@@ -1,0 +1,26 @@
+project:
+  type: website
+
+website:
+  title: "Portal do Desenvolvedor"
+  sidebar:
+      logo: "verificaidadedev.png"
+      style: "docked"
+      search: true
+      contents:
+        - index.qmd
+        - quickstart.qmd
+        - integraweb.qmd
+        - integramobile.qmd
+      page-navigation: true
+format:
+  html:
+    lang: pt-BR
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+
+

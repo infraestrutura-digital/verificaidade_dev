@@ -1,0 +1,49 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Introdução",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.",
+    "crumbs": [
+      "Introdução"
+    ]
+  },
+  {
+    "objectID": "index.html#arquitetura",
+    "href": "index.html#arquitetura",
+    "title": "Introdução",
+    "section": "Arquitetura",
+    "text": "Arquitetura\n\n\n\nArquitetura",
+    "crumbs": [
+      "Introdução"
+    ]
+  },
+  {
+    "objectID": "index.html#componentes",
+    "href": "index.html#componentes",
+    "title": "Introdução",
+    "section": "Componentes",
+    "text": "Componentes",
+    "crumbs": [
+      "Introdução"
+    ]
+  },
+  {
+    "objectID": "index.html#processo-de-integração",
+    "href": "index.html#processo-de-integração",
+    "title": "Introdução",
+    "section": "Processo de Integração",
+    "text": "Processo de Integração",
+    "crumbs": [
+      "Introdução"
+    ]
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  }
+]
