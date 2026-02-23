@@ -816,7 +816,7 @@
     "href": "index.html",
     "title": "Boas-vindas",
     "section": "",
-    "text": "O VerificaIdade é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis. O governo emite a credencial digital para o cidadão; o seu sistema verifica usando o INJI Verify.",
+    "text": "O VerificaIdade é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis.\nEssa solução de governo é baseada na stack MOSIP INJI e funciona sobre o protocolo Open ID for Verifiable Credentials (OID4VC) que é interoperável com outras soluções e adotado por diversos países e organizações, estando já presente em forma experimental nos browsers Chrome e Safari mais recentes.",
     "crumbs": [
       "Boas-vindas"
     ]
@@ -826,17 +826,7 @@
     "href": "index.html#o-que-é-o-verificaidade",
     "title": "Boas-vindas",
     "section": "",
-    "text": "O VerificaIdade é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis. O governo emite a credencial digital para o cidadão; o seu sistema verifica usando o INJI Verify.",
-    "crumbs": [
-      "Boas-vindas"
-    ]
-  },
-  {
-    "objectID": "index.html#como-funciona",
-    "href": "index.html#como-funciona",
-    "title": "Boas-vindas",
-    "section": "Como funciona",
-    "text": "Como funciona\n\nVocê integra o INJI Verify SDK (pacote NPM React) na sua aplicação web\nO SDK se comunica com o INJI Verify Service (backend Java/Spring Boot que roda na sua VM)\nO cidadão apresenta sua credencial via QR Code (desktop) ou Deep Link (mobile)\nO Service valida a credencial criptograficamente e retorna o resultado ao SDK\n\nNão é necessário criar um backend customizado para orquestrar a verificação.",
+    "text": "O VerificaIdade é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis.\nEssa solução de governo é baseada na stack MOSIP INJI e funciona sobre o protocolo Open ID for Verifiable Credentials (OID4VC) que é interoperável com outras soluções e adotado por diversos países e organizações, estando já presente em forma experimental nos browsers Chrome e Safari mais recentes.",
     "crumbs": [
       "Boas-vindas"
     ]
@@ -846,7 +836,17 @@
     "href": "index.html#para-quem-é-este-portal",
     "title": "Boas-vindas",
     "section": "Para quem é este portal?",
-    "text": "Para quem é este portal?\nPara desenvolvedores que precisam integrar verificação de idade em aplicações React (Web).",
+    "text": "Para quem é este portal?\nPara desenvolvedores de Plataformas Digitais, web ou mobile apps que precisam verificar idade de acordo com o ECA Digital.",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "index.html#como-funciona",
+    "href": "index.html#como-funciona",
+    "title": "Boas-vindas",
+    "section": "Como funciona",
+    "text": "Como funciona\n\nVocê integra o INJI Verify SDK Web em sua aplicação web ou o INJI Verify SDK Mobile em sua aplicação mobile.\nO SDK se comunica com o INJI Verify Service (backend Java/Spring Boot que roda na sua VM)\nO cidadão apresenta sua credencial via QR Code (desktop) ou Deep Link (mobile)\nO Verify Service valida a credencial criptograficamente e retorna o resultado ao SDK",
     "crumbs": [
       "Boas-vindas"
     ]
@@ -866,7 +866,7 @@
     "href": "index.html#pré-requisitos",
     "title": "Boas-vindas",
     "section": "Pré-requisitos",
-    "text": "Pré-requisitos\n\nReact 18.2.0+ com TypeScript 4.9.5+\nAcesso a uma VM com Docker para rodar o INJI Verify Service\nCredenciais de acesso ao gateway (obtidas no Onboarding)\n\n\n\n\n\n\n\nNota\n\n\n\nO objetivo é que você consiga integrar em 1 dia. Comece pelo Integre em 1 Hora.",
+    "text": "Pré-requisitos\n\nAcesso a uma VM com Docker para rodar o INJI Verify Service ? Credenciais de acesso ao gateway (obtidas no Onboarding)\n\n\n\n\n\n\n\nNota\n\n\n\nO objetivo é que um desenvolvedor experiente consiga integrar em 1 dia. Comece pelo Integre em 1 Dia.",
     "crumbs": [
       "Boas-vindas"
     ]

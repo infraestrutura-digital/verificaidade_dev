@@ -4,20 +4,21 @@ title: "Boas-vindas"
 
 ## O que é o VerificaIdade?
 
-O **VerificaIdade** é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis. O governo emite a credencial digital para o cidadão; o seu sistema verifica usando o **INJI Verify**.
+O [**VerificaIdade**](infraestrutura-digital.github.io/idade-website) é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis. 
 
-## Como funciona
-
-1. Você integra o **INJI Verify SDK** (pacote NPM React) na sua aplicação web
-2. O SDK se comunica com o **INJI Verify Service** (backend Java/Spring Boot que roda na sua VM)
-3. O cidadão apresenta sua credencial via **QR Code** (desktop) ou **Deep Link** (mobile)
-4. O Service valida a credencial criptograficamente e retorna o resultado ao SDK
-
-Não é necessário criar um backend customizado para orquestrar a verificação.
+Essa solução de governo é baseada na stack [MOSIP INJI](https://docs.inji.io/) e funciona sobre o protocolo Open ID for Verifiable Credentials (OID4VC) que é interoperável com outras soluções e adotado por diversos países e organizações, estando já presente em forma experimental nos browsers Chrome e Safari mais recentes.
 
 ## Para quem é este portal?
 
-Para **desenvolvedores** que precisam integrar verificação de idade em aplicações **React** (Web).
+Para **desenvolvedores** de Plataformas Digitais, web ou mobile apps que precisam verificar idade de acordo com o [ECA Digital]().
+
+## Como funciona
+
+1. Você integra o **INJI Verify SDK Web** em sua aplicação web ou o **INJI Verify SDK Mobile** em sua aplicação mobile.
+2. O SDK se comunica com o **INJI Verify Service** (backend Java/Spring Boot que roda na sua VM)
+3. O cidadão apresenta sua credencial via **QR Code** (desktop) ou **Deep Link** (mobile)
+4. O Verify Service valida a credencial criptograficamente e retorna o resultado ao SDK
+
 
 ## O que você vai encontrar aqui
 
@@ -39,10 +40,9 @@ Para **desenvolvedores** que precisam integrar verificação de idade em aplica�
 
 ## Pré-requisitos
 
-- **React 18.2.0+** com TypeScript 4.9.5+
 - Acesso a uma **VM com Docker** para rodar o INJI Verify Service
-- Credenciais de acesso ao gateway (obtidas no [Onboarding](onboarding.qmd))
+? Credenciais de acesso ao gateway (obtidas no [Onboarding](onboarding.qmd))
 
 ::: {.callout-note}
-O objetivo é que você consiga integrar em **1 dia**. Comece pelo [Integre em 1 Hora](quickstart.qmd).
+O objetivo é que um desenvolvedor experiente consiga integrar em **1 dia**. Comece pelo [Integre em 1 Dia](quickstart.qmd).
 :::

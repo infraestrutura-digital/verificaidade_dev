@@ -247,8 +247,8 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#o-que-é-o-verificaidade" id="toc-o-que-é-o-verificaidade" class="nav-link active" data-scroll-target="#o-que-é-o-verificaidade">O que é o VerificaIdade?</a></li>
-  <li><a href="#como-funciona" id="toc-como-funciona" class="nav-link" data-scroll-target="#como-funciona">Como funciona</a></li>
   <li><a href="#para-quem-é-este-portal" id="toc-para-quem-é-este-portal" class="nav-link" data-scroll-target="#para-quem-é-este-portal">Para quem é este portal?</a></li>
+  <li><a href="#como-funciona" id="toc-como-funciona" class="nav-link" data-scroll-target="#como-funciona">Como funciona</a></li>
   <li><a href="#o-que-você-vai-encontrar-aqui" id="toc-o-que-você-vai-encontrar-aqui" class="nav-link" data-scroll-target="#o-que-você-vai-encontrar-aqui">O que você vai encontrar aqui</a></li>
   <li><a href="#pré-requisitos" id="toc-pré-requisitos" class="nav-link" data-scroll-target="#pré-requisitos">Pré-requisitos</a></li>
   </ul>
@@ -278,21 +278,21 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="o-que-é-o-verificaidade" class="level2">
 <h2 class="anchored" data-anchor-id="o-que-é-o-verificaidade">O que é o VerificaIdade?</h2>
-<p>O <strong>VerificaIdade</strong> é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis. O governo emite a credencial digital para o cidadão; o seu sistema verifica usando o <strong>INJI Verify</strong>.</p>
+<p>O <a href="infraestrutura-digital.github.io/idade-website"><strong>VerificaIdade</strong></a> é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis.</p>
+<p>Essa solução de governo é baseada na stack <a href="https://docs.inji.io/">MOSIP INJI</a> e funciona sobre o protocolo Open ID for Verifiable Credentials (OID4VC) que é interoperável com outras soluções e adotado por diversos países e organizações, estando já presente em forma experimental nos browsers Chrome e Safari mais recentes.</p>
+</section>
+<section id="para-quem-é-este-portal" class="level2">
+<h2 class="anchored" data-anchor-id="para-quem-é-este-portal">Para quem é este portal?</h2>
+<p>Para <strong>desenvolvedores</strong> de Plataformas Digitais, web ou mobile apps que precisam verificar idade de acordo com o <a href="">ECA Digital</a>.</p>
 </section>
 <section id="como-funciona" class="level2">
 <h2 class="anchored" data-anchor-id="como-funciona">Como funciona</h2>
 <ol type="1">
-<li>Você integra o <strong>INJI Verify SDK</strong> (pacote NPM React) na sua aplicação web</li>
+<li>Você integra o <strong>INJI Verify SDK Web</strong> em sua aplicação web ou o <strong>INJI Verify SDK Mobile</strong> em sua aplicação mobile.</li>
 <li>O SDK se comunica com o <strong>INJI Verify Service</strong> (backend Java/Spring Boot que roda na sua VM)</li>
 <li>O cidadão apresenta sua credencial via <strong>QR Code</strong> (desktop) ou <strong>Deep Link</strong> (mobile)</li>
-<li>O Service valida a credencial criptograficamente e retorna o resultado ao SDK</li>
+<li>O Verify Service valida a credencial criptograficamente e retorna o resultado ao SDK</li>
 </ol>
-<p>Não é necessário criar um backend customizado para orquestrar a verificação.</p>
-</section>
-<section id="para-quem-é-este-portal" class="level2">
-<h2 class="anchored" data-anchor-id="para-quem-é-este-portal">Para quem é este portal?</h2>
-<p>Para <strong>desenvolvedores</strong> que precisam integrar verificação de idade em aplicações <strong>React</strong> (Web).</p>
 </section>
 <section id="o-que-você-vai-encontrar-aqui" class="level2">
 <h2 class="anchored" data-anchor-id="o-que-você-vai-encontrar-aqui">O que você vai encontrar aqui</h2>
@@ -362,9 +362,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="pré-requisitos" class="level2">
 <h2 class="anchored" data-anchor-id="pré-requisitos">Pré-requisitos</h2>
 <ul>
-<li><strong>React 18.2.0+</strong> com TypeScript 4.9.5+</li>
-<li>Acesso a uma <strong>VM com Docker</strong> para rodar o INJI Verify Service</li>
-<li>Credenciais de acesso ao gateway (obtidas no <a href="./onboarding.html">Onboarding</a>)</li>
+<li>Acesso a uma <strong>VM com Docker</strong> para rodar o INJI Verify Service ? Credenciais de acesso ao gateway (obtidas no <a href="./onboarding.html">Onboarding</a>)</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -376,7 +374,7 @@ Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>O objetivo é que você consiga integrar em <strong>1 dia</strong>. Comece pelo <a href="./quickstart.html">Integre em 1 Hora</a>.</p>
+<p>O objetivo é que um desenvolvedor experiente consiga integrar em <strong>1 dia</strong>. Comece pelo <a href="./quickstart.html">Integre em 1 Dia</a>.</p>
 </div>
 </div>
 

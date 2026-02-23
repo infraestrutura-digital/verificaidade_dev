@@ -317,11 +317,19 @@ nav[role="doc-toc"] a.active {
 
 /* --- Mermaid diagrams --- */
 .mermaid {
-  background-color: var(--govbr-white);
+  background-color: var(--govbr-white) !important;
   border: 1px solid var(--govbr-gray-10);
   border-radius: 4px;
   padding: 1rem;
   box-shadow: var(--govbr-shadow-sm);
+}
+
+.mermaid svg {
+  background-color: transparent !important;
+}
+
+.cell-output-display {
+  background-color: var(--govbr-white) !important;
 }
 
 /* --- Footer --- */
