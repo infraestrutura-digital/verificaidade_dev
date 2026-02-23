@@ -1,0 +1,142 @@
+---
+title: "Integração Mobile (Deep Link)"
+---
+
+## Objetivo
+
+Implementar verificação de idade em um app web mobile usando Deep Link (fluxo same-device).
+
+## Fluxo Mobile
+
+```{mermaid}
+sequenceDiagram
+    participant U as Usuário (Celular)
+    participant SDK as App React + SDK
+    participant VS as INJI Verify Service
+    participant W as Carteira Digital
+
+    U->>SDK: Toca "Verificar Idade"
+    SDK->>VS: POST /v1/verify/vp-request
+    VS-->>SDK: requestId + authorizationUrl
+    SDK->>W: Redireciona via Deep Link (openid4vp://...)
+    W->>VS: POST /v1/verify/vp-submission
+    Note over W: Usuário volta ao app
+    SDK->>VS: Long-polling /vp-request/{id}/status
+    VS-->>SDK: Resultado
+    SDK->>U: Callback executado
+```
+
+## Cenário
+
+O usuário está no **celular** acessando seu site via navegador. O SDK detecta que é um dispositivo mobile e, em vez de exibir um QR Code, redireciona automaticamente para a Carteira Digital via Deep Link.
+
+## Como funciona
+
+O SDK usa o **mesmo componente** `OpenID4VPVerification` — a detecção do dispositivo é automática:
+
+- **Desktop** → renderiza QR Code
+- **Mobile/Tablet** → redireciona via Deep Link (`openid4vp://...`)
+
+A prop `isSameDeviceFlowEnabled` controla esse comportamento (padrão: `true`).
+
+## Passo 1 — O mesmo componente funciona
+
+```tsx
+// src/components/VerificaIdade.tsx
+// O MESMO código da integração Web funciona no mobile!
+import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+
+export function VerificaIdade() {
+  return (
+    <OpenID4VPVerification
+      verifyServiceUrl="<VERIFY_BASE_URL>/v1/verify"
+      clientId="did:web:<SEU_DOMINIO>:v1:verify"
+      protocol="openid4vp://"
+      presentationDefinition={presentationDefinition}
+      isSameDeviceFlowEnabled={true}  // padrão — Deep Link no mobile
+      onVpProcessed={(results) => {
+        const ok = results.some(r => r.vcStatus === 'SUCCESS');
+        console.log('Verificado:', ok);
+      }}
+      onError={(error) => console.error(error)}
+      onQrCodeExpired={() => console.log('Expirou')}
+    />
+  );
+}
+```
+
+::: {.callout-note}
+Não é necessário código diferente para mobile. O SDK detecta o dispositivo automaticamente e escolhe entre QR Code e Deep Link.
+:::
+
+## O que acontece internamente no mobile
+
+1. SDK chama o INJI Verify Service para criar a VP Request
+2. SDK detecta que o dispositivo é mobile (via user agent)
+3. SDK redireciona o navegador para `openid4vp://authorize?...`
+4. A Carteira Digital abre e exibe a credencial para autorização
+5. Usuário autoriza o compartilhamento
+6. Carteira envia a VP ao INJI Verify Service
+7. Usuário volta ao navegador (ou ao app)
+8. SDK recupera a sessão do `sessionStorage` e busca o resultado
+
+## Botão personalizado para mobile
+
+Você pode usar `triggerElement` para criar um botão mais adequado ao mobile:
+
+```tsx
+<OpenID4VPVerification
+  // ...
+  triggerElement={
+    <button className="btn-verificar-mobile">
+      Verificar com Carteira Digital
+    </button>
+  }
+/>
+```
+
+## Desabilitar fluxo same-device
+
+Se quiser forçar QR Code mesmo no mobile (cenário raro):
+
+```tsx
+<OpenID4VPVerification
+  // ...
+  isSameDeviceFlowEnabled={false}  // Sempre QR Code
+/>
+```
+
+## Considerações Mobile
+
+### Retorno ao app
+
+Quando o usuário volta da Carteira Digital ao navegador, o SDK restaura a sessão a partir do `sessionStorage`. O resultado é obtido automaticamente.
+
+### Carteira não instalada
+
+Se a Carteira Digital não estiver instalada, o Deep Link não abrirá nada. Trate isso com uma mensagem orientando o usuário:
+
+```tsx
+<OpenID4VPVerification
+  // ...
+  onError={(error) => {
+    // Informar o usuário para instalar a Carteira Digital
+    alert('Instale a Carteira Digital para verificar sua idade.');
+  }}
+/>
+```
+
+### Apps nativos (Flutter, React Native)
+
+O INJI Verify SDK é exclusivo para **React Web**. Para apps nativos, você tem duas opções:
+
+1. **WebView** — Abrir uma tela React com o SDK dentro de uma WebView
+2. **API direta** — Chamar os endpoints do INJI Verify Service diretamente e implementar a lógica de Deep Link no app nativo
+
+::: {.callout-warning}
+O SDK **não suporta** React Native, Angular, Vue ou SSR (Next.js). Para apps nativos, use a opção de WebView ou API direta.
+:::
+
+## Próximo passo
+
+Entenda a [Policy 18+](policy18.qmd) e como configurar a Presentation Definition.

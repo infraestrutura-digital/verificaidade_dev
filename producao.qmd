@@ -1,0 +1,191 @@
+---
+title: "Produção e Operação"
+---
+
+## Objetivo
+
+Preparar o ambiente para deploy em produção com segurança e monitoramento.
+
+## Checklist de Produção
+
+- [ ] Domínio público com HTTPS (certificado SSL/TLS)
+- [ ] DIDs e `INJI_VP_SUBMISSION_BASE_URL` apontando para o domínio real
+- [ ] Reverse proxy (Nginx) na frente do INJI Verify Service
+- [ ] Senha do PostgreSQL alterada (não usar padrão)
+- [ ] Keystore PKCS12 próprio (não usar `test.p12`)
+- [ ] `INJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true`
+- [ ] Logs centralizados com rotação
+- [ ] Monitoramento e alertas
+- [ ] Backup do PostgreSQL
+
+## Docker Compose para Produção
+
+```yaml
+# docker-compose.prod.yml
+version: '3.8'
+
+services:
+  verify-service:
+    container_name: verify-service
+    image: injistackdev/inji-verify-service:develop
+    restart: always
+    ports:
+      - "127.0.0.1:8080:8080"  # Apenas localhost — Nginx faz o proxy
+    environment:
+      - active_profile_env=default
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=inji_verify
+      - DATABASE_SCHEMA=verify
+      - DATABASE_USERNAME=${DB_USER}
+      - DATABASE_PASSWORD=${DB_PASSWORD}
+      - INJI_VP_SUBMISSION_BASE_URL=https://verify.seu-dominio.com.br/v1/verify
+      - INJI_DID_VERIFY_URI=did:web:verify.seu-dominio.com.br:v1:verify
+      - INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:verify.seu-dominio.com.br:v1:verify#key-0
+      - INJI_KEYSTORE_FILE_PASS=${KEYSTORE_PASS}
+      - INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=55000
+      - INJI_VERIFY_REDIRECT_URI=https://verify.seu-dominio.com.br
+      - INJI_VERIFY_RESPONSE_CODE_EXPIRY_TIME_IN_MINS=5
+      - INJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true
+      - INJI_VERIFY_CLAIMS_WITH_META_DATA=_sd,_sd_alg,iss,cnf,sub,aud,exp,nbf,iat,cti
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: inji_verify
+    ports:
+      - "127.0.0.1:5432:5432"  # Apenas localhost
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  pgdata:
+```
+
+::: {.callout-important}
+Note `127.0.0.1:8080:8080` e `127.0.0.1:5432:5432` — isso garante que ambos os serviços só aceitam conexões locais. O Nginx faz o proxy HTTPS para o mundo externo.
+:::
+
+## Nginx como Reverse Proxy
+
+```nginx
+# /etc/nginx/sites-available/verificaidade
+server {
+    listen 443 ssl;
+    server_name verify.seu-dominio.com.br;
+
+    ssl_certificate /etc/letsencrypt/live/verify.seu-dominio.com.br/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/verify.seu-dominio.com.br/privkey.pem;
+
+    # INJI Verify Service
+    location /v1/verify/ {
+        proxy_pass http://localhost:8080/v1/verify/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Long-polling precisa de timeout maior
+        proxy_read_timeout 60s;
+    }
+}
+
+server {
+    listen 80;
+    server_name verify.seu-dominio.com.br;
+    return 301 https://$server_name$request_uri;
+}
+```
+
+```bash
+sudo ln -s /etc/nginx/sites-available/verificaidade /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+## Certificado SSL com Let's Encrypt
+
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d verify.seu-dominio.com.br
+```
+
+## Monitoramento
+
+### Health Check
+
+```bash
+curl -s https://verify.seu-dominio.com.br/v1/verify/health
+```
+
+### Script de monitoramento
+
+```bash
+#!/bin/bash
+# monitor.sh — executar via cron a cada minuto
+HEALTH=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/v1/verify/health)
+
+if [ "$HEALTH" != "200" ]; then
+  echo "$(date) ALERTA: INJI Verify Service indisponível (HTTP $HEALTH)" \
+    >> /var/log/verificaidade-monitor.log
+fi
+```
+
+```bash
+# Adicionar ao cron
+crontab -e
+# * * * * * /home/ubuntu/monitor.sh
+```
+
+## Backup do PostgreSQL
+
+```bash
+#!/bin/bash
+# backup-db.sh
+BACKUP_DIR=/home/ubuntu/backups
+mkdir -p $BACKUP_DIR
+docker exec postgres-db pg_dump -U ${DB_USER} inji_verify \
+  | gzip > $BACKUP_DIR/inji_verify_$(date +%Y%m%d_%H%M%S).sql.gz
+
+# Manter apenas últimos 7 dias
+find $BACKUP_DIR -name "*.sql.gz" -mtime +7 -delete
+```
+
+## Atualização do Service
+
+```bash
+cd ~/verificaidade
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d
+curl -s http://localhost:8080/v1/verify/health
+```
+
+::: {.callout-warning}
+Teste atualizações em ambiente de homologação antes de aplicar em produção.
+:::
+
+## Próximo passo
+
+Consulte a [API Reference](api-reference.qmd) para detalhes dos endpoints.

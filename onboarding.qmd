@@ -1,0 +1,98 @@
+---
+title: "Onboarding (Conceito e Uso com WSO2)"
+---
+
+## Objetivo
+
+Entender o processo de credenciamento (onboarding) para operar como verificador.
+
+## O que é o Onboarding?
+
+Antes de verificar credenciais em produção, sua organização precisa ser **credenciada** como verificador autorizado. O onboarding define:
+
+- Quem você é (identidade do verificador via DID)
+- Que credenciais você pode solicitar (Presentation Definitions)
+- Como acessar o ecossistema
+
+## Fluxo de Onboarding
+
+```{mermaid}
+flowchart TD
+    A[Solicitar credenciamento] --> B[Aprovação pelo órgão responsável]
+    B --> C[Receber acesso ao gateway WSO2]
+    C --> D[Configurar DID e keystore]
+    D --> E[Configurar INJI Verify Service]
+    E --> F[Testar em ambiente de homologação]
+    F --> G[Aprovação para produção]
+```
+
+## O papel do Gateway (WSO2)
+
+O gateway **WSO2 API Manager** é a camada de gerenciamento do ecossistema:
+
+| Função | Descrição |
+|--------|-----------|
+| **Registro** | Registra verificadores e suas credenciais de acesso |
+| **Rate Limiting** | Controla quantidade de verificações por período |
+| **Monitoramento** | Registra uso do serviço |
+| **Políticas** | Define quais Presentation Definitions são permitidas |
+
+::: {.callout-note}
+Você **não precisa instalar o WSO2**. Ele é gerenciado pelo provedor do ecossistema. Sua responsabilidade é configurar o INJI Verify Service na sua infraestrutura.
+:::
+
+## O que você configura
+
+Após o credenciamento, você recebe informações para configurar:
+
+| Item | Onde usar | Descrição |
+|------|----------|-----------|
+| DID do verificador | `INJI_DID_VERIFY_URI` | Identidade digital do seu verificador |
+| Keystore PKCS12 | Montado no container | Chave para assinar authorization requests |
+| Presentation Definition | Prop `presentationDefinition` do SDK | Define quais credenciais solicitar |
+| Domínio público | `INJI_VP_SUBMISSION_BASE_URL` | Endereço para a Wallet enviar credenciais |
+
+## Ambientes
+
+| Ambiente | Uso |
+|----------|-----|
+| **Homologação** | Testes com credenciais de teste. Use o keystore de teste. |
+| **Produção** | Sistema em operação real. Keystore e DID definitivos. |
+
+::: {.callout-warning}
+Nunca use o keystore de teste (`test.p12`) em produção. Gere um keystore próprio.
+:::
+
+## Passos do credenciamento
+
+### Passo 1 — Solicitar acesso
+
+Entre em contato com o órgão responsável pelo VerificaIdade.
+
+### Passo 2 — Receber acesso ao portal
+
+Após aprovação, você receberá acesso ao portal do gateway WSO2.
+
+### Passo 3 — Configurar identidade
+
+- Gere ou receba o DID Web do seu verificador
+- Gere ou receba o keystore PKCS12
+
+### Passo 4 — Configurar INJI Verify Service
+
+Use os valores recebidos nas variáveis de ambiente do [INJI Verify Service](inji-verify.qmd):
+
+```bash
+INJI_DID_VERIFY_URI=did:web:verify.seu-dominio.com.br:v1:verify
+INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:verify.seu-dominio.com.br:v1:verify#key-0
+INJI_KEYSTORE_FILE_PASS=sua-senha-do-keystore
+INJI_VP_SUBMISSION_BASE_URL=https://verify.seu-dominio.com.br/v1/verify
+```
+
+### Passo 5 — Testar em homologação
+
+Use credenciais de teste para validar o fluxo completo antes de ir para produção.
+
+## Dúvidas sobre Onboarding
+
+O processo de onboarding é gerenciado pelo órgão responsável pelo VerificaIdade. Consulte a documentação fornecida no credenciamento.

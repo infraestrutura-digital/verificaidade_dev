@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Integre em 1 Hora – VerificaIdade — Portal do Desenvolvedor</title>
+<title>API Reference – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./arquitetura.html">Início Rápido</a></li><li class="breadcrumb-item"><a href="./quickstart.html">Integre em 1 Hora</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./api-reference.html">API Reference</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -166,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quickstart.html" class="sidebar-item-text sidebar-link active">
+  <a href="./quickstart.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Integre em 1 Hora</span></a>
   </div>
 </li>
@@ -253,7 +253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./api-reference.html" class="sidebar-item-text sidebar-link">
+  <a href="./api-reference.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">API Reference</span></a>
   </div>
 </li>
@@ -282,24 +282,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo">Objetivo</a></li>
-  <li><a href="#checklist" id="toc-checklist" class="nav-link" data-scroll-target="#checklist">Checklist</a></li>
-  <li><a href="#etapa-1-preparar-vm-com-docker" id="toc-etapa-1-preparar-vm-com-docker" class="nav-link" data-scroll-target="#etapa-1-preparar-vm-com-docker">Etapa 1 — Preparar VM com Docker</a></li>
-  <li><a href="#etapa-2-subir-inji-verify-service" id="toc-etapa-2-subir-inji-verify-service" class="nav-link" data-scroll-target="#etapa-2-subir-inji-verify-service">Etapa 2 — Subir INJI Verify Service</a></li>
-  <li><a href="#etapa-3-expor-o-service-publicamente" id="toc-etapa-3-expor-o-service-publicamente" class="nav-link" data-scroll-target="#etapa-3-expor-o-service-publicamente">Etapa 3 — Expor o Service publicamente</a></li>
-  <li><a href="#etapa-4-instalar-o-sdk-no-projeto-react" id="toc-etapa-4-instalar-o-sdk-no-projeto-react" class="nav-link" data-scroll-target="#etapa-4-instalar-o-sdk-no-projeto-react">Etapa 4 — Instalar o SDK no projeto React</a></li>
-  <li><a href="#etapa-5-adicionar-componente-de-verificação" id="toc-etapa-5-adicionar-componente-de-verificação" class="nav-link" data-scroll-target="#etapa-5-adicionar-componente-de-verificação">Etapa 5 — Adicionar componente de verificação</a></li>
-  <li><a href="#etapa-6-testar-ponta-a-ponta" id="toc-etapa-6-testar-ponta-a-ponta" class="nav-link" data-scroll-target="#etapa-6-testar-ponta-a-ponta">Etapa 6 — Testar ponta a ponta</a></li>
-  <li><a href="#alternativa-receber-resultado-completo-no-frontend" id="toc-alternativa-receber-resultado-completo-no-frontend" class="nav-link" data-scroll-target="#alternativa-receber-resultado-completo-no-frontend">Alternativa: Receber resultado completo no frontend</a></li>
-  <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
+  <li><a href="#endpoints-do-inji-verify-service" id="toc-endpoints-do-inji-verify-service" class="nav-link" data-scroll-target="#endpoints-do-inji-verify-service">Endpoints do INJI Verify Service</a>
+  <ul class="collapse">
+  <li><a href="#criar-vp-request" id="toc-criar-vp-request" class="nav-link" data-scroll-target="#criar-vp-request">Criar VP Request</a></li>
+  <li><a href="#consultar-status-da-vp-request-long-polling" id="toc-consultar-status-da-vp-request-long-polling" class="nav-link" data-scroll-target="#consultar-status-da-vp-request-long-polling">Consultar Status da VP Request (Long-Polling)</a></li>
+  <li><a href="#obter-resultado-da-verificação" id="toc-obter-resultado-da-verificação" class="nav-link" data-scroll-target="#obter-resultado-da-verificação">Obter Resultado da Verificação</a></li>
+  <li><a href="#vp-submission-wallet-service" id="toc-vp-submission-wallet-service" class="nav-link" data-scroll-target="#vp-submission-wallet-service">VP Submission (Wallet → Service)</a></li>
+  <li><a href="#vc-verification-qr-code-scanupload" id="toc-vc-verification-qr-code-scanupload" class="nav-link" data-scroll-target="#vc-verification-qr-code-scanupload">VC Verification (QR Code Scan/Upload)</a></li>
+  <li><a href="#health-check" id="toc-health-check" class="nav-link" data-scroll-target="#health-check">Health Check</a></li>
+  </ul></li>
+  <li><a href="#uso-com-onvpreceived-backend" id="toc-uso-com-onvpreceived-backend" class="nav-link" data-scroll-target="#uso-com-onvpreceived-backend">Uso com <code>onVpReceived</code> (Backend)</a></li>
+  <li><a href="#resumo-de-placeholders" id="toc-resumo-de-placeholders" class="nav-link" data-scroll-target="#resumo-de-placeholders">Resumo de Placeholders</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./arquitetura.html">Início Rápido</a></li><li class="breadcrumb-item"><a href="./quickstart.html">Integre em 1 Hora</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./api-reference.html">API Reference</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Integre em 1 Hora</h1>
+<h1 class="title">API Reference</h1>
 </div>
 
 
@@ -318,111 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Sair do zero até uma verificação de idade funcionando em ambiente de desenvolvimento.</p>
-</section>
-<section id="checklist" class="level2">
-<h2 class="anchored" data-anchor-id="checklist">Checklist</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 8%">
-<col style="width: 19%">
-<col style="width: 19%">
-<col style="width: 52%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>#</th>
-<th>Etapa</th>
-<th>Tempo</th>
-<th>Resultado esperado</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>Preparar VM com Docker</td>
-<td>10 min</td>
-<td><code>docker compose version</code> funciona</td>
-</tr>
-<tr class="even">
-<td>2</td>
-<td>Subir INJI Verify Service</td>
-<td>10 min</td>
-<td>Health check retorna <code>UP</code></td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>Expor o Service publicamente</td>
-<td>5 min</td>
-<td>Carteira Digital alcança o Service</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>Instalar o SDK no projeto React</td>
-<td>5 min</td>
-<td><code>@mosip/react-inji-verify-sdk</code> instalado</td>
-</tr>
-<tr class="odd">
-<td>5</td>
-<td>Adicionar componente de verificação</td>
-<td>15 min</td>
-<td>QR Code exibido na tela</td>
-</tr>
-<tr class="even">
-<td>6</td>
-<td>Testar ponta a ponta</td>
-<td>15 min</td>
-<td>Credencial verificada com sucesso</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="etapa-1-preparar-vm-com-docker" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-1-preparar-vm-com-docker">Etapa 1 — Preparar VM com Docker</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> <span class="at">--version</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose version</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Se não tiver Docker, veja <a href="./setup-vm.html">Setup da VM e Docker</a>.</p>
-<p><strong>Resultado:</strong> Docker e Docker Compose funcionando.</p>
-</section>
-<section id="etapa-2-subir-inji-verify-service" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-2-subir-inji-verify-service">Etapa 2 — Subir INJI Verify Service</h2>
-<p>Crie o arquivo <code>docker-compose.yml</code> e suba os containers:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Veja a configuração completa em <a href="./inji-verify.html">Subindo o INJI Verify Service</a>.</p>
-<p><strong>Resultado:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://localhost:8080/v1/verify/health</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># { "status": "UP" }</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="etapa-3-expor-o-service-publicamente" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-3-expor-o-service-publicamente">Etapa 3 — Expor o Service publicamente</h2>
-<p>A Carteira Digital (no celular do cidadão) precisa acessar o INJI Verify Service. Em desenvolvimento, use ngrok:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ngrok</span> http 8080</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Anote a URL pública (ex: <code>https://abc123.ngrok-free.app</code>). Atualize as variáveis de ambiente do Service:</p>
-<ul>
-<li><code>INJI_VP_SUBMISSION_BASE_URL=https://abc123.ngrok-free.app/v1/verify</code></li>
-<li><code>INJI_DID_VERIFY_URI=did:web:abc123.ngrok-free.app:v1:verify</code></li>
-<li><code>INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:abc123.ngrok-free.app:v1:verify#key-0</code></li>
-</ul>
-<p>Reinicie o Service:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down <span class="kw">&amp;&amp;</span> <span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Aviso
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Em produção, use um domínio real com HTTPS. Veja <a href="./producao.html">Produção e Operação</a>.</p>
-</div>
-</div>
-<p><strong>Resultado:</strong> URL pública acessível pelo celular.</p>
-</section>
-<section id="etapa-4-instalar-o-sdk-no-projeto-react" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-4-instalar-o-sdk-no-projeto-react">Etapa 4 — Instalar o SDK no projeto React</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install @mosip/react-inji-verify-sdk</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Referência dos endpoints REST do INJI Verify Service. O context path é <code>/v1/verify</code>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -433,127 +331,190 @@ Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>O SDK requer <strong>React 18.2.0+</strong> e <strong>TypeScript 4.9.5+</strong> como peer dependencies.</p>
+<p>Em uso normal, o <strong>SDK gerencia todas as chamadas</strong> a esses endpoints automaticamente. Esta referência é útil para debugging, integração com apps nativos, ou uso de <code>onVpReceived</code> com backend.</p>
 </div>
 </div>
-<p><strong>Resultado:</strong> Pacote instalado sem erros.</p>
 </section>
-<section id="etapa-5-adicionar-componente-de-verificação" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-5-adicionar-componente-de-verificação">Etapa 5 — Adicionar componente de verificação</h2>
-<pre class="tsx"><code>// src/components/VerificaIdade.tsx
-import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
-
-// Substitua pela URL do seu INJI Verify Service
-const VERIFY_SERVICE_URL = 'https://abc123.ngrok-free.app/v1/verify';
-
-// Substitua pelo DID do seu verificador
-const CLIENT_ID_DID = 'did:web:abc123.ngrok-free.app:v1:verify';
-
-// Presentation Definition para verificação de idade 18+
-// Substitua pela definição fornecida no seu credenciamento
-const presentationDefinition = {
-  id: 'age-verification-18-plus',
-  input_descriptors: [
-    {
-      id: 'age_credential',
-      format: {
-        'vc+sd-jwt': {
-          'sd-jwt_alg_values': ['ES256']
-        }
-      },
-      constraints: {
-        fields: [
-          {
-            path: ['$.ageOver18'],
-            filter: {
-              type: 'boolean',
-              const: true
-            }
-          }
-        ]
-      }
-    }
-  ]
-};
-
-export function VerificaIdade() {
-  const handleVerificado = (txnId: string) =&gt; {
-    console.log('Verificação concluída. Transaction ID:', txnId);
-    // Busque o resultado no seu backend se necessário
-    // ou use onVpProcessed para receber o resultado direto
-  };
-
-  const handleErro = (error: unknown) =&gt; {
-    console.error('Erro na verificação:', error);
-  };
-
-  const handleQrExpirado = () =&gt; {
-    console.log('QR Code expirou');
-  };
-
-  return (
-    &lt;div&gt;
-      &lt;h2&gt;Verificação de Idade&lt;/h2&gt;
-      &lt;OpenID4VPVerification
-        verifyServiceUrl={VERIFY_SERVICE_URL}
-        clientId={CLIENT_ID_DID}
-        protocol="openid4vp://"
-        presentationDefinition={presentationDefinition}
-        onVpReceived={handleVerificado}
-        onError={handleErro}
-        onQrCodeExpired={handleQrExpirado}
-      /&gt;
-    &lt;/div&gt;
-  );
-}</code></pre>
-<p><strong>Resultado:</strong> Componente renderiza QR Code na tela.</p>
+<section id="endpoints-do-inji-verify-service" class="level2">
+<h2 class="anchored" data-anchor-id="endpoints-do-inji-verify-service">Endpoints do INJI Verify Service</h2>
+<section id="criar-vp-request" class="level3">
+<h3 class="anchored" data-anchor-id="criar-vp-request">Criar VP Request</h3>
+<p>Inicia uma solicitação de verificação OpenID4VP.</p>
+<pre><code>POST &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-request</code></pre>
+<p><strong>Request Body:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"presentationDefinition"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"age-verification-18-plus"</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"input_descriptors"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"age_credential"</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"format"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"vc+sd-jwt"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"sd-jwt_alg_values"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"ES256"</span><span class="ot">]</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">},</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"constraints"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"fields"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"path"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"$.ageOver18"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"filter"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"boolean"</span><span class="fu">,</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"const"</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>              <span class="fu">}</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>          <span class="ot">]</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Response — 200 OK:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"requestId"</span><span class="fu">:</span> <span class="st">"abc-123-def-456"</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"authorizationUrl"</span><span class="fu">:</span> <span class="st">"openid4vp://authorize?request_uri=https://..."</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
 </section>
-<section id="etapa-6-testar-ponta-a-ponta" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-6-testar-ponta-a-ponta">Etapa 6 — Testar ponta a ponta</h2>
-<ol type="1">
-<li>Acesse sua aplicação React no navegador</li>
-<li>O QR Code aparece na tela</li>
-<li>Abra a <strong>INJI Wallet</strong> no celular</li>
-<li>Escaneie o QR Code</li>
-<li>Autorize o compartilhamento da credencial na Wallet</li>
-<li>O SDK recebe o resultado via callback</li>
-</ol>
-<p><strong>Resultado esperado (no console):</strong></p>
-<pre><code>Verificação concluída. Transaction ID: abc-123-def-456</code></pre>
+<section id="consultar-status-da-vp-request-long-polling" class="level3">
+<h3 class="anchored" data-anchor-id="consultar-status-da-vp-request-long-polling">Consultar Status da VP Request (Long-Polling)</h3>
+<p>Aguarda até que a Carteira Digital envie a credencial ou o timeout seja atingido.</p>
+<pre><code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-request/{requestId}/status</code></pre>
+<p>O timeout padrão do long-polling é <strong>55 segundos</strong> (configurável via <code>INJI_VP_REQUEST_LONG_POLLING_TIMEOUT</code>).</p>
+<p><strong>Response — 200 OK (credencial recebida):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"COMPLETED"</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"requestId"</span><span class="fu">:</span> <span class="st">"abc-123-def-456"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Response — 200 OK (aguardando):</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"PENDING"</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"requestId"</span><span class="fu">:</span> <span class="st">"abc-123-def-456"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
 </section>
-<section id="alternativa-receber-resultado-completo-no-frontend" class="level2">
-<h2 class="anchored" data-anchor-id="alternativa-receber-resultado-completo-no-frontend">Alternativa: Receber resultado completo no frontend</h2>
-<p>Se preferir receber o resultado diretamente (sem buscar no backend), use <code>onVpProcessed</code> em vez de <code>onVpReceived</code>:</p>
-<pre class="tsx"><code>&lt;OpenID4VPVerification
-  verifyServiceUrl={VERIFY_SERVICE_URL}
-  clientId={CLIENT_ID_DID}
-  protocol="openid4vp://"
-  presentationDefinition={presentationDefinition}
-  onVpProcessed={(results) =&gt; {
-    // results: Array&lt;{ vc: unknown, vcStatus: "SUCCESS" | "INVALID" | "EXPIRED" }&gt;
-    const verificado = results.some(r =&gt; r.vcStatus === 'SUCCESS');
-    console.log('Idade verificada:', verificado);
-  }}
-  onError={(error) =&gt; console.error(error)}
-  onQrCodeExpired={() =&gt; console.log('QR expirou')}
-/&gt;</code></pre>
-<div class="callout callout-style-default callout-warning callout-titled">
+<section id="obter-resultado-da-verificação" class="level3">
+<h3 class="anchored" data-anchor-id="obter-resultado-da-verificação">Obter Resultado da Verificação</h3>
+<p>Busca o resultado completo após a Wallet ter submetido a credencial.</p>
+<pre><code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{requestId}</code></pre>
+<p><strong>Response — 200 OK:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vc"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"ageOver18"</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vcStatus"</span><span class="fu">:</span> <span class="st">"SUCCESS"</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Valores possíveis de <code>vcStatus</code>:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Valor</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SUCCESS</code></td>
+<td>Credencial válida, policy satisfeita</td>
+</tr>
+<tr class="even">
+<td><code>INVALID</code></td>
+<td>Credencial inválida (assinatura, emissor, formato)</td>
+</tr>
+<tr class="odd">
+<td><code>EXPIRED</code></td>
+<td>Credencial expirada</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="vp-submission-wallet-service" class="level3">
+<h3 class="anchored" data-anchor-id="vp-submission-wallet-service">VP Submission (Wallet → Service)</h3>
+<p>Endpoint chamado pela <strong>Carteira Digital</strong> para enviar a credencial. Você não chama este endpoint diretamente.</p>
+<pre><code>POST &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-submission</code></pre>
+<hr>
+</section>
+<section id="vc-verification-qr-code-scanupload" class="level3">
+<h3 class="anchored" data-anchor-id="vc-verification-qr-code-scanupload">VC Verification (QR Code Scan/Upload)</h3>
+<p>Para o fluxo de QR Code scan/upload (não OpenID4VP), o SDK usa:</p>
+<pre><code>POST &lt;VERIFY_BASE_URL&gt;/v1/verify/vc-verification</code></pre>
+<hr>
+</section>
+<section id="health-check" class="level3">
+<h3 class="anchored" data-anchor-id="health-check">Health Check</h3>
+<pre><code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/health</code></pre>
+<p><strong>Response — 200 OK:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"UP"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="uso-com-onvpreceived-backend" class="level2">
+<h2 class="anchored" data-anchor-id="uso-com-onvpreceived-backend">Uso com <code>onVpReceived</code> (Backend)</h2>
+<p>Quando você usa <code>onVpReceived</code>, o SDK retorna apenas o <code>txnId</code>. Para buscar o resultado no backend:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Backend Node/Express (exemplo)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> express <span class="op">=</span> <span class="pp">require</span>(<span class="st">'express'</span>)<span class="op">;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> app <span class="op">=</span> <span class="fu">express</span>()<span class="op">;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Substitua pelo valor do seu ambiente</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> VERIFY_BASE_URL <span class="op">=</span> <span class="st">'&lt;VERIFY_BASE_URL&gt;'</span><span class="op">;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>app<span class="op">.</span><span class="fu">get</span>(<span class="st">'/api/verificacao/:txnId'</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> {</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { txnId } <span class="op">=</span> req<span class="op">.</span><span class="at">params</span><span class="op">;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="vs">`</span><span class="sc">${</span>VERIFY_BASE_URL<span class="sc">}</span><span class="vs">/v1/verify/vp-result/</span><span class="sc">${</span>txnId<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> results <span class="op">=</span> <span class="cf">await</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> verified <span class="op">=</span> results<span class="op">.</span><span class="fu">some</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">vcStatus</span> <span class="op">===</span> <span class="st">'SUCCESS'</span>)<span class="op">;</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  res<span class="op">.</span><span class="fu">json</span>({ verified<span class="op">,</span> results })<span class="op">;</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="resumo-de-placeholders" class="level2">
+<h2 class="anchored" data-anchor-id="resumo-de-placeholders">Resumo de Placeholders</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 39%">
+<col style="width: 33%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Placeholder</th>
+<th>Descrição</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>&lt;VERIFY_BASE_URL&gt;</code></td>
+<td>URL base do INJI Verify Service</td>
+<td><code>https://verify.seu-dominio.com.br</code></td>
+</tr>
+<tr class="even">
+<td><code>&lt;SEU_DOMINIO&gt;</code></td>
+<td>Domínio público da VM</td>
+<td><code>verify.seu-dominio.com.br</code></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Aviso
+Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A documentação do INJI recomenda usar <code>onVpReceived</code> em produção e buscar o resultado pelo <code>txnId</code> no backend para maior segurança. O <code>onVpProcessed</code> é adequado para desenvolvimento e testes.</p>
+<p>Esses valores são definidos durante o <a href="./inji-verify.html">setup do INJI Verify Service</a> e o <a href="./onboarding.html">Onboarding</a>.</p>
 </div>
 </div>
-</section>
-<section id="próximo-passo" class="level2">
-<h2 class="anchored" data-anchor-id="próximo-passo">Próximo passo</h2>
-<p>Para entender o fluxo em detalhes, veja <a href="./fluxo-verificacao.html">Fluxo de Verificação</a>.</p>
 
 
 </section>

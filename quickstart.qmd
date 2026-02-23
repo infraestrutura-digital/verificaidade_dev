@@ -1,3 +1,200 @@
 ---
-title: "Quick Start"
+title: "Integre em 1 Hora"
 ---
+
+## Objetivo
+
+Sair do zero até uma verificação de idade funcionando em ambiente de desenvolvimento.
+
+## Checklist
+
+| # | Etapa | Tempo | Resultado esperado |
+|---|-------|-------|-------------------|
+| 1 | Preparar VM com Docker | 10 min | `docker compose version` funciona |
+| 2 | Subir INJI Verify Service | 10 min | Health check retorna `UP` |
+| 3 | Expor o Service publicamente | 5 min | Carteira Digital alcança o Service |
+| 4 | Instalar o SDK no projeto React | 5 min | `@mosip/react-inji-verify-sdk` instalado |
+| 5 | Adicionar componente de verificação | 15 min | QR Code exibido na tela |
+| 6 | Testar ponta a ponta | 15 min | Credencial verificada com sucesso |
+
+## Etapa 1 — Preparar VM com Docker
+
+```bash
+docker --version
+docker compose version
+```
+
+Se não tiver Docker, veja [Setup da VM e Docker](setup-vm.qmd).
+
+**Resultado:** Docker e Docker Compose funcionando.
+
+## Etapa 2 — Subir INJI Verify Service
+
+Crie o arquivo `docker-compose.yml` e suba os containers:
+
+```bash
+docker compose up -d
+```
+
+Veja a configuração completa em [Subindo o INJI Verify Service](inji-verify.qmd).
+
+**Resultado:**
+
+```bash
+curl -s http://localhost:8080/v1/verify/health
+# { "status": "UP" }
+```
+
+## Etapa 3 — Expor o Service publicamente
+
+A Carteira Digital (no celular do cidadão) precisa acessar o INJI Verify Service. Em desenvolvimento, use ngrok:
+
+```bash
+ngrok http 8080
+```
+
+Anote a URL pública (ex: `https://abc123.ngrok-free.app`). Atualize as variáveis de ambiente do Service:
+
+- `INJI_VP_SUBMISSION_BASE_URL=https://abc123.ngrok-free.app/v1/verify`
+- `INJI_DID_VERIFY_URI=did:web:abc123.ngrok-free.app:v1:verify`
+- `INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:abc123.ngrok-free.app:v1:verify#key-0`
+
+Reinicie o Service:
+
+```bash
+docker compose down && docker compose up -d
+```
+
+::: {.callout-warning}
+Em produção, use um domínio real com HTTPS. Veja [Produção e Operação](producao.qmd).
+:::
+
+**Resultado:** URL pública acessível pelo celular.
+
+## Etapa 4 — Instalar o SDK no projeto React
+
+```bash
+npm install @mosip/react-inji-verify-sdk
+```
+
+::: {.callout-note}
+O SDK requer **React 18.2.0+** e **TypeScript 4.9.5+** como peer dependencies.
+:::
+
+**Resultado:** Pacote instalado sem erros.
+
+## Etapa 5 — Adicionar componente de verificação
+
+```tsx
+// src/components/VerificaIdade.tsx
+import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+
+// Substitua pela URL do seu INJI Verify Service
+const VERIFY_SERVICE_URL = 'https://abc123.ngrok-free.app/v1/verify';
+
+// Substitua pelo DID do seu verificador
+const CLIENT_ID_DID = 'did:web:abc123.ngrok-free.app:v1:verify';
+
+// Presentation Definition para verificação de idade 18+
+// Substitua pela definição fornecida no seu credenciamento
+const presentationDefinition = {
+  id: 'age-verification-18-plus',
+  input_descriptors: [
+    {
+      id: 'age_credential',
+      format: {
+        'vc+sd-jwt': {
+          'sd-jwt_alg_values': ['ES256']
+        }
+      },
+      constraints: {
+        fields: [
+          {
+            path: ['$.ageOver18'],
+            filter: {
+              type: 'boolean',
+              const: true
+            }
+          }
+        ]
+      }
+    }
+  ]
+};
+
+export function VerificaIdade() {
+  const handleVerificado = (txnId: string) => {
+    console.log('Verificação concluída. Transaction ID:', txnId);
+    // Busque o resultado no seu backend se necessário
+    // ou use onVpProcessed para receber o resultado direto
+  };
+
+  const handleErro = (error: unknown) => {
+    console.error('Erro na verificação:', error);
+  };
+
+  const handleQrExpirado = () => {
+    console.log('QR Code expirou');
+  };
+
+  return (
+    <div>
+      <h2>Verificação de Idade</h2>
+      <OpenID4VPVerification
+        verifyServiceUrl={VERIFY_SERVICE_URL}
+        clientId={CLIENT_ID_DID}
+        protocol="openid4vp://"
+        presentationDefinition={presentationDefinition}
+        onVpReceived={handleVerificado}
+        onError={handleErro}
+        onQrCodeExpired={handleQrExpirado}
+      />
+    </div>
+  );
+}
+```
+
+**Resultado:** Componente renderiza QR Code na tela.
+
+## Etapa 6 — Testar ponta a ponta
+
+1. Acesse sua aplicação React no navegador
+2. O QR Code aparece na tela
+3. Abra a **INJI Wallet** no celular
+4. Escaneie o QR Code
+5. Autorize o compartilhamento da credencial na Wallet
+6. O SDK recebe o resultado via callback
+
+**Resultado esperado (no console):**
+
+```
+Verificação concluída. Transaction ID: abc-123-def-456
+```
+
+## Alternativa: Receber resultado completo no frontend
+
+Se preferir receber o resultado diretamente (sem buscar no backend), use `onVpProcessed` em vez de `onVpReceived`:
+
+```tsx
+<OpenID4VPVerification
+  verifyServiceUrl={VERIFY_SERVICE_URL}
+  clientId={CLIENT_ID_DID}
+  protocol="openid4vp://"
+  presentationDefinition={presentationDefinition}
+  onVpProcessed={(results) => {
+    // results: Array<{ vc: unknown, vcStatus: "SUCCESS" | "INVALID" | "EXPIRED" }>
+    const verificado = results.some(r => r.vcStatus === 'SUCCESS');
+    console.log('Idade verificada:', verificado);
+  }}
+  onError={(error) => console.error(error)}
+  onQrCodeExpired={() => console.log('QR expirou')}
+/>
+```
+
+::: {.callout-warning}
+A documentação do INJI recomenda usar `onVpReceived` em produção e buscar o resultado pelo `txnId` no backend para maior segurança. O `onVpProcessed` é adequado para desenvolvimento e testes.
+:::
+
+## Próximo passo
+
+Para entender o fluxo em detalhes, veja [Fluxo de Verificação](fluxo-verificacao.qmd).

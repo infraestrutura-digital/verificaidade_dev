@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Integre em 1 Hora – VerificaIdade — Portal do Desenvolvedor</title>
+<title>Onboarding (Conceito e Uso com WSO2) – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -103,6 +103,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Procurar"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="styles.css">
@@ -117,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./arquitetura.html">Início Rápido</a></li><li class="breadcrumb-item"><a href="./quickstart.html">Integre em 1 Hora</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./onboarding.html">Onboarding (Conceito e Uso com WSO2)</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -166,7 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quickstart.html" class="sidebar-item-text sidebar-link active">
+  <a href="./quickstart.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Integre em 1 Hora</span></a>
   </div>
 </li>
@@ -265,7 +268,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./onboarding.html" class="sidebar-item-text sidebar-link">
+  <a href="./onboarding.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Onboarding (Conceito e Uso com WSO2)</span></a>
   </div>
 </li>
@@ -282,24 +285,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo">Objetivo</a></li>
-  <li><a href="#checklist" id="toc-checklist" class="nav-link" data-scroll-target="#checklist">Checklist</a></li>
-  <li><a href="#etapa-1-preparar-vm-com-docker" id="toc-etapa-1-preparar-vm-com-docker" class="nav-link" data-scroll-target="#etapa-1-preparar-vm-com-docker">Etapa 1 — Preparar VM com Docker</a></li>
-  <li><a href="#etapa-2-subir-inji-verify-service" id="toc-etapa-2-subir-inji-verify-service" class="nav-link" data-scroll-target="#etapa-2-subir-inji-verify-service">Etapa 2 — Subir INJI Verify Service</a></li>
-  <li><a href="#etapa-3-expor-o-service-publicamente" id="toc-etapa-3-expor-o-service-publicamente" class="nav-link" data-scroll-target="#etapa-3-expor-o-service-publicamente">Etapa 3 — Expor o Service publicamente</a></li>
-  <li><a href="#etapa-4-instalar-o-sdk-no-projeto-react" id="toc-etapa-4-instalar-o-sdk-no-projeto-react" class="nav-link" data-scroll-target="#etapa-4-instalar-o-sdk-no-projeto-react">Etapa 4 — Instalar o SDK no projeto React</a></li>
-  <li><a href="#etapa-5-adicionar-componente-de-verificação" id="toc-etapa-5-adicionar-componente-de-verificação" class="nav-link" data-scroll-target="#etapa-5-adicionar-componente-de-verificação">Etapa 5 — Adicionar componente de verificação</a></li>
-  <li><a href="#etapa-6-testar-ponta-a-ponta" id="toc-etapa-6-testar-ponta-a-ponta" class="nav-link" data-scroll-target="#etapa-6-testar-ponta-a-ponta">Etapa 6 — Testar ponta a ponta</a></li>
-  <li><a href="#alternativa-receber-resultado-completo-no-frontend" id="toc-alternativa-receber-resultado-completo-no-frontend" class="nav-link" data-scroll-target="#alternativa-receber-resultado-completo-no-frontend">Alternativa: Receber resultado completo no frontend</a></li>
-  <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
+  <li><a href="#o-que-é-o-onboarding" id="toc-o-que-é-o-onboarding" class="nav-link" data-scroll-target="#o-que-é-o-onboarding">O que é o Onboarding?</a></li>
+  <li><a href="#fluxo-de-onboarding" id="toc-fluxo-de-onboarding" class="nav-link" data-scroll-target="#fluxo-de-onboarding">Fluxo de Onboarding</a></li>
+  <li><a href="#o-papel-do-gateway-wso2" id="toc-o-papel-do-gateway-wso2" class="nav-link" data-scroll-target="#o-papel-do-gateway-wso2">O papel do Gateway (WSO2)</a></li>
+  <li><a href="#o-que-você-configura" id="toc-o-que-você-configura" class="nav-link" data-scroll-target="#o-que-você-configura">O que você configura</a></li>
+  <li><a href="#ambientes" id="toc-ambientes" class="nav-link" data-scroll-target="#ambientes">Ambientes</a></li>
+  <li><a href="#passos-do-credenciamento" id="toc-passos-do-credenciamento" class="nav-link" data-scroll-target="#passos-do-credenciamento">Passos do credenciamento</a>
+  <ul class="collapse">
+  <li><a href="#passo-1-solicitar-acesso" id="toc-passo-1-solicitar-acesso" class="nav-link" data-scroll-target="#passo-1-solicitar-acesso">Passo 1 — Solicitar acesso</a></li>
+  <li><a href="#passo-2-receber-acesso-ao-portal" id="toc-passo-2-receber-acesso-ao-portal" class="nav-link" data-scroll-target="#passo-2-receber-acesso-ao-portal">Passo 2 — Receber acesso ao portal</a></li>
+  <li><a href="#passo-3-configurar-identidade" id="toc-passo-3-configurar-identidade" class="nav-link" data-scroll-target="#passo-3-configurar-identidade">Passo 3 — Configurar identidade</a></li>
+  <li><a href="#passo-4-configurar-inji-verify-service" id="toc-passo-4-configurar-inji-verify-service" class="nav-link" data-scroll-target="#passo-4-configurar-inji-verify-service">Passo 4 — Configurar INJI Verify Service</a></li>
+  <li><a href="#passo-5-testar-em-homologação" id="toc-passo-5-testar-em-homologação" class="nav-link" data-scroll-target="#passo-5-testar-em-homologação">Passo 5 — Testar em homologação</a></li>
+  </ul></li>
+  <li><a href="#dúvidas-sobre-onboarding" id="toc-dúvidas-sobre-onboarding" class="nav-link" data-scroll-target="#dúvidas-sobre-onboarding">Dúvidas sobre Onboarding</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./arquitetura.html">Início Rápido</a></li><li class="breadcrumb-item"><a href="./quickstart.html">Integre em 1 Hora</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./onboarding.html">Onboarding (Conceito e Uso com WSO2)</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Integre em 1 Hora</h1>
+<h1 class="title">Onboarding (Conceito e Uso com WSO2)</h1>
 </div>
 
 
@@ -318,111 +326,67 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Sair do zero até uma verificação de idade funcionando em ambiente de desenvolvimento.</p>
+<p>Entender o processo de credenciamento (onboarding) para operar como verificador.</p>
 </section>
-<section id="checklist" class="level2">
-<h2 class="anchored" data-anchor-id="checklist">Checklist</h2>
+<section id="o-que-é-o-onboarding" class="level2">
+<h2 class="anchored" data-anchor-id="o-que-é-o-onboarding">O que é o Onboarding?</h2>
+<p>Antes de verificar credenciais em produção, sua organização precisa ser <strong>credenciada</strong> como verificador autorizado. O onboarding define:</p>
+<ul>
+<li>Quem você é (identidade do verificador via DID)</li>
+<li>Que credenciais você pode solicitar (Presentation Definitions)</li>
+<li>Como acessar o ecossistema</li>
+</ul>
+</section>
+<section id="fluxo-de-onboarding" class="level2">
+<h2 class="anchored" data-anchor-id="fluxo-de-onboarding">Fluxo de Onboarding</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TD
+    A[Solicitar credenciamento] --&gt; B[Aprovação pelo órgão responsável]
+    B --&gt; C[Receber acesso ao gateway WSO2]
+    C --&gt; D[Configurar DID e keystore]
+    D --&gt; E[Configurar INJI Verify Service]
+    E --&gt; F[Testar em ambiente de homologação]
+    F --&gt; G[Aprovação para produção]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="o-papel-do-gateway-wso2" class="level2">
+<h2 class="anchored" data-anchor-id="o-papel-do-gateway-wso2">O papel do Gateway (WSO2)</h2>
+<p>O gateway <strong>WSO2 API Manager</strong> é a camada de gerenciamento do ecossistema:</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 8%">
-<col style="width: 19%">
-<col style="width: 19%">
-<col style="width: 52%">
-</colgroup>
 <thead>
 <tr class="header">
-<th>#</th>
-<th>Etapa</th>
-<th>Tempo</th>
-<th>Resultado esperado</th>
+<th>Função</th>
+<th>Descrição</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1</td>
-<td>Preparar VM com Docker</td>
-<td>10 min</td>
-<td><code>docker compose version</code> funciona</td>
+<td><strong>Registro</strong></td>
+<td>Registra verificadores e suas credenciais de acesso</td>
 </tr>
 <tr class="even">
-<td>2</td>
-<td>Subir INJI Verify Service</td>
-<td>10 min</td>
-<td>Health check retorna <code>UP</code></td>
+<td><strong>Rate Limiting</strong></td>
+<td>Controla quantidade de verificações por período</td>
 </tr>
 <tr class="odd">
-<td>3</td>
-<td>Expor o Service publicamente</td>
-<td>5 min</td>
-<td>Carteira Digital alcança o Service</td>
+<td><strong>Monitoramento</strong></td>
+<td>Registra uso do serviço</td>
 </tr>
 <tr class="even">
-<td>4</td>
-<td>Instalar o SDK no projeto React</td>
-<td>5 min</td>
-<td><code>@mosip/react-inji-verify-sdk</code> instalado</td>
-</tr>
-<tr class="odd">
-<td>5</td>
-<td>Adicionar componente de verificação</td>
-<td>15 min</td>
-<td>QR Code exibido na tela</td>
-</tr>
-<tr class="even">
-<td>6</td>
-<td>Testar ponta a ponta</td>
-<td>15 min</td>
-<td>Credencial verificada com sucesso</td>
+<td><strong>Políticas</strong></td>
+<td>Define quais Presentation Definitions são permitidas</td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="etapa-1-preparar-vm-com-docker" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-1-preparar-vm-com-docker">Etapa 1 — Preparar VM com Docker</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> <span class="at">--version</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose version</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Se não tiver Docker, veja <a href="./setup-vm.html">Setup da VM e Docker</a>.</p>
-<p><strong>Resultado:</strong> Docker e Docker Compose funcionando.</p>
-</section>
-<section id="etapa-2-subir-inji-verify-service" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-2-subir-inji-verify-service">Etapa 2 — Subir INJI Verify Service</h2>
-<p>Crie o arquivo <code>docker-compose.yml</code> e suba os containers:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Veja a configuração completa em <a href="./inji-verify.html">Subindo o INJI Verify Service</a>.</p>
-<p><strong>Resultado:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://localhost:8080/v1/verify/health</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># { "status": "UP" }</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="etapa-3-expor-o-service-publicamente" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-3-expor-o-service-publicamente">Etapa 3 — Expor o Service publicamente</h2>
-<p>A Carteira Digital (no celular do cidadão) precisa acessar o INJI Verify Service. Em desenvolvimento, use ngrok:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ngrok</span> http 8080</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Anote a URL pública (ex: <code>https://abc123.ngrok-free.app</code>). Atualize as variáveis de ambiente do Service:</p>
-<ul>
-<li><code>INJI_VP_SUBMISSION_BASE_URL=https://abc123.ngrok-free.app/v1/verify</code></li>
-<li><code>INJI_DID_VERIFY_URI=did:web:abc123.ngrok-free.app:v1:verify</code></li>
-<li><code>INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:abc123.ngrok-free.app:v1:verify#key-0</code></li>
-</ul>
-<p>Reinicie o Service:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down <span class="kw">&amp;&amp;</span> <span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Aviso
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Em produção, use um domínio real com HTTPS. Veja <a href="./producao.html">Produção e Operação</a>.</p>
-</div>
-</div>
-<p><strong>Resultado:</strong> URL pública acessível pelo celular.</p>
-</section>
-<section id="etapa-4-instalar-o-sdk-no-projeto-react" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-4-instalar-o-sdk-no-projeto-react">Etapa 4 — Instalar o SDK no projeto React</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install @mosip/react-inji-verify-sdk</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -433,110 +397,74 @@ Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>O SDK requer <strong>React 18.2.0+</strong> e <strong>TypeScript 4.9.5+</strong> como peer dependencies.</p>
+<p>Você <strong>não precisa instalar o WSO2</strong>. Ele é gerenciado pelo provedor do ecossistema. Sua responsabilidade é configurar o INJI Verify Service na sua infraestrutura.</p>
 </div>
 </div>
-<p><strong>Resultado:</strong> Pacote instalado sem erros.</p>
 </section>
-<section id="etapa-5-adicionar-componente-de-verificação" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-5-adicionar-componente-de-verificação">Etapa 5 — Adicionar componente de verificação</h2>
-<pre class="tsx"><code>// src/components/VerificaIdade.tsx
-import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
-
-// Substitua pela URL do seu INJI Verify Service
-const VERIFY_SERVICE_URL = 'https://abc123.ngrok-free.app/v1/verify';
-
-// Substitua pelo DID do seu verificador
-const CLIENT_ID_DID = 'did:web:abc123.ngrok-free.app:v1:verify';
-
-// Presentation Definition para verificação de idade 18+
-// Substitua pela definição fornecida no seu credenciamento
-const presentationDefinition = {
-  id: 'age-verification-18-plus',
-  input_descriptors: [
-    {
-      id: 'age_credential',
-      format: {
-        'vc+sd-jwt': {
-          'sd-jwt_alg_values': ['ES256']
-        }
-      },
-      constraints: {
-        fields: [
-          {
-            path: ['$.ageOver18'],
-            filter: {
-              type: 'boolean',
-              const: true
-            }
-          }
-        ]
-      }
-    }
-  ]
-};
-
-export function VerificaIdade() {
-  const handleVerificado = (txnId: string) =&gt; {
-    console.log('Verificação concluída. Transaction ID:', txnId);
-    // Busque o resultado no seu backend se necessário
-    // ou use onVpProcessed para receber o resultado direto
-  };
-
-  const handleErro = (error: unknown) =&gt; {
-    console.error('Erro na verificação:', error);
-  };
-
-  const handleQrExpirado = () =&gt; {
-    console.log('QR Code expirou');
-  };
-
-  return (
-    &lt;div&gt;
-      &lt;h2&gt;Verificação de Idade&lt;/h2&gt;
-      &lt;OpenID4VPVerification
-        verifyServiceUrl={VERIFY_SERVICE_URL}
-        clientId={CLIENT_ID_DID}
-        protocol="openid4vp://"
-        presentationDefinition={presentationDefinition}
-        onVpReceived={handleVerificado}
-        onError={handleErro}
-        onQrCodeExpired={handleQrExpirado}
-      /&gt;
-    &lt;/div&gt;
-  );
-}</code></pre>
-<p><strong>Resultado:</strong> Componente renderiza QR Code na tela.</p>
+<section id="o-que-você-configura" class="level2">
+<h2 class="anchored" data-anchor-id="o-que-você-configura">O que você configura</h2>
+<p>Após o credenciamento, você recebe informações para configurar:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 37%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Onde usar</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DID do verificador</td>
+<td><code>INJI_DID_VERIFY_URI</code></td>
+<td>Identidade digital do seu verificador</td>
+</tr>
+<tr class="even">
+<td>Keystore PKCS12</td>
+<td>Montado no container</td>
+<td>Chave para assinar authorization requests</td>
+</tr>
+<tr class="odd">
+<td>Presentation Definition</td>
+<td>Prop <code>presentationDefinition</code> do SDK</td>
+<td>Define quais credenciais solicitar</td>
+</tr>
+<tr class="even">
+<td>Domínio público</td>
+<td><code>INJI_VP_SUBMISSION_BASE_URL</code></td>
+<td>Endereço para a Wallet enviar credenciais</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="etapa-6-testar-ponta-a-ponta" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-6-testar-ponta-a-ponta">Etapa 6 — Testar ponta a ponta</h2>
-<ol type="1">
-<li>Acesse sua aplicação React no navegador</li>
-<li>O QR Code aparece na tela</li>
-<li>Abra a <strong>INJI Wallet</strong> no celular</li>
-<li>Escaneie o QR Code</li>
-<li>Autorize o compartilhamento da credencial na Wallet</li>
-<li>O SDK recebe o resultado via callback</li>
-</ol>
-<p><strong>Resultado esperado (no console):</strong></p>
-<pre><code>Verificação concluída. Transaction ID: abc-123-def-456</code></pre>
-</section>
-<section id="alternativa-receber-resultado-completo-no-frontend" class="level2">
-<h2 class="anchored" data-anchor-id="alternativa-receber-resultado-completo-no-frontend">Alternativa: Receber resultado completo no frontend</h2>
-<p>Se preferir receber o resultado diretamente (sem buscar no backend), use <code>onVpProcessed</code> em vez de <code>onVpReceived</code>:</p>
-<pre class="tsx"><code>&lt;OpenID4VPVerification
-  verifyServiceUrl={VERIFY_SERVICE_URL}
-  clientId={CLIENT_ID_DID}
-  protocol="openid4vp://"
-  presentationDefinition={presentationDefinition}
-  onVpProcessed={(results) =&gt; {
-    // results: Array&lt;{ vc: unknown, vcStatus: "SUCCESS" | "INVALID" | "EXPIRED" }&gt;
-    const verificado = results.some(r =&gt; r.vcStatus === 'SUCCESS');
-    console.log('Idade verificada:', verificado);
-  }}
-  onError={(error) =&gt; console.error(error)}
-  onQrCodeExpired={() =&gt; console.log('QR expirou')}
-/&gt;</code></pre>
+<section id="ambientes" class="level2">
+<h2 class="anchored" data-anchor-id="ambientes">Ambientes</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 66%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ambiente</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Homologação</strong></td>
+<td>Testes com credenciais de teste. Use o keystore de teste.</td>
+</tr>
+<tr class="even">
+<td><strong>Produção</strong></td>
+<td>Sistema em operação real. Keystore e DID definitivos.</td>
+</tr>
+</tbody>
+</table>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -547,13 +475,43 @@ Aviso
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A documentação do INJI recomenda usar <code>onVpReceived</code> em produção e buscar o resultado pelo <code>txnId</code> no backend para maior segurança. O <code>onVpProcessed</code> é adequado para desenvolvimento e testes.</p>
+<p>Nunca use o keystore de teste (<code>test.p12</code>) em produção. Gere um keystore próprio.</p>
 </div>
 </div>
 </section>
-<section id="próximo-passo" class="level2">
-<h2 class="anchored" data-anchor-id="próximo-passo">Próximo passo</h2>
-<p>Para entender o fluxo em detalhes, veja <a href="./fluxo-verificacao.html">Fluxo de Verificação</a>.</p>
+<section id="passos-do-credenciamento" class="level2">
+<h2 class="anchored" data-anchor-id="passos-do-credenciamento">Passos do credenciamento</h2>
+<section id="passo-1-solicitar-acesso" class="level3">
+<h3 class="anchored" data-anchor-id="passo-1-solicitar-acesso">Passo 1 — Solicitar acesso</h3>
+<p>Entre em contato com o órgão responsável pelo VerificaIdade.</p>
+</section>
+<section id="passo-2-receber-acesso-ao-portal" class="level3">
+<h3 class="anchored" data-anchor-id="passo-2-receber-acesso-ao-portal">Passo 2 — Receber acesso ao portal</h3>
+<p>Após aprovação, você receberá acesso ao portal do gateway WSO2.</p>
+</section>
+<section id="passo-3-configurar-identidade" class="level3">
+<h3 class="anchored" data-anchor-id="passo-3-configurar-identidade">Passo 3 — Configurar identidade</h3>
+<ul>
+<li>Gere ou receba o DID Web do seu verificador</li>
+<li>Gere ou receba o keystore PKCS12</li>
+</ul>
+</section>
+<section id="passo-4-configurar-inji-verify-service" class="level3">
+<h3 class="anchored" data-anchor-id="passo-4-configurar-inji-verify-service">Passo 4 — Configurar INJI Verify Service</h3>
+<p>Use os valores recebidos nas variáveis de ambiente do <a href="./inji-verify.html">INJI Verify Service</a>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">INJI_DID_VERIFY_URI</span><span class="op">=</span>did:web:verify.seu-dominio.com.br:v1:verify</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">INJI_DID_VERIFY_PUBLIC_KEY_URI</span><span class="op">=</span>did:web:verify.seu-dominio.com.br:v1:verify#key-0</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">INJI_KEYSTORE_FILE_PASS</span><span class="op">=</span>sua-senha-do-keystore</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">INJI_VP_SUBMISSION_BASE_URL</span><span class="op">=</span>https://verify.seu-dominio.com.br/v1/verify</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="passo-5-testar-em-homologação" class="level3">
+<h3 class="anchored" data-anchor-id="passo-5-testar-em-homologação">Passo 5 — Testar em homologação</h3>
+<p>Use credenciais de teste para validar o fluxo completo antes de ir para produção.</p>
+</section>
+</section>
+<section id="dúvidas-sobre-onboarding" class="level2">
+<h2 class="anchored" data-anchor-id="dúvidas-sobre-onboarding">Dúvidas sobre Onboarding</h2>
+<p>O processo de onboarding é gerenciado pelo órgão responsável pelo VerificaIdade. Consulte a documentação fornecida no credenciamento.</p>
 
 
 </section>

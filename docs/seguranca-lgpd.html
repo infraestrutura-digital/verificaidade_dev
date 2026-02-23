@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>About – Portal do Desenvolvedor</title>
+<title>Segurança e LGPD – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -40,7 +75,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-bcb4737e8fbcf1e9dfc00b59f8305558.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4d80fbb67350bf0285aa9751096d180d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -82,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">About</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./seguranca-lgpd.html">Segurança e LGPD</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -97,8 +132,8 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./verificaidadedev.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="./verificaidadedev.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <img src="./verificaidadedev.svg" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./verificaidadedev.svg" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -111,41 +146,163 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introdução</span></a>
+ <span class="menu-text">Boas-vindas</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Início Rápido</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arquitetura.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Arquitetura em 1 Página</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./quickstart.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Quick Start</span></a>
+ <span class="menu-text">Integre em 1 Hora</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Infraestrutura</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./integraweb.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Integração com Web Apps</span></a>
+  <a href="./setup-vm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Setup da VM e Docker</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./integramobile.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Integração com Mobile Apps</span></a>
+  <a href="./inji-verify.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Subindo o INJI Verify Service</span></a>
   </div>
 </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Integração</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fluxo-verificacao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fluxo de Verificação (Visão Geral)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./integra-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integração Web (QR Code)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./integra-mobile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integração Mobile (Deep Link)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Referência</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./policy18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Policy 18+</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seguranca-lgpd.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Segurança e LGPD</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./producao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Produção e Operação</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./api-reference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">API Reference</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./troubleshooting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Troubleshooting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./onboarding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Onboarding (Conceito e Uso com WSO2)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Nesta página</h2>
+   
+  <ul>
+  <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo">Objetivo</a></li>
+  <li><a href="#princípios" id="toc-princípios" class="nav-link" data-scroll-target="#princípios">Princípios</a></li>
+  <li><a href="#checklist-de-segurança" id="toc-checklist-de-segurança" class="nav-link" data-scroll-target="#checklist-de-segurança">Checklist de Segurança</a>
+  <ul class="collapse">
+  <li><a href="#inji-verify-service" id="toc-inji-verify-service" class="nav-link" data-scroll-target="#inji-verify-service">INJI Verify Service</a></li>
+  <li><a href="#aplicação-react" id="toc-aplicação-react" class="nav-link" data-scroll-target="#aplicação-react">Aplicação React</a></li>
+  <li><a href="#infraestrutura" id="toc-infraestrutura" class="nav-link" data-scroll-target="#infraestrutura">Infraestrutura</a></li>
+  </ul></li>
+  <li><a href="#onvpreceived-vs-onvpprocessed-segurança" id="toc-onvpreceived-vs-onvpprocessed-segurança" class="nav-link" data-scroll-target="#onvpreceived-vs-onvpprocessed-segurança"><code>onVpReceived</code> vs <code>onVpProcessed</code> — Segurança</a></li>
+  <li><a href="#did-e-keystore" id="toc-did-e-keystore" class="nav-link" data-scroll-target="#did-e-keystore">DID e Keystore</a></li>
+  <li><a href="#claims-filtradas-como-metadados" id="toc-claims-filtradas-como-metadados" class="nav-link" data-scroll-target="#claims-filtradas-como-metadados">Claims filtradas como metadados</a></li>
+  <li><a href="#consentimento-do-usuário" id="toc-consentimento-do-usuário" class="nav-link" data-scroll-target="#consentimento-do-usuário">Consentimento do Usuário</a></li>
+  <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./seguranca-lgpd.html">Segurança e LGPD</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">About</h1>
+<h1 class="title">Segurança e LGPD</h1>
 </div>
 
 
@@ -162,9 +319,183 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>About this site</p>
+<section id="objetivo" class="level2">
+<h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
+<p>Garantir que a integração siga boas práticas de segurança e esteja em conformidade com a LGPD.</p>
+</section>
+<section id="princípios" class="level2">
+<h2 class="anchored" data-anchor-id="princípios">Princípios</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Princípio</th>
+<th>Aplicação</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Minimização de dados</strong></td>
+<td>Com SD-JWT, o cidadão revela apenas <code>ageOver18</code>, não a data de nascimento</td>
+</tr>
+<tr class="even">
+<td><strong>Finalidade</strong></td>
+<td>Use o resultado apenas para controle de acesso por idade</td>
+</tr>
+<tr class="odd">
+<td><strong>Não armazenamento</strong></td>
+<td>Não armazene a credencial do cidadão</td>
+</tr>
+<tr class="even">
+<td><strong>Transparência</strong></td>
+<td>Informe ao usuário o que está sendo verificado</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="checklist-de-segurança" class="level2">
+<h2 class="anchored" data-anchor-id="checklist-de-segurança">Checklist de Segurança</h2>
+<section id="inji-verify-service" class="level3">
+<h3 class="anchored" data-anchor-id="inji-verify-service">INJI Verify Service</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Acessível pela internet apenas via HTTPS (reverse proxy)</label></li>
+<li><label><input type="checkbox">PostgreSQL <strong>não exposto</strong> à internet (apenas localhost ou rede Docker)</label></li>
+<li><label><input type="checkbox">Senha do banco alterada (não usar <code>postgres/postgres</code> em produção)</label></li>
+<li><label><input type="checkbox">Keystore PKCS12 com senha forte (<code>INJI_KEYSTORE_FILE_PASS</code>)</label></li>
+<li><label><input type="checkbox">Logs com rotação configurada</label></li>
+</ul>
+</section>
+<section id="aplicação-react" class="level3">
+<h3 class="anchored" data-anchor-id="aplicação-react">Aplicação React</h3>
+<ul class="task-list">
+<li><label><input type="checkbox"><code>onVpReceived</code> (com validação no backend) em vez de <code>onVpProcessed</code> em produção</label></li>
+<li><label><input type="checkbox">Sem dados de credencial armazenados no frontend (localStorage, sessionStorage, etc.)</label></li>
+<li><label><input type="checkbox">CSP (Content Security Policy) configurado</label></li>
+</ul>
+</section>
+<section id="infraestrutura" class="level3">
+<h3 class="anchored" data-anchor-id="infraestrutura">Infraestrutura</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">VM com firewall configurado</label></li>
+<li><label><input type="checkbox">Acesso SSH por chave, não senha</label></li>
+<li><label><input type="checkbox">Docker com usuário não-root (quando possível)</label></li>
+<li><label><input type="checkbox">Certificado SSL/TLS válido</label></li>
+</ul>
+</section>
+</section>
+<section id="onvpreceived-vs-onvpprocessed-segurança" class="level2">
+<h2 class="anchored" data-anchor-id="onvpreceived-vs-onvpprocessed-segurança"><code>onVpReceived</code> vs <code>onVpProcessed</code> — Segurança</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Aspecto</th>
+<th><code>onVpReceived</code></th>
+<th><code>onVpProcessed</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Resultado chega ao</td>
+<td>Backend (via txnId)</td>
+<td>Frontend (direto)</td>
+</tr>
+<tr class="even">
+<td>Adulteração possível?</td>
+<td>Não (backend valida)</td>
+<td>Sim (DevTools)</td>
+</tr>
+<tr class="odd">
+<td>Uso recomendado</td>
+<td><strong>Produção</strong></td>
+<td>Desenvolvimento</td>
+</tr>
+</tbody>
+</table>
+<p>Em produção, o fluxo seguro é:</p>
+<ol type="1">
+<li>SDK recebe <code>txnId</code> via <code>onVpReceived</code></li>
+<li>Frontend envia <code>txnId</code> ao seu backend</li>
+<li>Seu backend chama <code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{txnId}</code></li>
+<li>Backend decide se libera o acesso</li>
+</ol>
+<pre class="tsx"><code>// Frontend
+onVpReceived={async (txnId) =&gt; {
+  const res = await fetch(`/api/verificacao/${txnId}`);
+  const data = await res.json();
+  if (data.verified) { /* liberar */ }
+}}</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Backend (Node/Express) — opcional mas recomendado para produção</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>app<span class="op">.</span><span class="fu">get</span>(<span class="st">'/api/verificacao/:txnId'</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { txnId } <span class="op">=</span> req<span class="op">.</span><span class="at">params</span><span class="op">;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Substitua pelo valor do seu ambiente</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="vs">`&lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/</span><span class="sc">${</span>txnId<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> data <span class="op">=</span> <span class="cf">await</span> result<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> verified <span class="op">=</span> data<span class="op">.</span><span class="fu">some</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">vcStatus</span> <span class="op">===</span> <span class="st">'SUCCESS'</span>)<span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  res<span class="op">.</span><span class="fu">json</span>({ verified })<span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>O backend acima é <strong>simples e opcional</strong> — serve apenas para isolar a decisão de acesso do frontend. Não é um orquestrador de todo o fluxo.</p>
+</div>
+</div>
+</section>
+<section id="did-e-keystore" class="level2">
+<h2 class="anchored" data-anchor-id="did-e-keystore">DID e Keystore</h2>
+<p>O INJI Verify Service se identifica com um <strong>DID Web</strong> e assina requisições com um keystore PKCS12.</p>
+<ul>
+<li>O DID (<code>did:web:seu-dominio.com.br:v1:verify</code>) deve resolver para o seu domínio público</li>
+<li>O keystore (<code>test.p12</code>) é usado para assinar as authorization requests</li>
+<li>Em produção, gere um keystore próprio com chave forte</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Aviso
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>O <code>test.p12</code> incluído no INJI é para <strong>desenvolvimento apenas</strong>. Gere um keystore próprio para produção.</p>
+</div>
+</div>
+</section>
+<section id="claims-filtradas-como-metadados" class="level2">
+<h2 class="anchored" data-anchor-id="claims-filtradas-como-metadados">Claims filtradas como metadados</h2>
+<p>A variável <code>INJI_VERIFY_CLAIMS_WITH_META_DATA</code> define campos tratados como metadados internos (não exibidos):</p>
+<pre><code>_sd, _sd_alg, iss, cnf, sub, aud, exp, nbf, iat, cti</code></pre>
+<p>Esses campos são estruturais do SD-JWT e não contêm dados pessoais.</p>
+</section>
+<section id="consentimento-do-usuário" class="level2">
+<h2 class="anchored" data-anchor-id="consentimento-do-usuário">Consentimento do Usuário</h2>
+<p>Antes de iniciar a verificação, informe ao usuário:</p>
+<ul>
+<li><strong>O que</strong> está sendo verificado (idade &gt;= 18)</li>
+<li><strong>Quem</strong> é o verificador (sua organização)</li>
+<li>Que <strong>nenhum dado pessoal</strong> além de <code>ageOver18</code> é compartilhado</li>
+<li>Que o cidadão <strong>autoriza ativamente</strong> na Carteira Digital</li>
+</ul>
+</section>
+<section id="próximo-passo" class="level2">
+<h2 class="anchored" data-anchor-id="próximo-passo">Próximo passo</h2>
+<p>Veja como levar para <a href="./producao.html">Produção e Operação</a>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

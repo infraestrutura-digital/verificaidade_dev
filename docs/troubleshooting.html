@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Integre em 1 Hora – VerificaIdade — Portal do Desenvolvedor</title>
+<title>Troubleshooting – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./arquitetura.html">Início Rápido</a></li><li class="breadcrumb-item"><a href="./quickstart.html">Integre em 1 Hora</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./troubleshooting.html">Troubleshooting</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -166,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quickstart.html" class="sidebar-item-text sidebar-link active">
+  <a href="./quickstart.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Integre em 1 Hora</span></a>
   </div>
 </li>
@@ -259,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./troubleshooting.html" class="sidebar-item-text sidebar-link">
+  <a href="./troubleshooting.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Troubleshooting</span></a>
   </div>
 </li>
@@ -282,24 +282,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo">Objetivo</a></li>
-  <li><a href="#checklist" id="toc-checklist" class="nav-link" data-scroll-target="#checklist">Checklist</a></li>
-  <li><a href="#etapa-1-preparar-vm-com-docker" id="toc-etapa-1-preparar-vm-com-docker" class="nav-link" data-scroll-target="#etapa-1-preparar-vm-com-docker">Etapa 1 — Preparar VM com Docker</a></li>
-  <li><a href="#etapa-2-subir-inji-verify-service" id="toc-etapa-2-subir-inji-verify-service" class="nav-link" data-scroll-target="#etapa-2-subir-inji-verify-service">Etapa 2 — Subir INJI Verify Service</a></li>
-  <li><a href="#etapa-3-expor-o-service-publicamente" id="toc-etapa-3-expor-o-service-publicamente" class="nav-link" data-scroll-target="#etapa-3-expor-o-service-publicamente">Etapa 3 — Expor o Service publicamente</a></li>
-  <li><a href="#etapa-4-instalar-o-sdk-no-projeto-react" id="toc-etapa-4-instalar-o-sdk-no-projeto-react" class="nav-link" data-scroll-target="#etapa-4-instalar-o-sdk-no-projeto-react">Etapa 4 — Instalar o SDK no projeto React</a></li>
-  <li><a href="#etapa-5-adicionar-componente-de-verificação" id="toc-etapa-5-adicionar-componente-de-verificação" class="nav-link" data-scroll-target="#etapa-5-adicionar-componente-de-verificação">Etapa 5 — Adicionar componente de verificação</a></li>
-  <li><a href="#etapa-6-testar-ponta-a-ponta" id="toc-etapa-6-testar-ponta-a-ponta" class="nav-link" data-scroll-target="#etapa-6-testar-ponta-a-ponta">Etapa 6 — Testar ponta a ponta</a></li>
-  <li><a href="#alternativa-receber-resultado-completo-no-frontend" id="toc-alternativa-receber-resultado-completo-no-frontend" class="nav-link" data-scroll-target="#alternativa-receber-resultado-completo-no-frontend">Alternativa: Receber resultado completo no frontend</a></li>
-  <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
+  <li><a href="#container-não-sobe" id="toc-container-não-sobe" class="nav-link" data-scroll-target="#container-não-sobe">Container não sobe</a>
+  <ul class="collapse">
+  <li><a href="#sintoma" id="toc-sintoma" class="nav-link" data-scroll-target="#sintoma">Sintoma</a></li>
+  <li><a href="#diagnóstico" id="toc-diagnóstico" class="nav-link" data-scroll-target="#diagnóstico">Diagnóstico</a></li>
+  <li><a href="#soluções" id="toc-soluções" class="nav-link" data-scroll-target="#soluções">Soluções</a></li>
+  </ul></li>
+  <li><a href="#health-check-falha" id="toc-health-check-falha" class="nav-link" data-scroll-target="#health-check-falha">Health check falha</a>
+  <ul class="collapse">
+  <li><a href="#sintoma-1" id="toc-sintoma-1" class="nav-link" data-scroll-target="#sintoma-1">Sintoma</a></li>
+  <li><a href="#diagnóstico-1" id="toc-diagnóstico-1" class="nav-link" data-scroll-target="#diagnóstico-1">Diagnóstico</a></li>
+  <li><a href="#soluções-1" id="toc-soluções-1" class="nav-link" data-scroll-target="#soluções-1">Soluções</a></li>
+  </ul></li>
+  <li><a href="#schema-do-banco-não-existe" id="toc-schema-do-banco-não-existe" class="nav-link" data-scroll-target="#schema-do-banco-não-existe">Schema do banco não existe</a>
+  <ul class="collapse">
+  <li><a href="#sintoma-2" id="toc-sintoma-2" class="nav-link" data-scroll-target="#sintoma-2">Sintoma</a></li>
+  <li><a href="#causa" id="toc-causa" class="nav-link" data-scroll-target="#causa">Causa</a></li>
+  <li><a href="#solução" id="toc-solução" class="nav-link" data-scroll-target="#solução">Solução</a></li>
+  </ul></li>
+  <li><a href="#qr-code-não-funciona" id="toc-qr-code-não-funciona" class="nav-link" data-scroll-target="#qr-code-não-funciona">QR Code não funciona</a>
+  <ul class="collapse">
+  <li><a href="#sintoma-3" id="toc-sintoma-3" class="nav-link" data-scroll-target="#sintoma-3">Sintoma</a></li>
+  <li><a href="#causas-e-soluções" id="toc-causas-e-soluções" class="nav-link" data-scroll-target="#causas-e-soluções">Causas e soluções</a></li>
+  </ul></li>
+  <li><a href="#deep-link-não-abre-a-carteira-mobile" id="toc-deep-link-não-abre-a-carteira-mobile" class="nav-link" data-scroll-target="#deep-link-não-abre-a-carteira-mobile">Deep Link não abre a Carteira (Mobile)</a>
+  <ul class="collapse">
+  <li><a href="#sintoma-4" id="toc-sintoma-4" class="nav-link" data-scroll-target="#sintoma-4">Sintoma</a></li>
+  <li><a href="#soluções-2" id="toc-soluções-2" class="nav-link" data-scroll-target="#soluções-2">Soluções</a></li>
+  </ul></li>
+  <li><a href="#sdk-mostra-erro-de-props" id="toc-sdk-mostra-erro-de-props" class="nav-link" data-scroll-target="#sdk-mostra-erro-de-props">SDK mostra erro de props</a>
+  <ul class="collapse">
+  <li><a href="#sintoma-5" id="toc-sintoma-5" class="nav-link" data-scroll-target="#sintoma-5">Sintoma</a></li>
+  <li><a href="#causas-comuns" id="toc-causas-comuns" class="nav-link" data-scroll-target="#causas-comuns">Causas comuns</a></li>
+  </ul></li>
+  <li><a href="#long-polling-retorna-timeout" id="toc-long-polling-retorna-timeout" class="nav-link" data-scroll-target="#long-polling-retorna-timeout">Long-polling retorna timeout</a>
+  <ul class="collapse">
+  <li><a href="#sintoma-6" id="toc-sintoma-6" class="nav-link" data-scroll-target="#sintoma-6">Sintoma</a></li>
+  <li><a href="#causas" id="toc-causas" class="nav-link" data-scroll-target="#causas">Causas</a></li>
+  <li><a href="#solução-1" id="toc-solução-1" class="nav-link" data-scroll-target="#solução-1">Solução</a></li>
+  </ul></li>
+  <li><a href="#erro-cors-no-navegador" id="toc-erro-cors-no-navegador" class="nav-link" data-scroll-target="#erro-cors-no-navegador">Erro CORS no navegador</a>
+  <ul class="collapse">
+  <li><a href="#sintoma-7" id="toc-sintoma-7" class="nav-link" data-scroll-target="#sintoma-7">Sintoma</a></li>
+  <li><a href="#solução-2" id="toc-solução-2" class="nav-link" data-scroll-target="#solução-2">Solução</a></li>
+  </ul></li>
+  <li><a href="#postgresql-sem-espaço-em-disco" id="toc-postgresql-sem-espaço-em-disco" class="nav-link" data-scroll-target="#postgresql-sem-espaço-em-disco">PostgreSQL sem espaço em disco</a>
+  <ul class="collapse">
+  <li><a href="#sintoma-8" id="toc-sintoma-8" class="nav-link" data-scroll-target="#sintoma-8">Sintoma</a></li>
+  <li><a href="#solução-3" id="toc-solução-3" class="nav-link" data-scroll-target="#solução-3">Solução</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./arquitetura.html">Início Rápido</a></li><li class="breadcrumb-item"><a href="./quickstart.html">Integre em 1 Hora</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./troubleshooting.html">Troubleshooting</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Integre em 1 Hora</h1>
+<h1 class="title">Troubleshooting</h1>
 </div>
 
 
@@ -318,244 +358,247 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Sair do zero até uma verificação de idade funcionando em ambiente de desenvolvimento.</p>
+<p>Resolver problemas comuns durante a integração e operação.</p>
+<hr>
 </section>
-<section id="checklist" class="level2">
-<h2 class="anchored" data-anchor-id="checklist">Checklist</h2>
+<section id="container-não-sobe" class="level2">
+<h2 class="anchored" data-anchor-id="container-não-sobe">Container não sobe</h2>
+<section id="sintoma" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma">Sintoma</h3>
+<p><code>docker compose up -d</code> falha ou container reinicia em loop.</p>
+</section>
+<section id="diagnóstico" class="level3">
+<h3 class="anchored" data-anchor-id="diagnóstico">Diagnóstico</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> logs verify-service <span class="at">--tail</span> 100</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-a</span> <span class="kw">|</span> <span class="fu">grep</span> verify</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> stats <span class="at">--no-stream</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="soluções" class="level3">
+<h3 class="anchored" data-anchor-id="soluções">Soluções</h3>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 8%">
-<col style="width: 19%">
-<col style="width: 19%">
-<col style="width: 52%">
-</colgroup>
 <thead>
 <tr class="header">
-<th>#</th>
-<th>Etapa</th>
-<th>Tempo</th>
-<th>Resultado esperado</th>
+<th>Causa</th>
+<th>Solução</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1</td>
-<td>Preparar VM com Docker</td>
-<td>10 min</td>
-<td><code>docker compose version</code> funciona</td>
+<td>Porta 8080 em uso</td>
+<td><code>sudo lsof -i :8080</code> e encerrar o processo</td>
 </tr>
 <tr class="even">
-<td>2</td>
-<td>Subir INJI Verify Service</td>
-<td>10 min</td>
-<td>Health check retorna <code>UP</code></td>
+<td>PostgreSQL não iniciou</td>
+<td>Verificar logs: <code>docker logs postgres-db</code></td>
 </tr>
 <tr class="odd">
-<td>3</td>
-<td>Expor o Service publicamente</td>
-<td>5 min</td>
-<td>Carteira Digital alcança o Service</td>
+<td>Scripts de banco faltando</td>
+<td>Copiar scripts SQL para <code>db-init/</code></td>
 </tr>
 <tr class="even">
-<td>4</td>
-<td>Instalar o SDK no projeto React</td>
-<td>5 min</td>
-<td><code>@mosip/react-inji-verify-sdk</code> instalado</td>
-</tr>
-<tr class="odd">
-<td>5</td>
-<td>Adicionar componente de verificação</td>
-<td>15 min</td>
-<td>QR Code exibido na tela</td>
-</tr>
-<tr class="even">
-<td>6</td>
-<td>Testar ponta a ponta</td>
-<td>15 min</td>
-<td>Credencial verificada com sucesso</td>
+<td>Memória insuficiente</td>
+<td>Mínimo 4 GB RAM na VM</td>
 </tr>
 </tbody>
 </table>
+<hr>
 </section>
-<section id="etapa-1-preparar-vm-com-docker" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-1-preparar-vm-com-docker">Etapa 1 — Preparar VM com Docker</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> <span class="at">--version</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose version</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Se não tiver Docker, veja <a href="./setup-vm.html">Setup da VM e Docker</a>.</p>
-<p><strong>Resultado:</strong> Docker e Docker Compose funcionando.</p>
 </section>
-<section id="etapa-2-subir-inji-verify-service" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-2-subir-inji-verify-service">Etapa 2 — Subir INJI Verify Service</h2>
-<p>Crie o arquivo <code>docker-compose.yml</code> e suba os containers:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Veja a configuração completa em <a href="./inji-verify.html">Subindo o INJI Verify Service</a>.</p>
-<p><strong>Resultado:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://localhost:8080/v1/verify/health</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># { "status": "UP" }</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="health-check-falha" class="level2">
+<h2 class="anchored" data-anchor-id="health-check-falha">Health check falha</h2>
+<section id="sintoma-1" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-1">Sintoma</h3>
+<p><code>curl http://localhost:8080/v1/verify/health</code> retorna erro ou timeout.</p>
 </section>
-<section id="etapa-3-expor-o-service-publicamente" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-3-expor-o-service-publicamente">Etapa 3 — Expor o Service publicamente</h2>
-<p>A Carteira Digital (no celular do cidadão) precisa acessar o INJI Verify Service. Em desenvolvimento, use ngrok:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ngrok</span> http 8080</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Anote a URL pública (ex: <code>https://abc123.ngrok-free.app</code>). Atualize as variáveis de ambiente do Service:</p>
+<section id="diagnóstico-1" class="level3">
+<h3 class="anchored" data-anchor-id="diagnóstico-1">Diagnóstico</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="kw">|</span> <span class="fu">grep</span> verify-service</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> logs verify-service <span class="at">--tail</span> 20</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="soluções-1" class="level3">
+<h3 class="anchored" data-anchor-id="soluções-1">Soluções</h3>
 <ul>
-<li><code>INJI_VP_SUBMISSION_BASE_URL=https://abc123.ngrok-free.app/v1/verify</code></li>
-<li><code>INJI_DID_VERIFY_URI=did:web:abc123.ngrok-free.app:v1:verify</code></li>
-<li><code>INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:abc123.ngrok-free.app:v1:verify#key-0</code></li>
+<li>Container não está rodando → <code>docker compose up -d</code></li>
+<li>Serviço ainda iniciando → aguardar 30-60 segundos (Spring Boot demora para iniciar)</li>
+<li>Banco inacessível → verificar se PostgreSQL está rodando</li>
 </ul>
-<p>Reinicie o Service:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down <span class="kw">&amp;&amp;</span> <span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-warning callout-titled">
+<hr>
+</section>
+</section>
+<section id="schema-do-banco-não-existe" class="level2">
+<h2 class="anchored" data-anchor-id="schema-do-banco-não-existe">Schema do banco não existe</h2>
+<section id="sintoma-2" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-2">Sintoma</h3>
+<p>Logs do verify-service mostram erros de “relation does not exist”.</p>
+</section>
+<section id="causa" class="level3">
+<h3 class="anchored" data-anchor-id="causa">Causa</h3>
+<p><code>spring.jpa.hibernate.ddl-auto=none</code> — o schema não é criado automaticamente.</p>
+</section>
+<section id="solução" class="level3">
+<h3 class="anchored" data-anchor-id="solução">Solução</h3>
+<p>Copie os scripts de inicialização do repositório oficial do INJI Verify para <code>db-init/</code> e recrie o container do PostgreSQL:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> volume rm verificaidade_pgdata  <span class="co"># Remove dados antigos</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="qr-code-não-funciona" class="level2">
+<h2 class="anchored" data-anchor-id="qr-code-não-funciona">QR Code não funciona</h2>
+<section id="sintoma-3" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-3">Sintoma</h3>
+<p>Usuário escaneia o QR Code mas a Carteira Digital não responde.</p>
+</section>
+<section id="causas-e-soluções" class="level3">
+<h3 class="anchored" data-anchor-id="causas-e-soluções">Causas e soluções</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Causa</th>
+<th>Solução</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Carteira Digital não instalada</td>
+<td>Orientar o usuário a instalar a INJI Wallet</td>
+</tr>
+<tr class="even">
+<td>INJI Verify Service inacessível pelo celular</td>
+<td>Verificar que <code>INJI_VP_SUBMISSION_BASE_URL</code> é um domínio público</td>
+</tr>
+<tr class="odd">
+<td>DID não resolve</td>
+<td>Verificar <code>INJI_DID_VERIFY_URI</code> corresponde ao domínio público</td>
+</tr>
+<tr class="even">
+<td>URL expirada</td>
+<td>Sessão expirou; iniciar nova verificação</td>
+</tr>
+<tr class="odd">
+<td>Usando <code>localhost</code></td>
+<td>Em desenvolvimento, use ngrok ou túnel equivalente</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Aviso
+Importante
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Em produção, use um domínio real com HTTPS. Veja <a href="./producao.html">Produção e Operação</a>.</p>
+<p>A causa mais comum é <code>INJI_VP_SUBMISSION_BASE_URL</code> apontando para <code>localhost</code>. A Carteira Digital no celular não consegue acessar <code>localhost</code> do seu computador.</p>
 </div>
 </div>
-<p><strong>Resultado:</strong> URL pública acessível pelo celular.</p>
+<hr>
 </section>
-<section id="etapa-4-instalar-o-sdk-no-projeto-react" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-4-instalar-o-sdk-no-projeto-react">Etapa 4 — Instalar o SDK no projeto React</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install @mosip/react-inji-verify-sdk</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Nota
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>O SDK requer <strong>React 18.2.0+</strong> e <strong>TypeScript 4.9.5+</strong> como peer dependencies.</p>
-</div>
-</div>
-<p><strong>Resultado:</strong> Pacote instalado sem erros.</p>
 </section>
-<section id="etapa-5-adicionar-componente-de-verificação" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-5-adicionar-componente-de-verificação">Etapa 5 — Adicionar componente de verificação</h2>
-<pre class="tsx"><code>// src/components/VerificaIdade.tsx
-import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
-
-// Substitua pela URL do seu INJI Verify Service
-const VERIFY_SERVICE_URL = 'https://abc123.ngrok-free.app/v1/verify';
-
-// Substitua pelo DID do seu verificador
-const CLIENT_ID_DID = 'did:web:abc123.ngrok-free.app:v1:verify';
-
-// Presentation Definition para verificação de idade 18+
-// Substitua pela definição fornecida no seu credenciamento
-const presentationDefinition = {
-  id: 'age-verification-18-plus',
-  input_descriptors: [
-    {
-      id: 'age_credential',
-      format: {
-        'vc+sd-jwt': {
-          'sd-jwt_alg_values': ['ES256']
-        }
-      },
-      constraints: {
-        fields: [
-          {
-            path: ['$.ageOver18'],
-            filter: {
-              type: 'boolean',
-              const: true
-            }
-          }
-        ]
-      }
-    }
-  ]
-};
-
-export function VerificaIdade() {
-  const handleVerificado = (txnId: string) =&gt; {
-    console.log('Verificação concluída. Transaction ID:', txnId);
-    // Busque o resultado no seu backend se necessário
-    // ou use onVpProcessed para receber o resultado direto
-  };
-
-  const handleErro = (error: unknown) =&gt; {
-    console.error('Erro na verificação:', error);
-  };
-
-  const handleQrExpirado = () =&gt; {
-    console.log('QR Code expirou');
-  };
-
-  return (
-    &lt;div&gt;
-      &lt;h2&gt;Verificação de Idade&lt;/h2&gt;
-      &lt;OpenID4VPVerification
-        verifyServiceUrl={VERIFY_SERVICE_URL}
-        clientId={CLIENT_ID_DID}
-        protocol="openid4vp://"
-        presentationDefinition={presentationDefinition}
-        onVpReceived={handleVerificado}
-        onError={handleErro}
-        onQrCodeExpired={handleQrExpirado}
-      /&gt;
-    &lt;/div&gt;
-  );
-}</code></pre>
-<p><strong>Resultado:</strong> Componente renderiza QR Code na tela.</p>
+<section id="deep-link-não-abre-a-carteira-mobile" class="level2">
+<h2 class="anchored" data-anchor-id="deep-link-não-abre-a-carteira-mobile">Deep Link não abre a Carteira (Mobile)</h2>
+<section id="sintoma-4" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-4">Sintoma</h3>
+<p>No celular, o link <code>openid4vp://...</code> não abre nada.</p>
 </section>
-<section id="etapa-6-testar-ponta-a-ponta" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-6-testar-ponta-a-ponta">Etapa 6 — Testar ponta a ponta</h2>
+<section id="soluções-2" class="level3">
+<h3 class="anchored" data-anchor-id="soluções-2">Soluções</h3>
+<ul>
+<li>INJI Wallet não instalada → instalar a Carteira Digital</li>
+<li>Navegador bloqueia o scheme → testar em Chrome/Safari</li>
+<li>App não registrou o scheme → verificar se a versão da Wallet suporta <code>openid4vp://</code></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="sdk-mostra-erro-de-props" class="level2">
+<h2 class="anchored" data-anchor-id="sdk-mostra-erro-de-props">SDK mostra erro de props</h2>
+<section id="sintoma-5" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-5">Sintoma</h3>
+<p>Console mostra erro de validação do SDK.</p>
+</section>
+<section id="causas-comuns" class="level3">
+<h3 class="anchored" data-anchor-id="causas-comuns">Causas comuns</h3>
+<pre><code>Error: Cannot provide both presentationDefinition and presentationDefinitionId</code></pre>
+<p>→ Use <strong>uma ou outra</strong>, não ambas.</p>
+<pre><code>Error: Cannot provide both onVpReceived and onVpProcessed</code></pre>
+<p>→ Use <strong>um ou outro</strong>, não ambos.</p>
+<pre><code>Error: verifyServiceUrl is required</code></pre>
+<p>→ Passe a URL do INJI Verify Service.</p>
+<hr>
+</section>
+</section>
+<section id="long-polling-retorna-timeout" class="level2">
+<h2 class="anchored" data-anchor-id="long-polling-retorna-timeout">Long-polling retorna timeout</h2>
+<section id="sintoma-6" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-6">Sintoma</h3>
+<p>O SDK fica aguardando e depois de ~55 segundos não recebe resultado.</p>
+</section>
+<section id="causas" class="level3">
+<h3 class="anchored" data-anchor-id="causas">Causas</h3>
 <ol type="1">
-<li>Acesse sua aplicação React no navegador</li>
-<li>O QR Code aparece na tela</li>
-<li>Abra a <strong>INJI Wallet</strong> no celular</li>
-<li>Escaneie o QR Code</li>
-<li>Autorize o compartilhamento da credencial na Wallet</li>
-<li>O SDK recebe o resultado via callback</li>
+<li>Cidadão não apresentou a credencial (normal — aguardar ou expirar)</li>
+<li>Wallet não consegue acessar o INJI Verify Service (ver “QR Code não funciona”)</li>
+<li>VP Submission falhou na Wallet</li>
 </ol>
-<p><strong>Resultado esperado (no console):</strong></p>
-<pre><code>Verificação concluída. Transaction ID: abc-123-def-456</code></pre>
 </section>
-<section id="alternativa-receber-resultado-completo-no-frontend" class="level2">
-<h2 class="anchored" data-anchor-id="alternativa-receber-resultado-completo-no-frontend">Alternativa: Receber resultado completo no frontend</h2>
-<p>Se preferir receber o resultado diretamente (sem buscar no backend), use <code>onVpProcessed</code> em vez de <code>onVpReceived</code>:</p>
-<pre class="tsx"><code>&lt;OpenID4VPVerification
-  verifyServiceUrl={VERIFY_SERVICE_URL}
-  clientId={CLIENT_ID_DID}
-  protocol="openid4vp://"
-  presentationDefinition={presentationDefinition}
-  onVpProcessed={(results) =&gt; {
-    // results: Array&lt;{ vc: unknown, vcStatus: "SUCCESS" | "INVALID" | "EXPIRED" }&gt;
-    const verificado = results.some(r =&gt; r.vcStatus === 'SUCCESS');
-    console.log('Idade verificada:', verificado);
-  }}
-  onError={(error) =&gt; console.error(error)}
-  onQrCodeExpired={() =&gt; console.log('QR expirou')}
-/&gt;</code></pre>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Aviso
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>A documentação do INJI recomenda usar <code>onVpReceived</code> em produção e buscar o resultado pelo <code>txnId</code> no backend para maior segurança. O <code>onVpProcessed</code> é adequado para desenvolvimento e testes.</p>
-</div>
-</div>
+<section id="solução-1" class="level3">
+<h3 class="anchored" data-anchor-id="solução-1">Solução</h3>
+<ul>
+<li>Aumente o timeout se necessário: <code>INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=120000</code> (120s)</li>
+<li>Verifique os logs: <code>docker logs verify-service -f</code></li>
+<li>O SDK refaz o long-polling automaticamente; o QR Code expira após o timeout configurado</li>
+</ul>
+<hr>
 </section>
-<section id="próximo-passo" class="level2">
-<h2 class="anchored" data-anchor-id="próximo-passo">Próximo passo</h2>
-<p>Para entender o fluxo em detalhes, veja <a href="./fluxo-verificacao.html">Fluxo de Verificação</a>.</p>
+</section>
+<section id="erro-cors-no-navegador" class="level2">
+<h2 class="anchored" data-anchor-id="erro-cors-no-navegador">Erro CORS no navegador</h2>
+<section id="sintoma-7" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-7">Sintoma</h3>
+<p>Console mostra <code>Access-Control-Allow-Origin</code> bloqueado.</p>
+</section>
+<section id="solução-2" class="level3">
+<h3 class="anchored" data-anchor-id="solução-2">Solução</h3>
+<p>Configure o Nginx como reverse proxy para servir tanto o frontend quanto a API no mesmo domínio. Ou configure CORS no INJI Verify Service (se suportado).</p>
+<p>Alternativa com Nginx:</p>
+<pre class="nginx"><code>location /v1/verify/ {
+    proxy_pass http://localhost:8080/v1/verify/;
+    # Headers CORS (se necessário)
+    add_header Access-Control-Allow-Origin "https://seu-frontend.com.br" always;
+    add_header Access-Control-Allow-Methods "GET, POST, OPTIONS" always;
+    add_header Access-Control-Allow-Headers "Content-Type" always;
+}</code></pre>
+<hr>
+</section>
+</section>
+<section id="postgresql-sem-espaço-em-disco" class="level2">
+<h2 class="anchored" data-anchor-id="postgresql-sem-espaço-em-disco">PostgreSQL sem espaço em disco</h2>
+<section id="sintoma-8" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-8">Sintoma</h3>
+<p>Erros de escrita no banco de dados.</p>
+</section>
+<section id="solução-3" class="level3">
+<h3 class="anchored" data-anchor-id="solução-3">Solução</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar espaço</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">df</span> <span class="at">-h</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Limpar dados antigos (se aplicável)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec postgres-db psql <span class="at">-U</span> postgres <span class="at">-d</span> inji_verify <span class="dt">\</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-c</span> <span class="st">"DELETE FROM vp_requests WHERE created_at &lt; NOW() - INTERVAL '30 days';"</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Vacuum</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec postgres-db psql <span class="at">-U</span> postgres <span class="at">-d</span> inji_verify <span class="at">-c</span> <span class="st">"VACUUM FULL;"</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

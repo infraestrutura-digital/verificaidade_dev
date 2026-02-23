@@ -1,0 +1,223 @@
+---
+title: "Integração Web (QR Code)"
+---
+
+## Objetivo
+
+Implementar verificação de idade em uma aplicação Web React usando QR Code (fluxo cross-device).
+
+## Fluxo Web
+
+```{mermaid}
+sequenceDiagram
+    participant U as Usuário (Desktop)
+    participant SDK as App React + SDK
+    participant VS as INJI Verify Service
+    participant W as Carteira Digital (Celular)
+
+    U->>SDK: Clica "Verificar Idade"
+    SDK->>VS: POST /v1/verify/vp-request
+    VS-->>SDK: requestId + authorizationUrl
+    SDK->>U: Renderiza QR Code
+    U->>W: Escaneia QR Code
+    W->>VS: POST /v1/verify/vp-submission (credencial)
+    VS->>VS: Valida credencial
+    Note over SDK,VS: Long-polling /vp-request/{id}/status
+    VS-->>SDK: Resultado
+    SDK->>U: Callback executado
+```
+
+## Cenário
+
+O usuário está no **desktop**. O site exibe um QR Code. O usuário abre a Carteira Digital no **celular**, escaneia o QR Code e autoriza o compartilhamento da credencial.
+
+## Passo 1 — Instalar o SDK
+
+```bash
+npm install @mosip/react-inji-verify-sdk
+```
+
+## Passo 2 — Componente de verificação
+
+```tsx
+// src/components/VerificaIdade.tsx
+import { useState } from 'react';
+import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+
+// Substitua pelo valor do seu ambiente
+const VERIFY_SERVICE_URL = '<VERIFY_BASE_URL>/v1/verify';
+const CLIENT_ID_DID = 'did:web:<SEU_DOMINIO>:v1:verify';
+
+// Substitua pela Presentation Definition do seu credenciamento
+const presentationDefinition = {
+  id: 'age-verification-18-plus',
+  input_descriptors: [
+    {
+      id: 'age_credential',
+      format: {
+        'vc+sd-jwt': {
+          'sd-jwt_alg_values': ['ES256']
+        }
+      },
+      constraints: {
+        fields: [
+          {
+            path: ['$.ageOver18'],
+            filter: {
+              type: 'boolean',
+              const: true
+            }
+          }
+        ]
+      }
+    }
+  ]
+};
+
+type VerificaIdadeProps = {
+  onVerificado: () => void;
+  onFalhou: () => void;
+};
+
+export function VerificaIdade({ onVerificado, onFalhou }: VerificaIdadeProps) {
+  const [estado, setEstado] = useState<'idle' | 'verificado' | 'falhou'>('idle');
+
+  return (
+    <div>
+      {estado === 'idle' && (
+        <OpenID4VPVerification
+          verifyServiceUrl={VERIFY_SERVICE_URL}
+          clientId={CLIENT_ID_DID}
+          protocol="openid4vp://"
+          presentationDefinition={presentationDefinition}
+          onVpProcessed={(results) => {
+            const ok = results.some(r => r.vcStatus === 'SUCCESS');
+            if (ok) {
+              setEstado('verificado');
+              onVerificado();
+            } else {
+              setEstado('falhou');
+              onFalhou();
+            }
+          }}
+          onError={(error) => {
+            console.error('Erro na verificação:', error);
+            setEstado('falhou');
+            onFalhou();
+          }}
+          onQrCodeExpired={() => {
+            console.log('QR Code expirou');
+          }}
+        />
+      )}
+
+      {estado === 'verificado' && (
+        <p>Idade verificada com sucesso.</p>
+      )}
+
+      {estado === 'falhou' && (
+        <div>
+          <p>Verificação falhou.</p>
+          <button onClick={() => setEstado('idle')}>Tentar novamente</button>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## Passo 3 — Usar o componente
+
+```tsx
+// src/pages/Checkout.tsx
+import { VerificaIdade } from '../components/VerificaIdade';
+
+export function Checkout() {
+  return (
+    <div>
+      <h1>Verificação de Idade</h1>
+      <VerificaIdade
+        onVerificado={() => console.log('Acesso liberado')}
+        onFalhou={() => console.log('Acesso negado')}
+      />
+    </div>
+  );
+}
+```
+
+## Versão para produção (com `onVpReceived`)
+
+Em produção, use `onVpReceived` para buscar o resultado no backend:
+
+```tsx
+// src/components/VerificaIdadeProd.tsx
+import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+
+export function VerificaIdadeProd() {
+  const handleVpReceived = async (txnId: string) => {
+    // Buscar resultado no seu backend
+    const res = await fetch(`/api/verificacao/resultado/${txnId}`);
+    const data = await res.json();
+
+    if (data.verified) {
+      // Liberar acesso
+    } else {
+      // Negar acesso
+    }
+  };
+
+  return (
+    <OpenID4VPVerification
+      verifyServiceUrl="<VERIFY_BASE_URL>/v1/verify"
+      clientId="did:web:<SEU_DOMINIO>:v1:verify"
+      protocol="openid4vp://"
+      presentationDefinition={presentationDefinition}
+      onVpReceived={handleVpReceived}
+      onError={(error) => console.error(error)}
+      onQrCodeExpired={() => console.log('QR expirou')}
+    />
+  );
+}
+```
+
+::: {.callout-important}
+Nessa abordagem, seu backend busca o resultado em `GET <VERIFY_BASE_URL>/v1/verify/vp-result/{txnId}` e decide se libera o acesso. Isso evita que o frontend seja adulterado.
+:::
+
+## Customização do QR Code
+
+```tsx
+<OpenID4VPVerification
+  // ...
+  qrCodeStyles={{
+    size: 300,
+    bgColor: '#ffffff',
+    fgColor: '#000000',
+  }}
+  triggerElement={<button className="btn-verificar">Verificar Idade</button>}
+/>
+```
+
+## Props do `OpenID4VPVerification`
+
+| Prop | Tipo | Obrigatório | Descrição |
+|------|------|:-----------:|-----------|
+| `verifyServiceUrl` | `string` | Sim | URL do INJI Verify Service |
+| `clientId` | `string` | Sim | DID do verificador |
+| `protocol` | `string` | Sim | Protocolo (`"openid4vp://"`) |
+| `presentationDefinition` | `object` | Sim* | Presentation Definition inline |
+| `presentationDefinitionId` | `string` | Sim* | ID de definição pré-cadastrada |
+| `onVpReceived` | `(txnId) => void` | Sim** | Callback com transaction ID |
+| `onVpProcessed` | `(results) => void` | Sim** | Callback com resultado completo |
+| `onError` | `(error) => void` | Sim | Callback de erro |
+| `onQrCodeExpired` | `() => void` | Sim | Callback de QR expirado |
+| `triggerElement` | `ReactNode` | Não | Elemento que inicia a verificação |
+| `qrCodeStyles` | `object` | Não | Estilos do QR Code |
+
+\* Use `presentationDefinition` **ou** `presentationDefinitionId`, não ambos.
+
+\** Use `onVpReceived` **ou** `onVpProcessed`, não ambos.
+
+## Próximo passo
+
+Para integração mobile, veja [Integração Mobile (Deep Link)](integra-mobile.qmd).

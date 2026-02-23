@@ -1,0 +1,59 @@
+---
+title: "Arquitetura em 1 Página"
+---
+
+## Objetivo
+
+Entender os componentes do sistema e como eles se conectam.
+
+## Diagrama de Arquitetura
+
+```{mermaid}
+flowchart LR
+    subgraph Cidadão
+        A[Carteira Digital\nINJI Wallet]
+    end
+
+    subgraph "Verificador (você)"
+        B["App React\n+ INJI Verify SDK"]
+        C["INJI Verify Service\nSpring Boot + PostgreSQL\n(Docker na sua VM)"]
+    end
+
+    subgraph Governo
+        E[Emissor de\nCredenciais]
+    end
+
+    B <-->|"REST API\n(verifyServiceUrl)"| C
+    C <-->|"OpenID4VP\n(VP submission)"| A
+    B -.->|"QR Code ou Deep Link\n(authorizationUrl)"| A
+    E -.->|"emitiu credencial"| A
+```
+
+## Componentes
+
+| Componente | Responsável | Tecnologia | Descrição |
+|-----------|-------------|------------|-----------|
+| **Carteira Digital** | Cidadão | INJI Wallet (app mobile) | Armazena a credencial de idade emitida pelo governo |
+| **App React + SDK** | Verificador (você) | React 18 + `@mosip/react-inji-verify-sdk` | Componentes React que gerenciam o fluxo de verificação |
+| **INJI Verify Service** | Verificador (você) | Java 21, Spring Boot 3.2, PostgreSQL 13 | Backend que valida criptograficamente a credencial via OpenID4VP |
+| **Emissor** | Governo | — | Emitiu a credencial. Não participa do fluxo em tempo real |
+
+## Como os componentes se comunicam
+
+1. O **SDK React** chama o **INJI Verify Service** via REST API para criar uma solicitação de verificação (VP Request)
+2. O SDK exibe um **QR Code** (desktop) ou abre um **Deep Link** (mobile) contendo a URL de autorização
+3. O cidadão abre a **Carteira Digital**, que se comunica diretamente com o **INJI Verify Service** para apresentar a credencial
+4. O SDK faz **long-polling** no Service até receber o resultado
+5. O resultado chega ao SDK via callback (`onVpReceived` ou `onVpProcessed`)
+
+## Regras Fundamentais
+
+1. **Não é necessário um backend customizado** — o INJI Verify SDK e o INJI Verify Service fazem toda a orquestração.
+2. O INJI Verify Service roda **dentro da sua infraestrutura** (sua VM, via Docker).
+3. A Carteira Digital do cidadão precisa **acessar o INJI Verify Service pela internet** — o Service precisa de um domínio público.
+4. O governo **não participa** da verificação em tempo real — a credencial já está com o cidadão.
+5. A identidade do verificador é baseada em **DID Web** (`did:web:seu-dominio.com.br:v1:verify`).
+
+::: {.callout-important}
+O INJI Verify Service **precisa ser acessível publicamente** pela Carteira Digital do cidadão. Em desenvolvimento local, use um túnel (ex: ngrok).
+:::

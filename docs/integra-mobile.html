@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Integre em 1 Hora – VerificaIdade — Portal do Desenvolvedor</title>
+<title>Integração Mobile (Deep Link) – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,41 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -103,6 +68,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Procurar"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="styles.css">
@@ -117,7 +85,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./arquitetura.html">Início Rápido</a></li><li class="breadcrumb-item"><a href="./quickstart.html">Integre em 1 Hora</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./fluxo-verificacao.html">Integração</a></li><li class="breadcrumb-item"><a href="./integra-mobile.html">Integração Mobile (Deep Link)</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -166,7 +134,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quickstart.html" class="sidebar-item-text sidebar-link active">
+  <a href="./quickstart.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Integre em 1 Hora</span></a>
   </div>
 </li>
@@ -218,7 +186,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./integra-mobile.html" class="sidebar-item-text sidebar-link">
+  <a href="./integra-mobile.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Integração Mobile (Deep Link)</span></a>
   </div>
 </li>
@@ -282,14 +250,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo">Objetivo</a></li>
-  <li><a href="#checklist" id="toc-checklist" class="nav-link" data-scroll-target="#checklist">Checklist</a></li>
-  <li><a href="#etapa-1-preparar-vm-com-docker" id="toc-etapa-1-preparar-vm-com-docker" class="nav-link" data-scroll-target="#etapa-1-preparar-vm-com-docker">Etapa 1 — Preparar VM com Docker</a></li>
-  <li><a href="#etapa-2-subir-inji-verify-service" id="toc-etapa-2-subir-inji-verify-service" class="nav-link" data-scroll-target="#etapa-2-subir-inji-verify-service">Etapa 2 — Subir INJI Verify Service</a></li>
-  <li><a href="#etapa-3-expor-o-service-publicamente" id="toc-etapa-3-expor-o-service-publicamente" class="nav-link" data-scroll-target="#etapa-3-expor-o-service-publicamente">Etapa 3 — Expor o Service publicamente</a></li>
-  <li><a href="#etapa-4-instalar-o-sdk-no-projeto-react" id="toc-etapa-4-instalar-o-sdk-no-projeto-react" class="nav-link" data-scroll-target="#etapa-4-instalar-o-sdk-no-projeto-react">Etapa 4 — Instalar o SDK no projeto React</a></li>
-  <li><a href="#etapa-5-adicionar-componente-de-verificação" id="toc-etapa-5-adicionar-componente-de-verificação" class="nav-link" data-scroll-target="#etapa-5-adicionar-componente-de-verificação">Etapa 5 — Adicionar componente de verificação</a></li>
-  <li><a href="#etapa-6-testar-ponta-a-ponta" id="toc-etapa-6-testar-ponta-a-ponta" class="nav-link" data-scroll-target="#etapa-6-testar-ponta-a-ponta">Etapa 6 — Testar ponta a ponta</a></li>
-  <li><a href="#alternativa-receber-resultado-completo-no-frontend" id="toc-alternativa-receber-resultado-completo-no-frontend" class="nav-link" data-scroll-target="#alternativa-receber-resultado-completo-no-frontend">Alternativa: Receber resultado completo no frontend</a></li>
+  <li><a href="#fluxo-mobile" id="toc-fluxo-mobile" class="nav-link" data-scroll-target="#fluxo-mobile">Fluxo Mobile</a></li>
+  <li><a href="#cenário" id="toc-cenário" class="nav-link" data-scroll-target="#cenário">Cenário</a></li>
+  <li><a href="#como-funciona" id="toc-como-funciona" class="nav-link" data-scroll-target="#como-funciona">Como funciona</a></li>
+  <li><a href="#passo-1-o-mesmo-componente-funciona" id="toc-passo-1-o-mesmo-componente-funciona" class="nav-link" data-scroll-target="#passo-1-o-mesmo-componente-funciona">Passo 1 — O mesmo componente funciona</a></li>
+  <li><a href="#o-que-acontece-internamente-no-mobile" id="toc-o-que-acontece-internamente-no-mobile" class="nav-link" data-scroll-target="#o-que-acontece-internamente-no-mobile">O que acontece internamente no mobile</a></li>
+  <li><a href="#botão-personalizado-para-mobile" id="toc-botão-personalizado-para-mobile" class="nav-link" data-scroll-target="#botão-personalizado-para-mobile">Botão personalizado para mobile</a></li>
+  <li><a href="#desabilitar-fluxo-same-device" id="toc-desabilitar-fluxo-same-device" class="nav-link" data-scroll-target="#desabilitar-fluxo-same-device">Desabilitar fluxo same-device</a></li>
+  <li><a href="#considerações-mobile" id="toc-considerações-mobile" class="nav-link" data-scroll-target="#considerações-mobile">Considerações Mobile</a>
+  <ul class="collapse">
+  <li><a href="#retorno-ao-app" id="toc-retorno-ao-app" class="nav-link" data-scroll-target="#retorno-ao-app">Retorno ao app</a></li>
+  <li><a href="#carteira-não-instalada" id="toc-carteira-não-instalada" class="nav-link" data-scroll-target="#carteira-não-instalada">Carteira não instalada</a></li>
+  <li><a href="#apps-nativos-flutter-react-native" id="toc-apps-nativos-flutter-react-native" class="nav-link" data-scroll-target="#apps-nativos-flutter-react-native">Apps nativos (Flutter, React Native)</a></li>
+  </ul></li>
   <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
   </ul>
 </nav>
@@ -297,9 +270,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./arquitetura.html">Início Rápido</a></li><li class="breadcrumb-item"><a href="./quickstart.html">Integre em 1 Hora</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./fluxo-verificacao.html">Integração</a></li><li class="breadcrumb-item"><a href="./integra-mobile.html">Integração Mobile (Deep Link)</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Integre em 1 Hora</h1>
+<h1 class="title">Integração Mobile (Deep Link)</h1>
 </div>
 
 
@@ -318,111 +291,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Sair do zero até uma verificação de idade funcionando em ambiente de desenvolvimento.</p>
+<p>Implementar verificação de idade em um app web mobile usando Deep Link (fluxo same-device).</p>
 </section>
-<section id="checklist" class="level2">
-<h2 class="anchored" data-anchor-id="checklist">Checklist</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 8%">
-<col style="width: 19%">
-<col style="width: 19%">
-<col style="width: 52%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>#</th>
-<th>Etapa</th>
-<th>Tempo</th>
-<th>Resultado esperado</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>Preparar VM com Docker</td>
-<td>10 min</td>
-<td><code>docker compose version</code> funciona</td>
-</tr>
-<tr class="even">
-<td>2</td>
-<td>Subir INJI Verify Service</td>
-<td>10 min</td>
-<td>Health check retorna <code>UP</code></td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>Expor o Service publicamente</td>
-<td>5 min</td>
-<td>Carteira Digital alcança o Service</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>Instalar o SDK no projeto React</td>
-<td>5 min</td>
-<td><code>@mosip/react-inji-verify-sdk</code> instalado</td>
-</tr>
-<tr class="odd">
-<td>5</td>
-<td>Adicionar componente de verificação</td>
-<td>15 min</td>
-<td>QR Code exibido na tela</td>
-</tr>
-<tr class="even">
-<td>6</td>
-<td>Testar ponta a ponta</td>
-<td>15 min</td>
-<td>Credencial verificada com sucesso</td>
-</tr>
-</tbody>
-</table>
+<section id="fluxo-mobile" class="level2">
+<h2 class="anchored" data-anchor-id="fluxo-mobile">Fluxo Mobile</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant U as Usuário (Celular)
+    participant SDK as App React + SDK
+    participant VS as INJI Verify Service
+    participant W as Carteira Digital
+
+    U-&gt;&gt;SDK: Toca "Verificar Idade"
+    SDK-&gt;&gt;VS: POST /v1/verify/vp-request
+    VS--&gt;&gt;SDK: requestId + authorizationUrl
+    SDK-&gt;&gt;W: Redireciona via Deep Link (openid4vp://...)
+    W-&gt;&gt;VS: POST /v1/verify/vp-submission
+    Note over W: Usuário volta ao app
+    SDK-&gt;&gt;VS: Long-polling /vp-request/{id}/status
+    VS--&gt;&gt;SDK: Resultado
+    SDK-&gt;&gt;U: Callback executado
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 </section>
-<section id="etapa-1-preparar-vm-com-docker" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-1-preparar-vm-com-docker">Etapa 1 — Preparar VM com Docker</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> <span class="at">--version</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose version</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Se não tiver Docker, veja <a href="./setup-vm.html">Setup da VM e Docker</a>.</p>
-<p><strong>Resultado:</strong> Docker e Docker Compose funcionando.</p>
+<section id="cenário" class="level2">
+<h2 class="anchored" data-anchor-id="cenário">Cenário</h2>
+<p>O usuário está no <strong>celular</strong> acessando seu site via navegador. O SDK detecta que é um dispositivo mobile e, em vez de exibir um QR Code, redireciona automaticamente para a Carteira Digital via Deep Link.</p>
 </section>
-<section id="etapa-2-subir-inji-verify-service" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-2-subir-inji-verify-service">Etapa 2 — Subir INJI Verify Service</h2>
-<p>Crie o arquivo <code>docker-compose.yml</code> e suba os containers:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Veja a configuração completa em <a href="./inji-verify.html">Subindo o INJI Verify Service</a>.</p>
-<p><strong>Resultado:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://localhost:8080/v1/verify/health</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># { "status": "UP" }</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="etapa-3-expor-o-service-publicamente" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-3-expor-o-service-publicamente">Etapa 3 — Expor o Service publicamente</h2>
-<p>A Carteira Digital (no celular do cidadão) precisa acessar o INJI Verify Service. Em desenvolvimento, use ngrok:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ngrok</span> http 8080</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Anote a URL pública (ex: <code>https://abc123.ngrok-free.app</code>). Atualize as variáveis de ambiente do Service:</p>
+<section id="como-funciona" class="level2">
+<h2 class="anchored" data-anchor-id="como-funciona">Como funciona</h2>
+<p>O SDK usa o <strong>mesmo componente</strong> <code>OpenID4VPVerification</code> — a detecção do dispositivo é automática:</p>
 <ul>
-<li><code>INJI_VP_SUBMISSION_BASE_URL=https://abc123.ngrok-free.app/v1/verify</code></li>
-<li><code>INJI_DID_VERIFY_URI=did:web:abc123.ngrok-free.app:v1:verify</code></li>
-<li><code>INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:abc123.ngrok-free.app:v1:verify#key-0</code></li>
+<li><strong>Desktop</strong> → renderiza QR Code</li>
+<li><strong>Mobile/Tablet</strong> → redireciona via Deep Link (<code>openid4vp://...</code>)</li>
 </ul>
-<p>Reinicie o Service:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down <span class="kw">&amp;&amp;</span> <span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Aviso
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Em produção, use um domínio real com HTTPS. Veja <a href="./producao.html">Produção e Operação</a>.</p>
-</div>
-</div>
-<p><strong>Resultado:</strong> URL pública acessível pelo celular.</p>
+<p>A prop <code>isSameDeviceFlowEnabled</code> controla esse comportamento (padrão: <code>true</code>).</p>
 </section>
-<section id="etapa-4-instalar-o-sdk-no-projeto-react" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-4-instalar-o-sdk-no-projeto-react">Etapa 4 — Instalar o SDK no projeto React</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install @mosip/react-inji-verify-sdk</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="passo-1-o-mesmo-componente-funciona" class="level2">
+<h2 class="anchored" data-anchor-id="passo-1-o-mesmo-componente-funciona">Passo 1 — O mesmo componente funciona</h2>
+<pre class="tsx"><code>// src/components/VerificaIdade.tsx
+// O MESMO código da integração Web funciona no mobile!
+import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+
+export function VerificaIdade() {
+  return (
+    &lt;OpenID4VPVerification
+      verifyServiceUrl="&lt;VERIFY_BASE_URL&gt;/v1/verify"
+      clientId="did:web:&lt;SEU_DOMINIO&gt;:v1:verify"
+      protocol="openid4vp://"
+      presentationDefinition={presentationDefinition}
+      isSameDeviceFlowEnabled={true}  // padrão — Deep Link no mobile
+      onVpProcessed={(results) =&gt; {
+        const ok = results.some(r =&gt; r.vcStatus === 'SUCCESS');
+        console.log('Verificado:', ok);
+      }}
+      onError={(error) =&gt; console.error(error)}
+      onQrCodeExpired={() =&gt; console.log('Expirou')}
+    /&gt;
+  );
+}</code></pre>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -433,110 +368,67 @@ Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>O SDK requer <strong>React 18.2.0+</strong> e <strong>TypeScript 4.9.5+</strong> como peer dependencies.</p>
+<p>Não é necessário código diferente para mobile. O SDK detecta o dispositivo automaticamente e escolhe entre QR Code e Deep Link.</p>
 </div>
 </div>
-<p><strong>Resultado:</strong> Pacote instalado sem erros.</p>
 </section>
-<section id="etapa-5-adicionar-componente-de-verificação" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-5-adicionar-componente-de-verificação">Etapa 5 — Adicionar componente de verificação</h2>
-<pre class="tsx"><code>// src/components/VerificaIdade.tsx
-import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
-
-// Substitua pela URL do seu INJI Verify Service
-const VERIFY_SERVICE_URL = 'https://abc123.ngrok-free.app/v1/verify';
-
-// Substitua pelo DID do seu verificador
-const CLIENT_ID_DID = 'did:web:abc123.ngrok-free.app:v1:verify';
-
-// Presentation Definition para verificação de idade 18+
-// Substitua pela definição fornecida no seu credenciamento
-const presentationDefinition = {
-  id: 'age-verification-18-plus',
-  input_descriptors: [
-    {
-      id: 'age_credential',
-      format: {
-        'vc+sd-jwt': {
-          'sd-jwt_alg_values': ['ES256']
-        }
-      },
-      constraints: {
-        fields: [
-          {
-            path: ['$.ageOver18'],
-            filter: {
-              type: 'boolean',
-              const: true
-            }
-          }
-        ]
-      }
-    }
-  ]
-};
-
-export function VerificaIdade() {
-  const handleVerificado = (txnId: string) =&gt; {
-    console.log('Verificação concluída. Transaction ID:', txnId);
-    // Busque o resultado no seu backend se necessário
-    // ou use onVpProcessed para receber o resultado direto
-  };
-
-  const handleErro = (error: unknown) =&gt; {
-    console.error('Erro na verificação:', error);
-  };
-
-  const handleQrExpirado = () =&gt; {
-    console.log('QR Code expirou');
-  };
-
-  return (
-    &lt;div&gt;
-      &lt;h2&gt;Verificação de Idade&lt;/h2&gt;
-      &lt;OpenID4VPVerification
-        verifyServiceUrl={VERIFY_SERVICE_URL}
-        clientId={CLIENT_ID_DID}
-        protocol="openid4vp://"
-        presentationDefinition={presentationDefinition}
-        onVpReceived={handleVerificado}
-        onError={handleErro}
-        onQrCodeExpired={handleQrExpirado}
-      /&gt;
-    &lt;/div&gt;
-  );
-}</code></pre>
-<p><strong>Resultado:</strong> Componente renderiza QR Code na tela.</p>
-</section>
-<section id="etapa-6-testar-ponta-a-ponta" class="level2">
-<h2 class="anchored" data-anchor-id="etapa-6-testar-ponta-a-ponta">Etapa 6 — Testar ponta a ponta</h2>
+<section id="o-que-acontece-internamente-no-mobile" class="level2">
+<h2 class="anchored" data-anchor-id="o-que-acontece-internamente-no-mobile">O que acontece internamente no mobile</h2>
 <ol type="1">
-<li>Acesse sua aplicação React no navegador</li>
-<li>O QR Code aparece na tela</li>
-<li>Abra a <strong>INJI Wallet</strong> no celular</li>
-<li>Escaneie o QR Code</li>
-<li>Autorize o compartilhamento da credencial na Wallet</li>
-<li>O SDK recebe o resultado via callback</li>
+<li>SDK chama o INJI Verify Service para criar a VP Request</li>
+<li>SDK detecta que o dispositivo é mobile (via user agent)</li>
+<li>SDK redireciona o navegador para <code>openid4vp://authorize?...</code></li>
+<li>A Carteira Digital abre e exibe a credencial para autorização</li>
+<li>Usuário autoriza o compartilhamento</li>
+<li>Carteira envia a VP ao INJI Verify Service</li>
+<li>Usuário volta ao navegador (ou ao app)</li>
+<li>SDK recupera a sessão do <code>sessionStorage</code> e busca o resultado</li>
 </ol>
-<p><strong>Resultado esperado (no console):</strong></p>
-<pre><code>Verificação concluída. Transaction ID: abc-123-def-456</code></pre>
 </section>
-<section id="alternativa-receber-resultado-completo-no-frontend" class="level2">
-<h2 class="anchored" data-anchor-id="alternativa-receber-resultado-completo-no-frontend">Alternativa: Receber resultado completo no frontend</h2>
-<p>Se preferir receber o resultado diretamente (sem buscar no backend), use <code>onVpProcessed</code> em vez de <code>onVpReceived</code>:</p>
+<section id="botão-personalizado-para-mobile" class="level2">
+<h2 class="anchored" data-anchor-id="botão-personalizado-para-mobile">Botão personalizado para mobile</h2>
+<p>Você pode usar <code>triggerElement</code> para criar um botão mais adequado ao mobile:</p>
 <pre class="tsx"><code>&lt;OpenID4VPVerification
-  verifyServiceUrl={VERIFY_SERVICE_URL}
-  clientId={CLIENT_ID_DID}
-  protocol="openid4vp://"
-  presentationDefinition={presentationDefinition}
-  onVpProcessed={(results) =&gt; {
-    // results: Array&lt;{ vc: unknown, vcStatus: "SUCCESS" | "INVALID" | "EXPIRED" }&gt;
-    const verificado = results.some(r =&gt; r.vcStatus === 'SUCCESS');
-    console.log('Idade verificada:', verificado);
-  }}
-  onError={(error) =&gt; console.error(error)}
-  onQrCodeExpired={() =&gt; console.log('QR expirou')}
+  // ...
+  triggerElement={
+    &lt;button className="btn-verificar-mobile"&gt;
+      Verificar com Carteira Digital
+    &lt;/button&gt;
+  }
 /&gt;</code></pre>
+</section>
+<section id="desabilitar-fluxo-same-device" class="level2">
+<h2 class="anchored" data-anchor-id="desabilitar-fluxo-same-device">Desabilitar fluxo same-device</h2>
+<p>Se quiser forçar QR Code mesmo no mobile (cenário raro):</p>
+<pre class="tsx"><code>&lt;OpenID4VPVerification
+  // ...
+  isSameDeviceFlowEnabled={false}  // Sempre QR Code
+/&gt;</code></pre>
+</section>
+<section id="considerações-mobile" class="level2">
+<h2 class="anchored" data-anchor-id="considerações-mobile">Considerações Mobile</h2>
+<section id="retorno-ao-app" class="level3">
+<h3 class="anchored" data-anchor-id="retorno-ao-app">Retorno ao app</h3>
+<p>Quando o usuário volta da Carteira Digital ao navegador, o SDK restaura a sessão a partir do <code>sessionStorage</code>. O resultado é obtido automaticamente.</p>
+</section>
+<section id="carteira-não-instalada" class="level3">
+<h3 class="anchored" data-anchor-id="carteira-não-instalada">Carteira não instalada</h3>
+<p>Se a Carteira Digital não estiver instalada, o Deep Link não abrirá nada. Trate isso com uma mensagem orientando o usuário:</p>
+<pre class="tsx"><code>&lt;OpenID4VPVerification
+  // ...
+  onError={(error) =&gt; {
+    // Informar o usuário para instalar a Carteira Digital
+    alert('Instale a Carteira Digital para verificar sua idade.');
+  }}
+/&gt;</code></pre>
+</section>
+<section id="apps-nativos-flutter-react-native" class="level3">
+<h3 class="anchored" data-anchor-id="apps-nativos-flutter-react-native">Apps nativos (Flutter, React Native)</h3>
+<p>O INJI Verify SDK é exclusivo para <strong>React Web</strong>. Para apps nativos, você tem duas opções:</p>
+<ol type="1">
+<li><strong>WebView</strong> — Abrir uma tela React com o SDK dentro de uma WebView</li>
+<li><strong>API direta</strong> — Chamar os endpoints do INJI Verify Service diretamente e implementar a lógica de Deep Link no app nativo</li>
+</ol>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -547,13 +439,14 @@ Aviso
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A documentação do INJI recomenda usar <code>onVpReceived</code> em produção e buscar o resultado pelo <code>txnId</code> no backend para maior segurança. O <code>onVpProcessed</code> é adequado para desenvolvimento e testes.</p>
+<p>O SDK <strong>não suporta</strong> React Native, Angular, Vue ou SSR (Next.js). Para apps nativos, use a opção de WebView ou API direta.</p>
 </div>
 </div>
 </section>
+</section>
 <section id="próximo-passo" class="level2">
 <h2 class="anchored" data-anchor-id="próximo-passo">Próximo passo</h2>
-<p>Para entender o fluxo em detalhes, veja <a href="./fluxo-verificacao.html">Fluxo de Verificação</a>.</p>
+<p>Entenda a <a href="./policy18.html">Policy 18+</a> e como configurar a Presentation Definition.</p>
 
 
 </section>

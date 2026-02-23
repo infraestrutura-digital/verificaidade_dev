@@ -1,0 +1,116 @@
+---
+title: "Segurança e LGPD"
+---
+
+## Objetivo
+
+Garantir que a integração siga boas práticas de segurança e esteja em conformidade com a LGPD.
+
+## Princípios
+
+| Princípio | Aplicação |
+|-----------|-----------|
+| **Minimização de dados** | Com SD-JWT, o cidadão revela apenas `ageOver18`, não a data de nascimento |
+| **Finalidade** | Use o resultado apenas para controle de acesso por idade |
+| **Não armazenamento** | Não armazene a credencial do cidadão |
+| **Transparência** | Informe ao usuário o que está sendo verificado |
+
+## Checklist de Segurança
+
+### INJI Verify Service
+
+- [ ] Acessível pela internet apenas via HTTPS (reverse proxy)
+- [ ] PostgreSQL **não exposto** à internet (apenas localhost ou rede Docker)
+- [ ] Senha do banco alterada (não usar `postgres/postgres` em produção)
+- [ ] Keystore PKCS12 com senha forte (`INJI_KEYSTORE_FILE_PASS`)
+- [ ] Logs com rotação configurada
+
+### Aplicação React
+
+- [ ] `onVpReceived` (com validação no backend) em vez de `onVpProcessed` em produção
+- [ ] Sem dados de credencial armazenados no frontend (localStorage, sessionStorage, etc.)
+- [ ] CSP (Content Security Policy) configurado
+
+### Infraestrutura
+
+- [ ] VM com firewall configurado
+- [ ] Acesso SSH por chave, não senha
+- [ ] Docker com usuário não-root (quando possível)
+- [ ] Certificado SSL/TLS válido
+
+## `onVpReceived` vs `onVpProcessed` — Segurança
+
+| Aspecto | `onVpReceived` | `onVpProcessed` |
+|---------|---------------|-----------------|
+| Resultado chega ao | Backend (via txnId) | Frontend (direto) |
+| Adulteração possível? | Não (backend valida) | Sim (DevTools) |
+| Uso recomendado | **Produção** | Desenvolvimento |
+
+Em produção, o fluxo seguro é:
+
+1. SDK recebe `txnId` via `onVpReceived`
+2. Frontend envia `txnId` ao seu backend
+3. Seu backend chama `GET <VERIFY_BASE_URL>/v1/verify/vp-result/{txnId}`
+4. Backend decide se libera o acesso
+
+```tsx
+// Frontend
+onVpReceived={async (txnId) => {
+  const res = await fetch(`/api/verificacao/${txnId}`);
+  const data = await res.json();
+  if (data.verified) { /* liberar */ }
+}}
+```
+
+```javascript
+// Backend (Node/Express) — opcional mas recomendado para produção
+app.get('/api/verificacao/:txnId', async (req, res) => {
+  const { txnId } = req.params;
+  // Substitua pelo valor do seu ambiente
+  const result = await fetch(
+    `<VERIFY_BASE_URL>/v1/verify/vp-result/${txnId}`
+  );
+  const data = await result.json();
+  const verified = data.some(r => r.vcStatus === 'SUCCESS');
+  res.json({ verified });
+});
+```
+
+::: {.callout-important}
+O backend acima é **simples e opcional** — serve apenas para isolar a decisão de acesso do frontend. Não é um orquestrador de todo o fluxo.
+:::
+
+## DID e Keystore
+
+O INJI Verify Service se identifica com um **DID Web** e assina requisições com um keystore PKCS12.
+
+- O DID (`did:web:seu-dominio.com.br:v1:verify`) deve resolver para o seu domínio público
+- O keystore (`test.p12`) é usado para assinar as authorization requests
+- Em produção, gere um keystore próprio com chave forte
+
+::: {.callout-warning}
+O `test.p12` incluído no INJI é para **desenvolvimento apenas**. Gere um keystore próprio para produção.
+:::
+
+## Claims filtradas como metadados
+
+A variável `INJI_VERIFY_CLAIMS_WITH_META_DATA` define campos tratados como metadados internos (não exibidos):
+
+```
+_sd, _sd_alg, iss, cnf, sub, aud, exp, nbf, iat, cti
+```
+
+Esses campos são estruturais do SD-JWT e não contêm dados pessoais.
+
+## Consentimento do Usuário
+
+Antes de iniciar a verificação, informe ao usuário:
+
+- **O que** está sendo verificado (idade >= 18)
+- **Quem** é o verificador (sua organização)
+- Que **nenhum dado pessoal** além de `ageOver18` é compartilhado
+- Que o cidadão **autoriza ativamente** na Carteira Digital
+
+## Próximo passo
+
+Veja como levar para [Produção e Operação](producao.qmd).

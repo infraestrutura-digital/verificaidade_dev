@@ -1,0 +1,191 @@
+---
+title: "Troubleshooting"
+---
+
+## Objetivo
+
+Resolver problemas comuns durante a integração e operação.
+
+---
+
+## Container não sobe
+
+### Sintoma
+`docker compose up -d` falha ou container reinicia em loop.
+
+### Diagnóstico
+
+```bash
+docker logs verify-service --tail 100
+docker ps -a | grep verify
+docker stats --no-stream
+```
+
+### Soluções
+
+| Causa | Solução |
+|-------|---------|
+| Porta 8080 em uso | `sudo lsof -i :8080` e encerrar o processo |
+| PostgreSQL não iniciou | Verificar logs: `docker logs postgres-db` |
+| Scripts de banco faltando | Copiar scripts SQL para `db-init/` |
+| Memória insuficiente | Mínimo 4 GB RAM na VM |
+
+---
+
+## Health check falha
+
+### Sintoma
+`curl http://localhost:8080/v1/verify/health` retorna erro ou timeout.
+
+### Diagnóstico
+
+```bash
+docker ps | grep verify-service
+docker logs verify-service --tail 20
+```
+
+### Soluções
+
+- Container não está rodando → `docker compose up -d`
+- Serviço ainda iniciando → aguardar 30-60 segundos (Spring Boot demora para iniciar)
+- Banco inacessível → verificar se PostgreSQL está rodando
+
+---
+
+## Schema do banco não existe
+
+### Sintoma
+Logs do verify-service mostram erros de "relation does not exist".
+
+### Causa
+`spring.jpa.hibernate.ddl-auto=none` — o schema não é criado automaticamente.
+
+### Solução
+Copie os scripts de inicialização do repositório oficial do INJI Verify para `db-init/` e recrie o container do PostgreSQL:
+
+```bash
+docker compose down
+docker volume rm verificaidade_pgdata  # Remove dados antigos
+docker compose up -d
+```
+
+---
+
+## QR Code não funciona
+
+### Sintoma
+Usuário escaneia o QR Code mas a Carteira Digital não responde.
+
+### Causas e soluções
+
+| Causa | Solução |
+|-------|---------|
+| Carteira Digital não instalada | Orientar o usuário a instalar a INJI Wallet |
+| INJI Verify Service inacessível pelo celular | Verificar que `INJI_VP_SUBMISSION_BASE_URL` é um domínio público |
+| DID não resolve | Verificar `INJI_DID_VERIFY_URI` corresponde ao domínio público |
+| URL expirada | Sessão expirou; iniciar nova verificação |
+| Usando `localhost` | Em desenvolvimento, use ngrok ou túnel equivalente |
+
+::: {.callout-important}
+A causa mais comum é `INJI_VP_SUBMISSION_BASE_URL` apontando para `localhost`. A Carteira Digital no celular não consegue acessar `localhost` do seu computador.
+:::
+
+---
+
+## Deep Link não abre a Carteira (Mobile)
+
+### Sintoma
+No celular, o link `openid4vp://...` não abre nada.
+
+### Soluções
+
+- INJI Wallet não instalada → instalar a Carteira Digital
+- Navegador bloqueia o scheme → testar em Chrome/Safari
+- App não registrou o scheme → verificar se a versão da Wallet suporta `openid4vp://`
+
+---
+
+## SDK mostra erro de props
+
+### Sintoma
+Console mostra erro de validação do SDK.
+
+### Causas comuns
+
+```
+Error: Cannot provide both presentationDefinition and presentationDefinitionId
+```
+→ Use **uma ou outra**, não ambas.
+
+```
+Error: Cannot provide both onVpReceived and onVpProcessed
+```
+→ Use **um ou outro**, não ambos.
+
+```
+Error: verifyServiceUrl is required
+```
+→ Passe a URL do INJI Verify Service.
+
+---
+
+## Long-polling retorna timeout
+
+### Sintoma
+O SDK fica aguardando e depois de ~55 segundos não recebe resultado.
+
+### Causas
+
+1. Cidadão não apresentou a credencial (normal — aguardar ou expirar)
+2. Wallet não consegue acessar o INJI Verify Service (ver "QR Code não funciona")
+3. VP Submission falhou na Wallet
+
+### Solução
+
+- Aumente o timeout se necessário: `INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=120000` (120s)
+- Verifique os logs: `docker logs verify-service -f`
+- O SDK refaz o long-polling automaticamente; o QR Code expira após o timeout configurado
+
+---
+
+## Erro CORS no navegador
+
+### Sintoma
+Console mostra `Access-Control-Allow-Origin` bloqueado.
+
+### Solução
+
+Configure o Nginx como reverse proxy para servir tanto o frontend quanto a API no mesmo domínio. Ou configure CORS no INJI Verify Service (se suportado).
+
+Alternativa com Nginx:
+
+```nginx
+location /v1/verify/ {
+    proxy_pass http://localhost:8080/v1/verify/;
+    # Headers CORS (se necessário)
+    add_header Access-Control-Allow-Origin "https://seu-frontend.com.br" always;
+    add_header Access-Control-Allow-Methods "GET, POST, OPTIONS" always;
+    add_header Access-Control-Allow-Headers "Content-Type" always;
+}
+```
+
+---
+
+## PostgreSQL sem espaço em disco
+
+### Sintoma
+Erros de escrita no banco de dados.
+
+### Solução
+
+```bash
+# Verificar espaço
+df -h
+
+# Limpar dados antigos (se aplicável)
+docker exec postgres-db psql -U postgres -d inji_verify \
+  -c "DELETE FROM vp_requests WHERE created_at < NOW() - INTERVAL '30 days';"
+
+# Vacuum
+docker exec postgres-db psql -U postgres -d inji_verify -c "VACUUM FULL;"
+```

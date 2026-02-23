@@ -1,0 +1,130 @@
+---
+title: "Policy 18+"
+---
+
+## Objetivo
+
+Entender como configurar a Presentation Definition para verificação de idade (18+) usando o padrão OpenID4VP.
+
+## O que é uma Presentation Definition?
+
+A Presentation Definition (PD) é um documento JSON que descreve **quais credenciais e campos** você quer que o cidadão apresente. Ela segue o padrão [DIF Presentation Exchange](https://identity.foundation/presentation-exchange/).
+
+No caso do VerificaIdade, a PD solicita uma credencial que contenha `ageOver18: true`.
+
+## Presentation Definition para idade 18+
+
+```json
+{
+  "id": "age-verification-18-plus",
+  "input_descriptors": [
+    {
+      "id": "age_credential",
+      "format": {
+        "vc+sd-jwt": {
+          "sd-jwt_alg_values": ["ES256"]
+        }
+      },
+      "constraints": {
+        "fields": [
+          {
+            "path": ["$.ageOver18"],
+            "filter": {
+              "type": "boolean",
+              "const": true
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+::: {.callout-important}
+Esta é uma Presentation Definition **ilustrativa**. A definição exata depende do tipo de credencial emitida pelo governo e do formato suportado. Consulte a documentação do emissor para os campos corretos.
+:::
+
+## Como usar no SDK
+
+### Opção 1 — Inline (passar diretamente)
+
+```tsx
+<OpenID4VPVerification
+  // ...
+  presentationDefinition={{
+    id: 'age-verification-18-plus',
+    input_descriptors: [/* ... */]
+  }}
+/>
+```
+
+### Opção 2 — Pré-cadastrada no Service
+
+Se a Presentation Definition estiver cadastrada no INJI Verify Service, use o ID:
+
+```tsx
+<OpenID4VPVerification
+  // ...
+  presentationDefinitionId="age-verification-18-plus"
+/>
+```
+
+::: {.callout-warning}
+Use **uma ou outra** opção, nunca ambas. O SDK rejeita se ambas forem fornecidas.
+:::
+
+## O que você recebe
+
+### Verificação com sucesso
+
+```json
+[
+  {
+    "vc": { "...conteúdo da credencial..." },
+    "vcStatus": "SUCCESS"
+  }
+]
+```
+
+### Credencial inválida
+
+```json
+[
+  {
+    "vc": { "...conteúdo da credencial..." },
+    "vcStatus": "INVALID"
+  }
+]
+```
+
+### Credencial expirada
+
+```json
+[
+  {
+    "vc": { "...conteúdo da credencial..." },
+    "vcStatus": "EXPIRED"
+  }
+]
+```
+
+## O que o INJI Verify Service valida
+
+1. **Assinatura criptográfica** — a credencial foi emitida por um emissor confiável?
+2. **Formato** — a credencial segue o padrão esperado (SD-JWT, CWT)?
+3. **Expiração** — a credencial ainda é válida?
+4. **Revogação** — a credencial foi revogada?
+5. **Constraints** — os campos solicitados na PD foram satisfeitos?
+
+## Minimização de dados
+
+A Presentation Definition solicita **apenas o campo `ageOver18`**. Usando SD-JWT (Selective Disclosure), o cidadão pode apresentar **apenas esse campo** sem revelar nome, data de nascimento ou outros dados pessoais.
+
+::: {.callout-note}
+Isso é **privacy by design**. Você confirma que a pessoa tem 18+ sem saber a idade exata ou qualquer outro dado pessoal.
+:::
+
+## Próximo passo
+
+Entenda as práticas de [Segurança e LGPD](seguranca-lgpd.qmd).

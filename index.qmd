@@ -1,14 +1,48 @@
 ---
-title: "Introdução"
+title: "Boas-vindas"
 ---
 
-This is a Quarto website.
+## O que é o VerificaIdade?
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+O **VerificaIdade** é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis. O governo emite a credencial digital para o cidadão; o seu sistema verifica usando o **INJI Verify**.
 
-## Arquitetura
-![Arquitetura](arquitetura.png){width="70%"}
+## Como funciona
 
-## Componentes
+1. Você integra o **INJI Verify SDK** (pacote NPM React) na sua aplicação web
+2. O SDK se comunica com o **INJI Verify Service** (backend Java/Spring Boot que roda na sua VM)
+3. O cidadão apresenta sua credencial via **QR Code** (desktop) ou **Deep Link** (mobile)
+4. O Service valida a credencial criptograficamente e retorna o resultado ao SDK
 
-## Processo de Integração
+Não é necessário criar um backend customizado para orquestrar a verificação.
+
+## Para quem é este portal?
+
+Para **desenvolvedores** que precisam integrar verificação de idade em aplicações **React** (Web).
+
+## O que você vai encontrar aqui
+
+| Seção | O que resolve |
+|-------|--------------|
+| [Arquitetura em 1 Página](arquitetura.qmd) | Visão geral dos componentes |
+| [Integre em 1 Hora](quickstart.qmd) | Checklist passo a passo |
+| [Setup da VM e Docker](setup-vm.qmd) | Preparar a infraestrutura |
+| [INJI Verify Service](inji-verify.qmd) | Subir o backend com Docker Compose |
+| [Fluxo de Verificação](fluxo-verificacao.qmd) | Entender o ciclo completo |
+| [Integração Web (QR Code)](integra-web.qmd) | Fluxo cross-device no desktop |
+| [Integração Mobile (Deep Link)](integra-mobile.qmd) | Fluxo same-device no celular |
+| [Policy 18+](policy18.qmd) | Presentation Definition de idade |
+| [Segurança e LGPD](seguranca-lgpd.qmd) | Boas práticas |
+| [Produção e Operação](producao.qmd) | Deploy em produção |
+| [API Reference](api-reference.qmd) | Endpoints do INJI Verify Service |
+| [Troubleshooting](troubleshooting.qmd) | Erros comuns |
+| [Onboarding](onboarding.qmd) | Gateway e credenciamento |
+
+## Pré-requisitos
+
+- **React 18.2.0+** com TypeScript 4.9.5+
+- Acesso a uma **VM com Docker** para rodar o INJI Verify Service
+- Credenciais de acesso ao gateway (obtidas no [Onboarding](onboarding.qmd))
+
+::: {.callout-note}
+O objetivo é que você consiga integrar em **1 dia**. Comece pelo [Integre em 1 Hora](quickstart.qmd).
+:::

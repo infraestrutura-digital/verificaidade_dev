@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Integração com Mobile Apps – Portal do Desenvolvedor</title>
+<title>Integração Web (QR Code) – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -40,7 +75,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-bcb4737e8fbcf1e9dfc00b59f8305558.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4d80fbb67350bf0285aa9751096d180d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -68,6 +103,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Procurar"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="styles.css">
@@ -82,7 +120,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./integramobile.html">Integração com Mobile Apps</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./fluxo-verificacao.html">Integração</a></li><li class="breadcrumb-item"><a href="./integra-web.html">Integração Web (QR Code)</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -97,8 +135,8 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./verificaidadedev.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="./verificaidadedev.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <img src="./verificaidadedev.svg" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./verificaidadedev.svg" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -111,41 +149,160 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introdução</span></a>
+ <span class="menu-text">Boas-vindas</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Início Rápido</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arquitetura.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Arquitetura em 1 Página</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./quickstart.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Quick Start</span></a>
+ <span class="menu-text">Integre em 1 Hora</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Infraestrutura</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./integraweb.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Integração com Web Apps</span></a>
+  <a href="./setup-vm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Setup da VM e Docker</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./integramobile.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Integração com Mobile Apps</span></a>
+  <a href="./inji-verify.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Subindo o INJI Verify Service</span></a>
   </div>
 </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Integração</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fluxo-verificacao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fluxo de Verificação (Visão Geral)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./integra-web.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Integração Web (QR Code)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./integra-mobile.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Integração Mobile (Deep Link)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Referência</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./policy18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Policy 18+</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./seguranca-lgpd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Segurança e LGPD</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./producao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Produção e Operação</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./api-reference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">API Reference</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./troubleshooting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Troubleshooting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./onboarding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Onboarding (Conceito e Uso com WSO2)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Nesta página</h2>
+   
+  <ul>
+  <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo">Objetivo</a></li>
+  <li><a href="#fluxo-web" id="toc-fluxo-web" class="nav-link" data-scroll-target="#fluxo-web">Fluxo Web</a></li>
+  <li><a href="#cenário" id="toc-cenário" class="nav-link" data-scroll-target="#cenário">Cenário</a></li>
+  <li><a href="#passo-1-instalar-o-sdk" id="toc-passo-1-instalar-o-sdk" class="nav-link" data-scroll-target="#passo-1-instalar-o-sdk">Passo 1 — Instalar o SDK</a></li>
+  <li><a href="#passo-2-componente-de-verificação" id="toc-passo-2-componente-de-verificação" class="nav-link" data-scroll-target="#passo-2-componente-de-verificação">Passo 2 — Componente de verificação</a></li>
+  <li><a href="#passo-3-usar-o-componente" id="toc-passo-3-usar-o-componente" class="nav-link" data-scroll-target="#passo-3-usar-o-componente">Passo 3 — Usar o componente</a></li>
+  <li><a href="#versão-para-produção-com-onvpreceived" id="toc-versão-para-produção-com-onvpreceived" class="nav-link" data-scroll-target="#versão-para-produção-com-onvpreceived">Versão para produção (com <code>onVpReceived</code>)</a></li>
+  <li><a href="#customização-do-qr-code" id="toc-customização-do-qr-code" class="nav-link" data-scroll-target="#customização-do-qr-code">Customização do QR Code</a></li>
+  <li><a href="#props-do-openid4vpverification" id="toc-props-do-openid4vpverification" class="nav-link" data-scroll-target="#props-do-openid4vpverification">Props do <code>OpenID4VPVerification</code></a></li>
+  <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./fluxo-verificacao.html">Integração</a></li><li class="breadcrumb-item"><a href="./integra-web.html">Integração Web (QR Code)</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Integração com Mobile Apps</h1>
+<h1 class="title">Integração Web (QR Code)</h1>
 </div>
 
 
@@ -162,8 +319,304 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="objetivo" class="level2">
+<h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
+<p>Implementar verificação de idade em uma aplicação Web React usando QR Code (fluxo cross-device).</p>
+</section>
+<section id="fluxo-web" class="level2">
+<h2 class="anchored" data-anchor-id="fluxo-web">Fluxo Web</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant U as Usuário (Desktop)
+    participant SDK as App React + SDK
+    participant VS as INJI Verify Service
+    participant W as Carteira Digital (Celular)
+
+    U-&gt;&gt;SDK: Clica "Verificar Idade"
+    SDK-&gt;&gt;VS: POST /v1/verify/vp-request
+    VS--&gt;&gt;SDK: requestId + authorizationUrl
+    SDK-&gt;&gt;U: Renderiza QR Code
+    U-&gt;&gt;W: Escaneia QR Code
+    W-&gt;&gt;VS: POST /v1/verify/vp-submission (credencial)
+    VS-&gt;&gt;VS: Valida credencial
+    Note over SDK,VS: Long-polling /vp-request/{id}/status
+    VS--&gt;&gt;SDK: Resultado
+    SDK-&gt;&gt;U: Callback executado
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="cenário" class="level2">
+<h2 class="anchored" data-anchor-id="cenário">Cenário</h2>
+<p>O usuário está no <strong>desktop</strong>. O site exibe um QR Code. O usuário abre a Carteira Digital no <strong>celular</strong>, escaneia o QR Code e autoriza o compartilhamento da credencial.</p>
+</section>
+<section id="passo-1-instalar-o-sdk" class="level2">
+<h2 class="anchored" data-anchor-id="passo-1-instalar-o-sdk">Passo 1 — Instalar o SDK</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install @mosip/react-inji-verify-sdk</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="passo-2-componente-de-verificação" class="level2">
+<h2 class="anchored" data-anchor-id="passo-2-componente-de-verificação">Passo 2 — Componente de verificação</h2>
+<pre class="tsx"><code>// src/components/VerificaIdade.tsx
+import { useState } from 'react';
+import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+
+// Substitua pelo valor do seu ambiente
+const VERIFY_SERVICE_URL = '&lt;VERIFY_BASE_URL&gt;/v1/verify';
+const CLIENT_ID_DID = 'did:web:&lt;SEU_DOMINIO&gt;:v1:verify';
+
+// Substitua pela Presentation Definition do seu credenciamento
+const presentationDefinition = {
+  id: 'age-verification-18-plus',
+  input_descriptors: [
+    {
+      id: 'age_credential',
+      format: {
+        'vc+sd-jwt': {
+          'sd-jwt_alg_values': ['ES256']
+        }
+      },
+      constraints: {
+        fields: [
+          {
+            path: ['$.ageOver18'],
+            filter: {
+              type: 'boolean',
+              const: true
+            }
+          }
+        ]
+      }
+    }
+  ]
+};
+
+type VerificaIdadeProps = {
+  onVerificado: () =&gt; void;
+  onFalhou: () =&gt; void;
+};
+
+export function VerificaIdade({ onVerificado, onFalhou }: VerificaIdadeProps) {
+  const [estado, setEstado] = useState&lt;'idle' | 'verificado' | 'falhou'&gt;('idle');
+
+  return (
+    &lt;div&gt;
+      {estado === 'idle' &amp;&amp; (
+        &lt;OpenID4VPVerification
+          verifyServiceUrl={VERIFY_SERVICE_URL}
+          clientId={CLIENT_ID_DID}
+          protocol="openid4vp://"
+          presentationDefinition={presentationDefinition}
+          onVpProcessed={(results) =&gt; {
+            const ok = results.some(r =&gt; r.vcStatus === 'SUCCESS');
+            if (ok) {
+              setEstado('verificado');
+              onVerificado();
+            } else {
+              setEstado('falhou');
+              onFalhou();
+            }
+          }}
+          onError={(error) =&gt; {
+            console.error('Erro na verificação:', error);
+            setEstado('falhou');
+            onFalhou();
+          }}
+          onQrCodeExpired={() =&gt; {
+            console.log('QR Code expirou');
+          }}
+        /&gt;
+      )}
+
+      {estado === 'verificado' &amp;&amp; (
+        &lt;p&gt;Idade verificada com sucesso.&lt;/p&gt;
+      )}
+
+      {estado === 'falhou' &amp;&amp; (
+        &lt;div&gt;
+          &lt;p&gt;Verificação falhou.&lt;/p&gt;
+          &lt;button onClick={() =&gt; setEstado('idle')}&gt;Tentar novamente&lt;/button&gt;
+        &lt;/div&gt;
+      )}
+    &lt;/div&gt;
+  );
+}</code></pre>
+</section>
+<section id="passo-3-usar-o-componente" class="level2">
+<h2 class="anchored" data-anchor-id="passo-3-usar-o-componente">Passo 3 — Usar o componente</h2>
+<pre class="tsx"><code>// src/pages/Checkout.tsx
+import { VerificaIdade } from '../components/VerificaIdade';
+
+export function Checkout() {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Verificação de Idade&lt;/h1&gt;
+      &lt;VerificaIdade
+        onVerificado={() =&gt; console.log('Acesso liberado')}
+        onFalhou={() =&gt; console.log('Acesso negado')}
+      /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+</section>
+<section id="versão-para-produção-com-onvpreceived" class="level2">
+<h2 class="anchored" data-anchor-id="versão-para-produção-com-onvpreceived">Versão para produção (com <code>onVpReceived</code>)</h2>
+<p>Em produção, use <code>onVpReceived</code> para buscar o resultado no backend:</p>
+<pre class="tsx"><code>// src/components/VerificaIdadeProd.tsx
+import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+
+export function VerificaIdadeProd() {
+  const handleVpReceived = async (txnId: string) =&gt; {
+    // Buscar resultado no seu backend
+    const res = await fetch(`/api/verificacao/resultado/${txnId}`);
+    const data = await res.json();
+
+    if (data.verified) {
+      // Liberar acesso
+    } else {
+      // Negar acesso
+    }
+  };
+
+  return (
+    &lt;OpenID4VPVerification
+      verifyServiceUrl="&lt;VERIFY_BASE_URL&gt;/v1/verify"
+      clientId="did:web:&lt;SEU_DOMINIO&gt;:v1:verify"
+      protocol="openid4vp://"
+      presentationDefinition={presentationDefinition}
+      onVpReceived={handleVpReceived}
+      onError={(error) =&gt; console.error(error)}
+      onQrCodeExpired={() =&gt; console.log('QR expirou')}
+    /&gt;
+  );
+}</code></pre>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nessa abordagem, seu backend busca o resultado em <code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{txnId}</code> e decide se libera o acesso. Isso evita que o frontend seja adulterado.</p>
+</div>
+</div>
+</section>
+<section id="customização-do-qr-code" class="level2">
+<h2 class="anchored" data-anchor-id="customização-do-qr-code">Customização do QR Code</h2>
+<pre class="tsx"><code>&lt;OpenID4VPVerification
+  // ...
+  qrCodeStyles={{
+    size: 300,
+    bgColor: '#ffffff',
+    fgColor: '#000000',
+  }}
+  triggerElement={&lt;button className="btn-verificar"&gt;Verificar Idade&lt;/button&gt;}
+/&gt;</code></pre>
+</section>
+<section id="props-do-openid4vpverification" class="level2">
+<h2 class="anchored" data-anchor-id="props-do-openid4vpverification">Props do <code>OpenID4VPVerification</code></h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 36%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Prop</th>
+<th>Tipo</th>
+<th style="text-align: center;">Obrigatório</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>verifyServiceUrl</code></td>
+<td><code>string</code></td>
+<td style="text-align: center;">Sim</td>
+<td>URL do INJI Verify Service</td>
+</tr>
+<tr class="even">
+<td><code>clientId</code></td>
+<td><code>string</code></td>
+<td style="text-align: center;">Sim</td>
+<td>DID do verificador</td>
+</tr>
+<tr class="odd">
+<td><code>protocol</code></td>
+<td><code>string</code></td>
+<td style="text-align: center;">Sim</td>
+<td>Protocolo (<code>"openid4vp://"</code>)</td>
+</tr>
+<tr class="even">
+<td><code>presentationDefinition</code></td>
+<td><code>object</code></td>
+<td style="text-align: center;">Sim*</td>
+<td>Presentation Definition inline</td>
+</tr>
+<tr class="odd">
+<td><code>presentationDefinitionId</code></td>
+<td><code>string</code></td>
+<td style="text-align: center;">Sim*</td>
+<td>ID de definição pré-cadastrada</td>
+</tr>
+<tr class="even">
+<td><code>onVpReceived</code></td>
+<td><code>(txnId) =&gt; void</code></td>
+<td style="text-align: center;">Sim**</td>
+<td>Callback com transaction ID</td>
+</tr>
+<tr class="odd">
+<td><code>onVpProcessed</code></td>
+<td><code>(results) =&gt; void</code></td>
+<td style="text-align: center;">Sim**</td>
+<td>Callback com resultado completo</td>
+</tr>
+<tr class="even">
+<td><code>onError</code></td>
+<td><code>(error) =&gt; void</code></td>
+<td style="text-align: center;">Sim</td>
+<td>Callback de erro</td>
+</tr>
+<tr class="odd">
+<td><code>onQrCodeExpired</code></td>
+<td><code>() =&gt; void</code></td>
+<td style="text-align: center;">Sim</td>
+<td>Callback de QR expirado</td>
+</tr>
+<tr class="even">
+<td><code>triggerElement</code></td>
+<td><code>ReactNode</code></td>
+<td style="text-align: center;">Não</td>
+<td>Elemento que inicia a verificação</td>
+</tr>
+<tr class="odd">
+<td><code>qrCodeStyles</code></td>
+<td><code>object</code></td>
+<td style="text-align: center;">Não</td>
+<td>Estilos do QR Code</td>
+</tr>
+</tbody>
+</table>
+<p>* Use <code>presentationDefinition</code> <strong>ou</strong> <code>presentationDefinitionId</code>, não ambos.</p>
+<p>** Use <code>onVpReceived</code> <strong>ou</strong> <code>onVpProcessed</code>, não ambos.</p>
+</section>
+<section id="próximo-passo" class="level2">
+<h2 class="anchored" data-anchor-id="próximo-passo">Próximo passo</h2>
+<p>Para integração mobile, veja <a href="./integra-mobile.html">Integração Mobile (Deep Link)</a>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

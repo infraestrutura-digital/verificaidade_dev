@@ -1,0 +1,114 @@
+---
+title: "Fluxo de Verificação (Visão Geral)"
+---
+
+## Objetivo
+
+Entender o ciclo completo de uma verificação de idade, do início ao resultado.
+
+## Fluxo Ponta a Ponta (Cross-Device — QR Code)
+
+```{mermaid}
+sequenceDiagram
+    participant U as Usuário (Desktop)
+    participant SDK as App React + SDK
+    participant VS as INJI Verify Service
+    participant W as Carteira Digital (Celular)
+
+    U->>SDK: Clica "Verificar Idade"
+    SDK->>VS: POST /v1/verify/vp-request
+    VS-->>SDK: requestId + authorizationUrl
+    SDK->>U: Exibe QR Code (authorizationUrl)
+    U->>W: Escaneia QR Code com a Carteira
+    W->>VS: Apresenta credencial (VP submission)
+    VS->>VS: Valida credencial + policy 18+
+    Note over SDK,VS: SDK faz long-polling em /vp-request/{id}/status
+    VS-->>SDK: Resultado da verificação
+    SDK->>U: "Idade verificada!" (callback)
+```
+
+## Fluxo Same-Device (Deep Link — Mobile)
+
+```{mermaid}
+sequenceDiagram
+    participant U as Usuário (Celular)
+    participant SDK as App React + SDK
+    participant VS as INJI Verify Service
+    participant W as Carteira Digital
+
+    U->>SDK: Toca "Verificar Idade"
+    SDK->>VS: POST /v1/verify/vp-request
+    VS-->>SDK: requestId + authorizationUrl
+    SDK->>W: Abre Deep Link (openid4vp://...)
+    W->>VS: Apresenta credencial (VP submission)
+    Note over W: Usuário volta ao app
+    SDK->>VS: Long-polling /vp-request/{id}/status
+    VS-->>SDK: Resultado da verificação
+    SDK->>U: "Idade verificada!" (callback)
+```
+
+## O que o SDK faz internamente
+
+O INJI Verify SDK gerencia todo o ciclo:
+
+1. **Cria a VP Request** — chama `POST /v1/verify/vp-request` com a Presentation Definition
+2. **Detecta o dispositivo** — se mobile, usa Deep Link; se desktop, renderiza QR Code
+3. **Long-polling** — consulta `GET /v1/verify/vp-request/{id}/status` repetidamente (timeout padrão: 55s)
+4. **Busca resultado** — quando a Wallet envia a credencial, obtém o resultado via `GET /v1/verify/vp-result/{id}`
+5. **Dispara callback** — chama `onVpReceived(txnId)` ou `onVpProcessed(results)`
+
+Você **não precisa implementar** nenhuma dessas etapas manualmente.
+
+## Estados da Verificação
+
+| Estado | Significado |
+|--------|-------------|
+| VP Request criada | Aguardando apresentação da credencial |
+| VP submetida | Carteira enviou a credencial ao Service |
+| `SUCCESS` | Credencial válida e policy satisfeita |
+| `INVALID` | Credencial inválida (assinatura, emissor, formato) |
+| `EXPIRED` | Credencial ou sessão expirada |
+
+## Callbacks do SDK
+
+O SDK oferece **dois modos** de receber o resultado (mutuamente exclusivos):
+
+### `onVpReceived(txnId)` — Recomendado para produção
+
+Retorna apenas o `txnId`. Você busca o resultado no seu backend ou diretamente no INJI Verify Service.
+
+```tsx
+<OpenID4VPVerification
+  // ...
+  onVpReceived={(txnId) => {
+    // Buscar resultado no Service: GET /v1/verify/vp-result/{txnId}
+    console.log('Transaction ID:', txnId);
+  }}
+/>
+```
+
+### `onVpProcessed(results)` — Para desenvolvimento
+
+Retorna o resultado completo diretamente no frontend.
+
+```tsx
+<OpenID4VPVerification
+  // ...
+  onVpProcessed={(results) => {
+    // results: Array<{ vc: unknown, vcStatus: "SUCCESS" | "INVALID" | "EXPIRED" }>
+    const ok = results.some(r => r.vcStatus === 'SUCCESS');
+    console.log('Verificado:', ok);
+  }}
+/>
+```
+
+::: {.callout-warning}
+`onVpProcessed` expõe o resultado diretamente no frontend. Em produção, use `onVpReceived` e valide o resultado no backend para evitar adulteração.
+:::
+
+## Próximo passo
+
+Escolha sua jornada:
+
+- [Integração Web — QR Code (cross-device)](integra-web.qmd)
+- [Integração Mobile — Deep Link (same-device)](integra-mobile.qmd)

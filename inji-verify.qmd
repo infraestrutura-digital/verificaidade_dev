@@ -1,0 +1,156 @@
+---
+title: "Subindo o INJI Verify Service"
+---
+
+## Objetivo
+
+Colocar o INJI Verify Service rodando com Docker Compose na sua VM.
+
+## Componentes
+
+O INJI Verify Service é composto por 3 containers:
+
+| Container | Imagem | Porta | Função |
+|-----------|--------|-------|--------|
+| `verify-service` | `injistackdev/inji-verify-service:develop` | 8080 | Backend Spring Boot — validação de credenciais |
+| `verify-ui` | `injistackdev/inji-verify-ui:develop` | 3000 | UI de referência (opcional se você usa o SDK) |
+| `postgres` | `postgres:13` | 5432 | Banco de dados |
+
+::: {.callout-note}
+O container `verify-ui` é a interface de referência do INJI. Se você está integrando o SDK no seu próprio app React, ele é **opcional** mas útil para testes.
+:::
+
+## Passo 1 — Criar estrutura de diretórios
+
+```bash
+mkdir -p ~/verificaidade/db-init
+cd ~/verificaidade
+```
+
+## Passo 2 — Obter scripts de inicialização do banco
+
+Os scripts SQL de inicialização do schema estão no repositório oficial do INJI Verify. Copie-os para `db-init/`:
+
+```bash
+# Substitua pela URL do repositório oficial
+# Os scripts criam o schema 'verify' e as tabelas necessárias
+```
+
+::: {.callout-warning}
+O `spring.jpa.hibernate.ddl-auto=none` significa que o banco **não é criado automaticamente**. Você precisa dos scripts de inicialização.
+:::
+
+## Passo 3 — Criar docker-compose.yml
+
+Substitua `SEU_DOMINIO_PUBLICO` pelo domínio público da sua VM (ou URL do ngrok em desenvolvimento).
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+
+services:
+  verify-service:
+    container_name: verify-service
+    image: injistackdev/inji-verify-service:develop
+    user: root
+    ports:
+      - "8080:8080"
+    environment:
+      - active_profile_env=default
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=inji_verify
+      - DATABASE_SCHEMA=verify
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      # URL pública — a Carteira Digital precisa alcançar este endereço
+      - INJI_VP_SUBMISSION_BASE_URL=https://SEU_DOMINIO_PUBLICO/v1/verify
+      # DID do verificador — deve corresponder ao domínio público
+      - INJI_DID_VERIFY_URI=did:web:SEU_DOMINIO_PUBLICO:v1:verify
+      - INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:SEU_DOMINIO_PUBLICO:v1:verify#key-0
+      - INJI_KEYSTORE_FILE_PASS=mosip
+      - INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=55000
+      - INJI_VERIFY_REDIRECT_URI=https://SEU_DOMINIO_PUBLICO
+      - INJI_VERIFY_RESPONSE_CODE_EXPIRY_TIME_IN_MINS=5
+      - INJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true
+      - INJI_VERIFY_CLAIMS_WITH_META_DATA=_sd,_sd_alg,iss,cnf,sub,aud,exp,nbf,iat,cti
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: inji_verify
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+
+volumes:
+  pgdata:
+```
+
+## Passo 4 — Subir os containers
+
+```bash
+docker compose up -d
+```
+
+## Passo 5 — Verificar se está rodando
+
+```bash
+# Ver containers ativos
+docker ps
+
+# Ver logs do Service
+docker logs verify-service --tail 50
+
+# Health check
+curl -s http://localhost:8080/v1/verify/health
+```
+
+**Resultado esperado:**
+
+```json
+{
+  "status": "UP"
+}
+```
+
+## Variáveis de Ambiente — Referência
+
+| Variável | Padrão | Descrição |
+|----------|--------|-----------|
+| `DATABASE_HOST` | — | Host do PostgreSQL |
+| `DATABASE_PORT` | `5432` | Porta do PostgreSQL |
+| `DATABASE_NAME` | `inji_verify` | Nome do banco |
+| `DATABASE_SCHEMA` | `verify` | Schema do banco |
+| `INJI_VP_SUBMISSION_BASE_URL` | — | **URL pública** do Service (a Wallet envia VP para cá) |
+| `INJI_DID_VERIFY_URI` | — | DID Web do verificador |
+| `INJI_DID_VERIFY_PUBLIC_KEY_URI` | — | URI da chave pública do DID |
+| `INJI_KEYSTORE_FILE_PASS` | `mosip` | Senha do keystore PKCS12 |
+| `INJI_VP_REQUEST_LONG_POLLING_TIMEOUT` | `55000` | Timeout do long-polling (ms) |
+| `INJI_VERIFY_REDIRECT_URI` | — | URI de redirecionamento pós-verificação |
+| `INJI_VERIFY_RESPONSE_CODE_EXPIRY_TIME_IN_MINS` | `5` | TTL do response code (min) |
+
+::: {.callout-important}
+`INJI_VP_SUBMISSION_BASE_URL` e os DIDs **devem usar seu domínio público real**. A Carteira Digital do cidadão precisa resolver esses endereços pela internet.
+:::
+
+## Comandos úteis
+
+| Comando | O que faz |
+|---------|-----------|
+| `docker compose up -d` | Inicia os serviços |
+| `docker compose down` | Para os serviços |
+| `docker compose restart verify-service` | Reinicia o Service |
+| `docker logs verify-service -f` | Acompanha logs em tempo real |
+| `docker compose pull` | Atualiza as imagens |
+
+## Próximo passo
+
+Serviço rodando. Agora entenda o [Fluxo de Verificação](fluxo-verificacao.qmd).

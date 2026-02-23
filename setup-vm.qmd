@@ -1,0 +1,82 @@
+---
+title: "Setup da VM e Docker"
+---
+
+## Objetivo
+
+Preparar a VM do verificador com Docker e Docker Compose para rodar o INJI Verify Service.
+
+## Requisitos Mínimos
+
+| Recurso | Mínimo | Recomendado |
+|---------|--------|-------------|
+| CPU | 2 vCPUs | 4 vCPUs |
+| RAM | 4 GB | 8 GB |
+| Disco | 20 GB | 40 GB |
+| SO | Ubuntu 22.04 LTS | Ubuntu 22.04 LTS |
+| Rede | Portas 80, 443, 8080 | Portas 80, 443, 8080 |
+
+## Passo 1 — Atualizar o sistema
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+## Passo 2 — Instalar Docker
+
+```bash
+# Instalar dependências
+sudo apt install -y ca-certificates curl gnupg
+
+# Adicionar chave GPG do Docker
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Adicionar repositório
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Instalar Docker
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
+
+## Passo 3 — Configurar permissões
+
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+## Passo 4 — Verificar instalação
+
+```bash
+docker --version
+docker compose version
+docker run --rm hello-world
+```
+
+**Resultado esperado:** Mensagem "Hello from Docker!" sem erros.
+
+## Passo 5 — Configurar firewall
+
+```bash
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 8080/tcp
+sudo ufw enable
+sudo ufw status
+```
+
+::: {.callout-important}
+A porta 8080 é usada pelo INJI Verify Service. A Carteira Digital do cidadão precisa acessá-la. Em produção, coloque um reverse proxy (Nginx) com HTTPS na frente.
+:::
+
+## Próximo passo
+
+VM pronta. Agora [suba o INJI Verify Service](inji-verify.qmd).

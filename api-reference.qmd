@@ -1,0 +1,196 @@
+---
+title: "API Reference"
+---
+
+## Objetivo
+
+Referência dos endpoints REST do INJI Verify Service. O context path é `/v1/verify`.
+
+::: {.callout-note}
+Em uso normal, o **SDK gerencia todas as chamadas** a esses endpoints automaticamente. Esta referência é útil para debugging, integração com apps nativos, ou uso de `onVpReceived` com backend.
+:::
+
+## Endpoints do INJI Verify Service
+
+### Criar VP Request
+
+Inicia uma solicitação de verificação OpenID4VP.
+
+```
+POST <VERIFY_BASE_URL>/v1/verify/vp-request
+```
+
+**Request Body:**
+
+```json
+{
+  "presentationDefinition": {
+    "id": "age-verification-18-plus",
+    "input_descriptors": [
+      {
+        "id": "age_credential",
+        "format": {
+          "vc+sd-jwt": {
+            "sd-jwt_alg_values": ["ES256"]
+          }
+        },
+        "constraints": {
+          "fields": [
+            {
+              "path": ["$.ageOver18"],
+              "filter": {
+                "type": "boolean",
+                "const": true
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+**Response — 200 OK:**
+
+```json
+{
+  "requestId": "abc-123-def-456",
+  "authorizationUrl": "openid4vp://authorize?request_uri=https://..."
+}
+```
+
+---
+
+### Consultar Status da VP Request (Long-Polling)
+
+Aguarda até que a Carteira Digital envie a credencial ou o timeout seja atingido.
+
+```
+GET <VERIFY_BASE_URL>/v1/verify/vp-request/{requestId}/status
+```
+
+O timeout padrão do long-polling é **55 segundos** (configurável via `INJI_VP_REQUEST_LONG_POLLING_TIMEOUT`).
+
+**Response — 200 OK (credencial recebida):**
+
+```json
+{
+  "status": "COMPLETED",
+  "requestId": "abc-123-def-456"
+}
+```
+
+**Response — 200 OK (aguardando):**
+
+```json
+{
+  "status": "PENDING",
+  "requestId": "abc-123-def-456"
+}
+```
+
+---
+
+### Obter Resultado da Verificação
+
+Busca o resultado completo após a Wallet ter submetido a credencial.
+
+```
+GET <VERIFY_BASE_URL>/v1/verify/vp-result/{requestId}
+```
+
+**Response — 200 OK:**
+
+```json
+[
+  {
+    "vc": {
+      "ageOver18": true
+    },
+    "vcStatus": "SUCCESS"
+  }
+]
+```
+
+**Valores possíveis de `vcStatus`:**
+
+| Valor | Significado |
+|-------|-------------|
+| `SUCCESS` | Credencial válida, policy satisfeita |
+| `INVALID` | Credencial inválida (assinatura, emissor, formato) |
+| `EXPIRED` | Credencial expirada |
+
+---
+
+### VP Submission (Wallet → Service)
+
+Endpoint chamado pela **Carteira Digital** para enviar a credencial. Você não chama este endpoint diretamente.
+
+```
+POST <VERIFY_BASE_URL>/v1/verify/vp-submission
+```
+
+---
+
+### VC Verification (QR Code Scan/Upload)
+
+Para o fluxo de QR Code scan/upload (não OpenID4VP), o SDK usa:
+
+```
+POST <VERIFY_BASE_URL>/v1/verify/vc-verification
+```
+
+---
+
+### Health Check
+
+```
+GET <VERIFY_BASE_URL>/v1/verify/health
+```
+
+**Response — 200 OK:**
+
+```json
+{
+  "status": "UP"
+}
+```
+
+---
+
+## Uso com `onVpReceived` (Backend)
+
+Quando você usa `onVpReceived`, o SDK retorna apenas o `txnId`. Para buscar o resultado no backend:
+
+```javascript
+// Backend Node/Express (exemplo)
+const express = require('express');
+const app = express();
+
+// Substitua pelo valor do seu ambiente
+const VERIFY_BASE_URL = '<VERIFY_BASE_URL>';
+
+app.get('/api/verificacao/:txnId', async (req, res) => {
+  const { txnId } = req.params;
+
+  const response = await fetch(
+    `${VERIFY_BASE_URL}/v1/verify/vp-result/${txnId}`
+  );
+  const results = await response.json();
+
+  const verified = results.some(r => r.vcStatus === 'SUCCESS');
+  res.json({ verified, results });
+});
+```
+
+## Resumo de Placeholders
+
+| Placeholder | Descrição | Exemplo |
+|-------------|-----------|---------|
+| `<VERIFY_BASE_URL>` | URL base do INJI Verify Service | `https://verify.seu-dominio.com.br` |
+| `<SEU_DOMINIO>` | Domínio público da VM | `verify.seu-dominio.com.br` |
+
+::: {.callout-note}
+Esses valores são definidos durante o [setup do INJI Verify Service](inji-verify.qmd) e o [Onboarding](onboarding.qmd).
+:::

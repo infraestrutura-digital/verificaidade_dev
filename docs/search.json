@@ -1,49 +1,1424 @@
 [
   {
+    "objectID": "setup-vm.html",
+    "href": "setup-vm.html",
+    "title": "Setup da VM e Docker",
+    "section": "",
+    "text": "Preparar a VM do verificador com Docker e Docker Compose para rodar o INJI Verify Service.",
+    "crumbs": [
+      "Infraestrutura",
+      "Setup da VM e Docker"
+    ]
+  },
+  {
+    "objectID": "setup-vm.html#objetivo",
+    "href": "setup-vm.html#objetivo",
+    "title": "Setup da VM e Docker",
+    "section": "",
+    "text": "Preparar a VM do verificador com Docker e Docker Compose para rodar o INJI Verify Service.",
+    "crumbs": [
+      "Infraestrutura",
+      "Setup da VM e Docker"
+    ]
+  },
+  {
+    "objectID": "setup-vm.html#requisitos-mínimos",
+    "href": "setup-vm.html#requisitos-mínimos",
+    "title": "Setup da VM e Docker",
+    "section": "Requisitos Mínimos",
+    "text": "Requisitos Mínimos\n\n\n\nRecurso\nMínimo\nRecomendado\n\n\n\n\nCPU\n2 vCPUs\n4 vCPUs\n\n\nRAM\n4 GB\n8 GB\n\n\nDisco\n20 GB\n40 GB\n\n\nSO\nUbuntu 22.04 LTS\nUbuntu 22.04 LTS\n\n\nRede\nPortas 80, 443, 8080\nPortas 80, 443, 8080",
+    "crumbs": [
+      "Infraestrutura",
+      "Setup da VM e Docker"
+    ]
+  },
+  {
+    "objectID": "setup-vm.html#passo-1-atualizar-o-sistema",
+    "href": "setup-vm.html#passo-1-atualizar-o-sistema",
+    "title": "Setup da VM e Docker",
+    "section": "Passo 1 — Atualizar o sistema",
+    "text": "Passo 1 — Atualizar o sistema\nsudo apt update && sudo apt upgrade -y",
+    "crumbs": [
+      "Infraestrutura",
+      "Setup da VM e Docker"
+    ]
+  },
+  {
+    "objectID": "setup-vm.html#passo-2-instalar-docker",
+    "href": "setup-vm.html#passo-2-instalar-docker",
+    "title": "Setup da VM e Docker",
+    "section": "Passo 2 — Instalar Docker",
+    "text": "Passo 2 — Instalar Docker\n# Instalar dependências\nsudo apt install -y ca-certificates curl gnupg\n\n# Adicionar chave GPG do Docker\nsudo install -m 0755 -d /etc/apt/keyrings\ncurl -fsSL https://download.docker.com/linux/ubuntu/gpg | \\\n  sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg\nsudo chmod a+r /etc/apt/keyrings/docker.gpg\n\n# Adicionar repositório\necho \\\n  \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \\\n  https://download.docker.com/linux/ubuntu \\\n  $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable\" | \\\n  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null\n\n# Instalar Docker\nsudo apt update\nsudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin",
+    "crumbs": [
+      "Infraestrutura",
+      "Setup da VM e Docker"
+    ]
+  },
+  {
+    "objectID": "setup-vm.html#passo-3-configurar-permissões",
+    "href": "setup-vm.html#passo-3-configurar-permissões",
+    "title": "Setup da VM e Docker",
+    "section": "Passo 3 — Configurar permissões",
+    "text": "Passo 3 — Configurar permissões\nsudo usermod -aG docker $USER\nnewgrp docker",
+    "crumbs": [
+      "Infraestrutura",
+      "Setup da VM e Docker"
+    ]
+  },
+  {
+    "objectID": "setup-vm.html#passo-4-verificar-instalação",
+    "href": "setup-vm.html#passo-4-verificar-instalação",
+    "title": "Setup da VM e Docker",
+    "section": "Passo 4 — Verificar instalação",
+    "text": "Passo 4 — Verificar instalação\ndocker --version\ndocker compose version\ndocker run --rm hello-world\nResultado esperado: Mensagem “Hello from Docker!” sem erros.",
+    "crumbs": [
+      "Infraestrutura",
+      "Setup da VM e Docker"
+    ]
+  },
+  {
+    "objectID": "setup-vm.html#passo-5-configurar-firewall",
+    "href": "setup-vm.html#passo-5-configurar-firewall",
+    "title": "Setup da VM e Docker",
+    "section": "Passo 5 — Configurar firewall",
+    "text": "Passo 5 — Configurar firewall\nsudo ufw allow 80/tcp\nsudo ufw allow 443/tcp\nsudo ufw allow 8080/tcp\nsudo ufw enable\nsudo ufw status\n\n\n\n\n\n\nImportante\n\n\n\nA porta 8080 é usada pelo INJI Verify Service. A Carteira Digital do cidadão precisa acessá-la. Em produção, coloque um reverse proxy (Nginx) com HTTPS na frente.",
+    "crumbs": [
+      "Infraestrutura",
+      "Setup da VM e Docker"
+    ]
+  },
+  {
+    "objectID": "setup-vm.html#próximo-passo",
+    "href": "setup-vm.html#próximo-passo",
+    "title": "Setup da VM e Docker",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nVM pronta. Agora suba o INJI Verify Service.",
+    "crumbs": [
+      "Infraestrutura",
+      "Setup da VM e Docker"
+    ]
+  },
+  {
+    "objectID": "CLAUDE.html",
+    "href": "CLAUDE.html",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.\n\n\nDeveloper portal (“Portal do Desenvolvedor”) for VerificaIdade — age verification (18+) using INJI Verify. Static documentation site built with Quarto, written entirely in Portuguese (pt-BR).\nThe integration architecture is:\n\nINJI Verify SDK (@mosip/react-inji-verify-sdk) — React NPM package with embeddable verification components\nINJI Verify Service — Java/Spring Boot backend deployed via Docker on the verifier’s VM, with PostgreSQL\nNo custom backend is needed to orchestrate verification; the SDK talks directly to the Service\n\n\n\n\nquarto render          # Generate HTML in docs/\nquarto preview         # Preview with live reload\nOutput goes to docs/ for GitHub Pages deployment.\n\n\n\n\nQuarto static site — no backend, no JS framework\n_quarto.yml — main project config (site structure, theme, sidebar nav with sections)\n.qmd files (root) — documentation pages in Quarto Markdown with Mermaid diagrams\ndocs/ — generated output (committed for GitHub Pages)\nTheme: Cosmo + styles.css for custom overrides\n\n\n\n\nPages organized in sections: Início Rápido (arquitetura, quickstart), Infraestrutura (setup-vm, inji-verify), Integração (fluxo-verificacao, integra-web, integra-mobile), Referência (policy18, seguranca-lgpd, producao, api-reference, troubleshooting, onboarding).\n\n\n\n\nAll content in Portuguese (pt-BR)\nSite structure defined in _quarto.yml under website.sidebar.contents\nAdding a page: create .qmd file + add to sidebar in _quarto.yml\nAfter changes: quarto render and commit both source and docs/\nCode examples use React/TypeScript (frontend with SDK), Node/Express (optional backend for production security)\nINJI Verify Service deployed via Docker Compose (Spring Boot + PostgreSQL)\nUse Quarto callouts (.callout-note, .callout-warning, .callout-important)\nUse Mermaid diagrams for architecture and flow visualizations\nPlaceholders: &lt;VERIFY_BASE_URL&gt;, &lt;SEU_DOMINIO&gt;"
+  },
+  {
+    "objectID": "CLAUDE.html#project-overview",
+    "href": "CLAUDE.html#project-overview",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Developer portal (“Portal do Desenvolvedor”) for VerificaIdade — age verification (18+) using INJI Verify. Static documentation site built with Quarto, written entirely in Portuguese (pt-BR).\nThe integration architecture is:\n\nINJI Verify SDK (@mosip/react-inji-verify-sdk) — React NPM package with embeddable verification components\nINJI Verify Service — Java/Spring Boot backend deployed via Docker on the verifier’s VM, with PostgreSQL\nNo custom backend is needed to orchestrate verification; the SDK talks directly to the Service"
+  },
+  {
+    "objectID": "CLAUDE.html#build-commands",
+    "href": "CLAUDE.html#build-commands",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "quarto render          # Generate HTML in docs/\nquarto preview         # Preview with live reload\nOutput goes to docs/ for GitHub Pages deployment."
+  },
+  {
+    "objectID": "CLAUDE.html#architecture",
+    "href": "CLAUDE.html#architecture",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Quarto static site — no backend, no JS framework\n_quarto.yml — main project config (site structure, theme, sidebar nav with sections)\n.qmd files (root) — documentation pages in Quarto Markdown with Mermaid diagrams\ndocs/ — generated output (committed for GitHub Pages)\nTheme: Cosmo + styles.css for custom overrides"
+  },
+  {
+    "objectID": "CLAUDE.html#content-structure",
+    "href": "CLAUDE.html#content-structure",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Pages organized in sections: Início Rápido (arquitetura, quickstart), Infraestrutura (setup-vm, inji-verify), Integração (fluxo-verificacao, integra-web, integra-mobile), Referência (policy18, seguranca-lgpd, producao, api-reference, troubleshooting, onboarding)."
+  },
+  {
+    "objectID": "CLAUDE.html#conventions",
+    "href": "CLAUDE.html#conventions",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "All content in Portuguese (pt-BR)\nSite structure defined in _quarto.yml under website.sidebar.contents\nAdding a page: create .qmd file + add to sidebar in _quarto.yml\nAfter changes: quarto render and commit both source and docs/\nCode examples use React/TypeScript (frontend with SDK), Node/Express (optional backend for production security)\nINJI Verify Service deployed via Docker Compose (Spring Boot + PostgreSQL)\nUse Quarto callouts (.callout-note, .callout-warning, .callout-important)\nUse Mermaid diagrams for architecture and flow visualizations\nPlaceholders: &lt;VERIFY_BASE_URL&gt;, &lt;SEU_DOMINIO&gt;"
+  },
+  {
+    "objectID": "integra-web.html",
+    "href": "integra-web.html",
+    "title": "Integração Web (QR Code)",
+    "section": "",
+    "text": "Implementar verificação de idade em uma aplicação Web React usando QR Code (fluxo cross-device).",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "integra-web.html#objetivo",
+    "href": "integra-web.html#objetivo",
+    "title": "Integração Web (QR Code)",
+    "section": "",
+    "text": "Implementar verificação de idade em uma aplicação Web React usando QR Code (fluxo cross-device).",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "integra-web.html#fluxo-web",
+    "href": "integra-web.html#fluxo-web",
+    "title": "Integração Web (QR Code)",
+    "section": "Fluxo Web",
+    "text": "Fluxo Web\n\n\n\n\n\nsequenceDiagram\n    participant U as Usuário (Desktop)\n    participant SDK as App React + SDK\n    participant VS as INJI Verify Service\n    participant W as Carteira Digital (Celular)\n\n    U-&gt;&gt;SDK: Clica \"Verificar Idade\"\n    SDK-&gt;&gt;VS: POST /v1/verify/vp-request\n    VS--&gt;&gt;SDK: requestId + authorizationUrl\n    SDK-&gt;&gt;U: Renderiza QR Code\n    U-&gt;&gt;W: Escaneia QR Code\n    W-&gt;&gt;VS: POST /v1/verify/vp-submission (credencial)\n    VS-&gt;&gt;VS: Valida credencial\n    Note over SDK,VS: Long-polling /vp-request/{id}/status\n    VS--&gt;&gt;SDK: Resultado\n    SDK-&gt;&gt;U: Callback executado",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "integra-web.html#cenário",
+    "href": "integra-web.html#cenário",
+    "title": "Integração Web (QR Code)",
+    "section": "Cenário",
+    "text": "Cenário\nO usuário está no desktop. O site exibe um QR Code. O usuário abre a Carteira Digital no celular, escaneia o QR Code e autoriza o compartilhamento da credencial.",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "integra-web.html#passo-1-instalar-o-sdk",
+    "href": "integra-web.html#passo-1-instalar-o-sdk",
+    "title": "Integração Web (QR Code)",
+    "section": "Passo 1 — Instalar o SDK",
+    "text": "Passo 1 — Instalar o SDK\nnpm install @mosip/react-inji-verify-sdk",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "integra-web.html#passo-2-componente-de-verificação",
+    "href": "integra-web.html#passo-2-componente-de-verificação",
+    "title": "Integração Web (QR Code)",
+    "section": "Passo 2 — Componente de verificação",
+    "text": "Passo 2 — Componente de verificação\n// src/components/VerificaIdade.tsx\nimport { useState } from 'react';\nimport { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';\n\n// Substitua pelo valor do seu ambiente\nconst VERIFY_SERVICE_URL = '&lt;VERIFY_BASE_URL&gt;/v1/verify';\nconst CLIENT_ID_DID = 'did:web:&lt;SEU_DOMINIO&gt;:v1:verify';\n\n// Substitua pela Presentation Definition do seu credenciamento\nconst presentationDefinition = {\n  id: 'age-verification-18-plus',\n  input_descriptors: [\n    {\n      id: 'age_credential',\n      format: {\n        'vc+sd-jwt': {\n          'sd-jwt_alg_values': ['ES256']\n        }\n      },\n      constraints: {\n        fields: [\n          {\n            path: ['$.ageOver18'],\n            filter: {\n              type: 'boolean',\n              const: true\n            }\n          }\n        ]\n      }\n    }\n  ]\n};\n\ntype VerificaIdadeProps = {\n  onVerificado: () =&gt; void;\n  onFalhou: () =&gt; void;\n};\n\nexport function VerificaIdade({ onVerificado, onFalhou }: VerificaIdadeProps) {\n  const [estado, setEstado] = useState&lt;'idle' | 'verificado' | 'falhou'&gt;('idle');\n\n  return (\n    &lt;div&gt;\n      {estado === 'idle' && (\n        &lt;OpenID4VPVerification\n          verifyServiceUrl={VERIFY_SERVICE_URL}\n          clientId={CLIENT_ID_DID}\n          protocol=\"openid4vp://\"\n          presentationDefinition={presentationDefinition}\n          onVpProcessed={(results) =&gt; {\n            const ok = results.some(r =&gt; r.vcStatus === 'SUCCESS');\n            if (ok) {\n              setEstado('verificado');\n              onVerificado();\n            } else {\n              setEstado('falhou');\n              onFalhou();\n            }\n          }}\n          onError={(error) =&gt; {\n            console.error('Erro na verificação:', error);\n            setEstado('falhou');\n            onFalhou();\n          }}\n          onQrCodeExpired={() =&gt; {\n            console.log('QR Code expirou');\n          }}\n        /&gt;\n      )}\n\n      {estado === 'verificado' && (\n        &lt;p&gt;Idade verificada com sucesso.&lt;/p&gt;\n      )}\n\n      {estado === 'falhou' && (\n        &lt;div&gt;\n          &lt;p&gt;Verificação falhou.&lt;/p&gt;\n          &lt;button onClick={() =&gt; setEstado('idle')}&gt;Tentar novamente&lt;/button&gt;\n        &lt;/div&gt;\n      )}\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "integra-web.html#passo-3-usar-o-componente",
+    "href": "integra-web.html#passo-3-usar-o-componente",
+    "title": "Integração Web (QR Code)",
+    "section": "Passo 3 — Usar o componente",
+    "text": "Passo 3 — Usar o componente\n// src/pages/Checkout.tsx\nimport { VerificaIdade } from '../components/VerificaIdade';\n\nexport function Checkout() {\n  return (\n    &lt;div&gt;\n      &lt;h1&gt;Verificação de Idade&lt;/h1&gt;\n      &lt;VerificaIdade\n        onVerificado={() =&gt; console.log('Acesso liberado')}\n        onFalhou={() =&gt; console.log('Acesso negado')}\n      /&gt;\n    &lt;/div&gt;\n  );\n}",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "integra-web.html#versão-para-produção-com-onvpreceived",
+    "href": "integra-web.html#versão-para-produção-com-onvpreceived",
+    "title": "Integração Web (QR Code)",
+    "section": "Versão para produção (com onVpReceived)",
+    "text": "Versão para produção (com onVpReceived)\nEm produção, use onVpReceived para buscar o resultado no backend:\n// src/components/VerificaIdadeProd.tsx\nimport { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';\n\nexport function VerificaIdadeProd() {\n  const handleVpReceived = async (txnId: string) =&gt; {\n    // Buscar resultado no seu backend\n    const res = await fetch(`/api/verificacao/resultado/${txnId}`);\n    const data = await res.json();\n\n    if (data.verified) {\n      // Liberar acesso\n    } else {\n      // Negar acesso\n    }\n  };\n\n  return (\n    &lt;OpenID4VPVerification\n      verifyServiceUrl=\"&lt;VERIFY_BASE_URL&gt;/v1/verify\"\n      clientId=\"did:web:&lt;SEU_DOMINIO&gt;:v1:verify\"\n      protocol=\"openid4vp://\"\n      presentationDefinition={presentationDefinition}\n      onVpReceived={handleVpReceived}\n      onError={(error) =&gt; console.error(error)}\n      onQrCodeExpired={() =&gt; console.log('QR expirou')}\n    /&gt;\n  );\n}\n\n\n\n\n\n\nImportante\n\n\n\nNessa abordagem, seu backend busca o resultado em GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{txnId} e decide se libera o acesso. Isso evita que o frontend seja adulterado.",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "integra-web.html#customização-do-qr-code",
+    "href": "integra-web.html#customização-do-qr-code",
+    "title": "Integração Web (QR Code)",
+    "section": "Customização do QR Code",
+    "text": "Customização do QR Code\n&lt;OpenID4VPVerification\n  // ...\n  qrCodeStyles={{\n    size: 300,\n    bgColor: '#ffffff',\n    fgColor: '#000000',\n  }}\n  triggerElement={&lt;button className=\"btn-verificar\"&gt;Verificar Idade&lt;/button&gt;}\n/&gt;",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "integra-web.html#props-do-openid4vpverification",
+    "href": "integra-web.html#props-do-openid4vpverification",
+    "title": "Integração Web (QR Code)",
+    "section": "Props do OpenID4VPVerification",
+    "text": "Props do OpenID4VPVerification\n\n\n\n\n\n\n\n\n\nProp\nTipo\nObrigatório\nDescrição\n\n\n\n\nverifyServiceUrl\nstring\nSim\nURL do INJI Verify Service\n\n\nclientId\nstring\nSim\nDID do verificador\n\n\nprotocol\nstring\nSim\nProtocolo (\"openid4vp://\")\n\n\npresentationDefinition\nobject\nSim*\nPresentation Definition inline\n\n\npresentationDefinitionId\nstring\nSim*\nID de definição pré-cadastrada\n\n\nonVpReceived\n(txnId) =&gt; void\nSim**\nCallback com transaction ID\n\n\nonVpProcessed\n(results) =&gt; void\nSim**\nCallback com resultado completo\n\n\nonError\n(error) =&gt; void\nSim\nCallback de erro\n\n\nonQrCodeExpired\n() =&gt; void\nSim\nCallback de QR expirado\n\n\ntriggerElement\nReactNode\nNão\nElemento que inicia a verificação\n\n\nqrCodeStyles\nobject\nNão\nEstilos do QR Code\n\n\n\n* Use presentationDefinition ou presentationDefinitionId, não ambos.\n** Use onVpReceived ou onVpProcessed, não ambos.",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "integra-web.html#próximo-passo",
+    "href": "integra-web.html#próximo-passo",
+    "title": "Integração Web (QR Code)",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nPara integração mobile, veja Integração Mobile (Deep Link).",
+    "crumbs": [
+      "Integração",
+      "Integração Web (QR Code)"
+    ]
+  },
+  {
+    "objectID": "policy18.html",
+    "href": "policy18.html",
+    "title": "Policy 18+",
+    "section": "",
+    "text": "Entender como configurar a Presentation Definition para verificação de idade (18+) usando o padrão OpenID4VP.",
+    "crumbs": [
+      "Referência",
+      "Policy 18+"
+    ]
+  },
+  {
+    "objectID": "policy18.html#objetivo",
+    "href": "policy18.html#objetivo",
+    "title": "Policy 18+",
+    "section": "",
+    "text": "Entender como configurar a Presentation Definition para verificação de idade (18+) usando o padrão OpenID4VP.",
+    "crumbs": [
+      "Referência",
+      "Policy 18+"
+    ]
+  },
+  {
+    "objectID": "policy18.html#o-que-é-uma-presentation-definition",
+    "href": "policy18.html#o-que-é-uma-presentation-definition",
+    "title": "Policy 18+",
+    "section": "O que é uma Presentation Definition?",
+    "text": "O que é uma Presentation Definition?\nA Presentation Definition (PD) é um documento JSON que descreve quais credenciais e campos você quer que o cidadão apresente. Ela segue o padrão DIF Presentation Exchange.\nNo caso do VerificaIdade, a PD solicita uma credencial que contenha ageOver18: true.",
+    "crumbs": [
+      "Referência",
+      "Policy 18+"
+    ]
+  },
+  {
+    "objectID": "policy18.html#presentation-definition-para-idade-18",
+    "href": "policy18.html#presentation-definition-para-idade-18",
+    "title": "Policy 18+",
+    "section": "Presentation Definition para idade 18+",
+    "text": "Presentation Definition para idade 18+\n{\n  \"id\": \"age-verification-18-plus\",\n  \"input_descriptors\": [\n    {\n      \"id\": \"age_credential\",\n      \"format\": {\n        \"vc+sd-jwt\": {\n          \"sd-jwt_alg_values\": [\"ES256\"]\n        }\n      },\n      \"constraints\": {\n        \"fields\": [\n          {\n            \"path\": [\"$.ageOver18\"],\n            \"filter\": {\n              \"type\": \"boolean\",\n              \"const\": true\n            }\n          }\n        ]\n      }\n    }\n  ]\n}\n\n\n\n\n\n\nImportante\n\n\n\nEsta é uma Presentation Definition ilustrativa. A definição exata depende do tipo de credencial emitida pelo governo e do formato suportado. Consulte a documentação do emissor para os campos corretos.",
+    "crumbs": [
+      "Referência",
+      "Policy 18+"
+    ]
+  },
+  {
+    "objectID": "policy18.html#como-usar-no-sdk",
+    "href": "policy18.html#como-usar-no-sdk",
+    "title": "Policy 18+",
+    "section": "Como usar no SDK",
+    "text": "Como usar no SDK\n\nOpção 1 — Inline (passar diretamente)\n&lt;OpenID4VPVerification\n  // ...\n  presentationDefinition={{\n    id: 'age-verification-18-plus',\n    input_descriptors: [/* ... */]\n  }}\n/&gt;\n\n\nOpção 2 — Pré-cadastrada no Service\nSe a Presentation Definition estiver cadastrada no INJI Verify Service, use o ID:\n&lt;OpenID4VPVerification\n  // ...\n  presentationDefinitionId=\"age-verification-18-plus\"\n/&gt;\n\n\n\n\n\n\nAviso\n\n\n\nUse uma ou outra opção, nunca ambas. O SDK rejeita se ambas forem fornecidas.",
+    "crumbs": [
+      "Referência",
+      "Policy 18+"
+    ]
+  },
+  {
+    "objectID": "policy18.html#o-que-você-recebe",
+    "href": "policy18.html#o-que-você-recebe",
+    "title": "Policy 18+",
+    "section": "O que você recebe",
+    "text": "O que você recebe\n\nVerificação com sucesso\n[\n  {\n    \"vc\": { \"...conteúdo da credencial...\" },\n    \"vcStatus\": \"SUCCESS\"\n  }\n]\n\n\nCredencial inválida\n[\n  {\n    \"vc\": { \"...conteúdo da credencial...\" },\n    \"vcStatus\": \"INVALID\"\n  }\n]\n\n\nCredencial expirada\n[\n  {\n    \"vc\": { \"...conteúdo da credencial...\" },\n    \"vcStatus\": \"EXPIRED\"\n  }\n]",
+    "crumbs": [
+      "Referência",
+      "Policy 18+"
+    ]
+  },
+  {
+    "objectID": "policy18.html#o-que-o-inji-verify-service-valida",
+    "href": "policy18.html#o-que-o-inji-verify-service-valida",
+    "title": "Policy 18+",
+    "section": "O que o INJI Verify Service valida",
+    "text": "O que o INJI Verify Service valida\n\nAssinatura criptográfica — a credencial foi emitida por um emissor confiável?\nFormato — a credencial segue o padrão esperado (SD-JWT, CWT)?\nExpiração — a credencial ainda é válida?\nRevogação — a credencial foi revogada?\nConstraints — os campos solicitados na PD foram satisfeitos?",
+    "crumbs": [
+      "Referência",
+      "Policy 18+"
+    ]
+  },
+  {
+    "objectID": "policy18.html#minimização-de-dados",
+    "href": "policy18.html#minimização-de-dados",
+    "title": "Policy 18+",
+    "section": "Minimização de dados",
+    "text": "Minimização de dados\nA Presentation Definition solicita apenas o campo ageOver18. Usando SD-JWT (Selective Disclosure), o cidadão pode apresentar apenas esse campo sem revelar nome, data de nascimento ou outros dados pessoais.\n\n\n\n\n\n\nNota\n\n\n\nIsso é privacy by design. Você confirma que a pessoa tem 18+ sem saber a idade exata ou qualquer outro dado pessoal.",
+    "crumbs": [
+      "Referência",
+      "Policy 18+"
+    ]
+  },
+  {
+    "objectID": "policy18.html#próximo-passo",
+    "href": "policy18.html#próximo-passo",
+    "title": "Policy 18+",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nEntenda as práticas de Segurança e LGPD.",
+    "crumbs": [
+      "Referência",
+      "Policy 18+"
+    ]
+  },
+  {
+    "objectID": "onboarding.html",
+    "href": "onboarding.html",
+    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "section": "",
+    "text": "Entender o processo de credenciamento (onboarding) para operar como verificador.",
+    "crumbs": [
+      "Referência",
+      "Onboarding (Conceito e Uso com WSO2)"
+    ]
+  },
+  {
+    "objectID": "onboarding.html#objetivo",
+    "href": "onboarding.html#objetivo",
+    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "section": "",
+    "text": "Entender o processo de credenciamento (onboarding) para operar como verificador.",
+    "crumbs": [
+      "Referência",
+      "Onboarding (Conceito e Uso com WSO2)"
+    ]
+  },
+  {
+    "objectID": "onboarding.html#o-que-é-o-onboarding",
+    "href": "onboarding.html#o-que-é-o-onboarding",
+    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "section": "O que é o Onboarding?",
+    "text": "O que é o Onboarding?\nAntes de verificar credenciais em produção, sua organização precisa ser credenciada como verificador autorizado. O onboarding define:\n\nQuem você é (identidade do verificador via DID)\nQue credenciais você pode solicitar (Presentation Definitions)\nComo acessar o ecossistema",
+    "crumbs": [
+      "Referência",
+      "Onboarding (Conceito e Uso com WSO2)"
+    ]
+  },
+  {
+    "objectID": "onboarding.html#fluxo-de-onboarding",
+    "href": "onboarding.html#fluxo-de-onboarding",
+    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "section": "Fluxo de Onboarding",
+    "text": "Fluxo de Onboarding\n\n\n\n\n\nflowchart TD\n    A[Solicitar credenciamento] --&gt; B[Aprovação pelo órgão responsável]\n    B --&gt; C[Receber acesso ao gateway WSO2]\n    C --&gt; D[Configurar DID e keystore]\n    D --&gt; E[Configurar INJI Verify Service]\n    E --&gt; F[Testar em ambiente de homologação]\n    F --&gt; G[Aprovação para produção]",
+    "crumbs": [
+      "Referência",
+      "Onboarding (Conceito e Uso com WSO2)"
+    ]
+  },
+  {
+    "objectID": "onboarding.html#o-papel-do-gateway-wso2",
+    "href": "onboarding.html#o-papel-do-gateway-wso2",
+    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "section": "O papel do Gateway (WSO2)",
+    "text": "O papel do Gateway (WSO2)\nO gateway WSO2 API Manager é a camada de gerenciamento do ecossistema:\n\n\n\nFunção\nDescrição\n\n\n\n\nRegistro\nRegistra verificadores e suas credenciais de acesso\n\n\nRate Limiting\nControla quantidade de verificações por período\n\n\nMonitoramento\nRegistra uso do serviço\n\n\nPolíticas\nDefine quais Presentation Definitions são permitidas\n\n\n\n\n\n\n\n\n\nNota\n\n\n\nVocê não precisa instalar o WSO2. Ele é gerenciado pelo provedor do ecossistema. Sua responsabilidade é configurar o INJI Verify Service na sua infraestrutura.",
+    "crumbs": [
+      "Referência",
+      "Onboarding (Conceito e Uso com WSO2)"
+    ]
+  },
+  {
+    "objectID": "onboarding.html#o-que-você-configura",
+    "href": "onboarding.html#o-que-você-configura",
+    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "section": "O que você configura",
+    "text": "O que você configura\nApós o credenciamento, você recebe informações para configurar:\n\n\n\n\n\n\n\n\nItem\nOnde usar\nDescrição\n\n\n\n\nDID do verificador\nINJI_DID_VERIFY_URI\nIdentidade digital do seu verificador\n\n\nKeystore PKCS12\nMontado no container\nChave para assinar authorization requests\n\n\nPresentation Definition\nProp presentationDefinition do SDK\nDefine quais credenciais solicitar\n\n\nDomínio público\nINJI_VP_SUBMISSION_BASE_URL\nEndereço para a Wallet enviar credenciais",
+    "crumbs": [
+      "Referência",
+      "Onboarding (Conceito e Uso com WSO2)"
+    ]
+  },
+  {
+    "objectID": "onboarding.html#ambientes",
+    "href": "onboarding.html#ambientes",
+    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "section": "Ambientes",
+    "text": "Ambientes\n\n\n\n\n\n\n\nAmbiente\nUso\n\n\n\n\nHomologação\nTestes com credenciais de teste. Use o keystore de teste.\n\n\nProdução\nSistema em operação real. Keystore e DID definitivos.\n\n\n\n\n\n\n\n\n\nAviso\n\n\n\nNunca use o keystore de teste (test.p12) em produção. Gere um keystore próprio.",
+    "crumbs": [
+      "Referência",
+      "Onboarding (Conceito e Uso com WSO2)"
+    ]
+  },
+  {
+    "objectID": "onboarding.html#passos-do-credenciamento",
+    "href": "onboarding.html#passos-do-credenciamento",
+    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "section": "Passos do credenciamento",
+    "text": "Passos do credenciamento\n\nPasso 1 — Solicitar acesso\nEntre em contato com o órgão responsável pelo VerificaIdade.\n\n\nPasso 2 — Receber acesso ao portal\nApós aprovação, você receberá acesso ao portal do gateway WSO2.\n\n\nPasso 3 — Configurar identidade\n\nGere ou receba o DID Web do seu verificador\nGere ou receba o keystore PKCS12\n\n\n\nPasso 4 — Configurar INJI Verify Service\nUse os valores recebidos nas variáveis de ambiente do INJI Verify Service:\nINJI_DID_VERIFY_URI=did:web:verify.seu-dominio.com.br:v1:verify\nINJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:verify.seu-dominio.com.br:v1:verify#key-0\nINJI_KEYSTORE_FILE_PASS=sua-senha-do-keystore\nINJI_VP_SUBMISSION_BASE_URL=https://verify.seu-dominio.com.br/v1/verify\n\n\nPasso 5 — Testar em homologação\nUse credenciais de teste para validar o fluxo completo antes de ir para produção.",
+    "crumbs": [
+      "Referência",
+      "Onboarding (Conceito e Uso com WSO2)"
+    ]
+  },
+  {
+    "objectID": "onboarding.html#dúvidas-sobre-onboarding",
+    "href": "onboarding.html#dúvidas-sobre-onboarding",
+    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "section": "Dúvidas sobre Onboarding",
+    "text": "Dúvidas sobre Onboarding\nO processo de onboarding é gerenciado pelo órgão responsável pelo VerificaIdade. Consulte a documentação fornecida no credenciamento.",
+    "crumbs": [
+      "Referência",
+      "Onboarding (Conceito e Uso com WSO2)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html",
+    "href": "integra-mobile.html",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "",
+    "text": "Implementar verificação de idade em um app web mobile usando Deep Link (fluxo same-device).",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html#objetivo",
+    "href": "integra-mobile.html#objetivo",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "",
+    "text": "Implementar verificação de idade em um app web mobile usando Deep Link (fluxo same-device).",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html#fluxo-mobile",
+    "href": "integra-mobile.html#fluxo-mobile",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "Fluxo Mobile",
+    "text": "Fluxo Mobile\n\n\n\n\n\nsequenceDiagram\n    participant U as Usuário (Celular)\n    participant SDK as App React + SDK\n    participant VS as INJI Verify Service\n    participant W as Carteira Digital\n\n    U-&gt;&gt;SDK: Toca \"Verificar Idade\"\n    SDK-&gt;&gt;VS: POST /v1/verify/vp-request\n    VS--&gt;&gt;SDK: requestId + authorizationUrl\n    SDK-&gt;&gt;W: Redireciona via Deep Link (openid4vp://...)\n    W-&gt;&gt;VS: POST /v1/verify/vp-submission\n    Note over W: Usuário volta ao app\n    SDK-&gt;&gt;VS: Long-polling /vp-request/{id}/status\n    VS--&gt;&gt;SDK: Resultado\n    SDK-&gt;&gt;U: Callback executado",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html#cenário",
+    "href": "integra-mobile.html#cenário",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "Cenário",
+    "text": "Cenário\nO usuário está no celular acessando seu site via navegador. O SDK detecta que é um dispositivo mobile e, em vez de exibir um QR Code, redireciona automaticamente para a Carteira Digital via Deep Link.",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html#como-funciona",
+    "href": "integra-mobile.html#como-funciona",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "Como funciona",
+    "text": "Como funciona\nO SDK usa o mesmo componente OpenID4VPVerification — a detecção do dispositivo é automática:\n\nDesktop → renderiza QR Code\nMobile/Tablet → redireciona via Deep Link (openid4vp://...)\n\nA prop isSameDeviceFlowEnabled controla esse comportamento (padrão: true).",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html#passo-1-o-mesmo-componente-funciona",
+    "href": "integra-mobile.html#passo-1-o-mesmo-componente-funciona",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "Passo 1 — O mesmo componente funciona",
+    "text": "Passo 1 — O mesmo componente funciona\n// src/components/VerificaIdade.tsx\n// O MESMO código da integração Web funciona no mobile!\nimport { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';\n\nexport function VerificaIdade() {\n  return (\n    &lt;OpenID4VPVerification\n      verifyServiceUrl=\"&lt;VERIFY_BASE_URL&gt;/v1/verify\"\n      clientId=\"did:web:&lt;SEU_DOMINIO&gt;:v1:verify\"\n      protocol=\"openid4vp://\"\n      presentationDefinition={presentationDefinition}\n      isSameDeviceFlowEnabled={true}  // padrão — Deep Link no mobile\n      onVpProcessed={(results) =&gt; {\n        const ok = results.some(r =&gt; r.vcStatus === 'SUCCESS');\n        console.log('Verificado:', ok);\n      }}\n      onError={(error) =&gt; console.error(error)}\n      onQrCodeExpired={() =&gt; console.log('Expirou')}\n    /&gt;\n  );\n}\n\n\n\n\n\n\nNota\n\n\n\nNão é necessário código diferente para mobile. O SDK detecta o dispositivo automaticamente e escolhe entre QR Code e Deep Link.",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html#o-que-acontece-internamente-no-mobile",
+    "href": "integra-mobile.html#o-que-acontece-internamente-no-mobile",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "O que acontece internamente no mobile",
+    "text": "O que acontece internamente no mobile\n\nSDK chama o INJI Verify Service para criar a VP Request\nSDK detecta que o dispositivo é mobile (via user agent)\nSDK redireciona o navegador para openid4vp://authorize?...\nA Carteira Digital abre e exibe a credencial para autorização\nUsuário autoriza o compartilhamento\nCarteira envia a VP ao INJI Verify Service\nUsuário volta ao navegador (ou ao app)\nSDK recupera a sessão do sessionStorage e busca o resultado",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html#botão-personalizado-para-mobile",
+    "href": "integra-mobile.html#botão-personalizado-para-mobile",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "Botão personalizado para mobile",
+    "text": "Botão personalizado para mobile\nVocê pode usar triggerElement para criar um botão mais adequado ao mobile:\n&lt;OpenID4VPVerification\n  // ...\n  triggerElement={\n    &lt;button className=\"btn-verificar-mobile\"&gt;\n      Verificar com Carteira Digital\n    &lt;/button&gt;\n  }\n/&gt;",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html#desabilitar-fluxo-same-device",
+    "href": "integra-mobile.html#desabilitar-fluxo-same-device",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "Desabilitar fluxo same-device",
+    "text": "Desabilitar fluxo same-device\nSe quiser forçar QR Code mesmo no mobile (cenário raro):\n&lt;OpenID4VPVerification\n  // ...\n  isSameDeviceFlowEnabled={false}  // Sempre QR Code\n/&gt;",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html#considerações-mobile",
+    "href": "integra-mobile.html#considerações-mobile",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "Considerações Mobile",
+    "text": "Considerações Mobile\n\nRetorno ao app\nQuando o usuário volta da Carteira Digital ao navegador, o SDK restaura a sessão a partir do sessionStorage. O resultado é obtido automaticamente.\n\n\nCarteira não instalada\nSe a Carteira Digital não estiver instalada, o Deep Link não abrirá nada. Trate isso com uma mensagem orientando o usuário:\n&lt;OpenID4VPVerification\n  // ...\n  onError={(error) =&gt; {\n    // Informar o usuário para instalar a Carteira Digital\n    alert('Instale a Carteira Digital para verificar sua idade.');\n  }}\n/&gt;\n\n\nApps nativos (Flutter, React Native)\nO INJI Verify SDK é exclusivo para React Web. Para apps nativos, você tem duas opções:\n\nWebView — Abrir uma tela React com o SDK dentro de uma WebView\nAPI direta — Chamar os endpoints do INJI Verify Service diretamente e implementar a lógica de Deep Link no app nativo\n\n\n\n\n\n\n\nAviso\n\n\n\nO SDK não suporta React Native, Angular, Vue ou SSR (Next.js). Para apps nativos, use a opção de WebView ou API direta.",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "integra-mobile.html#próximo-passo",
+    "href": "integra-mobile.html#próximo-passo",
+    "title": "Integração Mobile (Deep Link)",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nEntenda a Policy 18+ e como configurar a Presentation Definition.",
+    "crumbs": [
+      "Integração",
+      "Integração Mobile (Deep Link)"
+    ]
+  },
+  {
+    "objectID": "api-reference.html",
+    "href": "api-reference.html",
+    "title": "API Reference",
+    "section": "",
+    "text": "Referência dos endpoints REST do INJI Verify Service. O context path é /v1/verify.\n\n\n\n\n\n\nNota\n\n\n\nEm uso normal, o SDK gerencia todas as chamadas a esses endpoints automaticamente. Esta referência é útil para debugging, integração com apps nativos, ou uso de onVpReceived com backend.",
+    "crumbs": [
+      "Referência",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api-reference.html#objetivo",
+    "href": "api-reference.html#objetivo",
+    "title": "API Reference",
+    "section": "",
+    "text": "Referência dos endpoints REST do INJI Verify Service. O context path é /v1/verify.\n\n\n\n\n\n\nNota\n\n\n\nEm uso normal, o SDK gerencia todas as chamadas a esses endpoints automaticamente. Esta referência é útil para debugging, integração com apps nativos, ou uso de onVpReceived com backend.",
+    "crumbs": [
+      "Referência",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api-reference.html#endpoints-do-inji-verify-service",
+    "href": "api-reference.html#endpoints-do-inji-verify-service",
+    "title": "API Reference",
+    "section": "Endpoints do INJI Verify Service",
+    "text": "Endpoints do INJI Verify Service\n\nCriar VP Request\nInicia uma solicitação de verificação OpenID4VP.\nPOST &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-request\nRequest Body:\n{\n  \"presentationDefinition\": {\n    \"id\": \"age-verification-18-plus\",\n    \"input_descriptors\": [\n      {\n        \"id\": \"age_credential\",\n        \"format\": {\n          \"vc+sd-jwt\": {\n            \"sd-jwt_alg_values\": [\"ES256\"]\n          }\n        },\n        \"constraints\": {\n          \"fields\": [\n            {\n              \"path\": [\"$.ageOver18\"],\n              \"filter\": {\n                \"type\": \"boolean\",\n                \"const\": true\n              }\n            }\n          ]\n        }\n      }\n    ]\n  }\n}\nResponse — 200 OK:\n{\n  \"requestId\": \"abc-123-def-456\",\n  \"authorizationUrl\": \"openid4vp://authorize?request_uri=https://...\"\n}\n\n\n\nConsultar Status da VP Request (Long-Polling)\nAguarda até que a Carteira Digital envie a credencial ou o timeout seja atingido.\nGET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-request/{requestId}/status\nO timeout padrão do long-polling é 55 segundos (configurável via INJI_VP_REQUEST_LONG_POLLING_TIMEOUT).\nResponse — 200 OK (credencial recebida):\n{\n  \"status\": \"COMPLETED\",\n  \"requestId\": \"abc-123-def-456\"\n}\nResponse — 200 OK (aguardando):\n{\n  \"status\": \"PENDING\",\n  \"requestId\": \"abc-123-def-456\"\n}\n\n\n\nObter Resultado da Verificação\nBusca o resultado completo após a Wallet ter submetido a credencial.\nGET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{requestId}\nResponse — 200 OK:\n[\n  {\n    \"vc\": {\n      \"ageOver18\": true\n    },\n    \"vcStatus\": \"SUCCESS\"\n  }\n]\nValores possíveis de vcStatus:\n\n\n\nValor\nSignificado\n\n\n\n\nSUCCESS\nCredencial válida, policy satisfeita\n\n\nINVALID\nCredencial inválida (assinatura, emissor, formato)\n\n\nEXPIRED\nCredencial expirada\n\n\n\n\n\n\nVP Submission (Wallet → Service)\nEndpoint chamado pela Carteira Digital para enviar a credencial. Você não chama este endpoint diretamente.\nPOST &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-submission\n\n\n\nVC Verification (QR Code Scan/Upload)\nPara o fluxo de QR Code scan/upload (não OpenID4VP), o SDK usa:\nPOST &lt;VERIFY_BASE_URL&gt;/v1/verify/vc-verification\n\n\n\nHealth Check\nGET &lt;VERIFY_BASE_URL&gt;/v1/verify/health\nResponse — 200 OK:\n{\n  \"status\": \"UP\"\n}",
+    "crumbs": [
+      "Referência",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api-reference.html#uso-com-onvpreceived-backend",
+    "href": "api-reference.html#uso-com-onvpreceived-backend",
+    "title": "API Reference",
+    "section": "Uso com onVpReceived (Backend)",
+    "text": "Uso com onVpReceived (Backend)\nQuando você usa onVpReceived, o SDK retorna apenas o txnId. Para buscar o resultado no backend:\n// Backend Node/Express (exemplo)\nconst express = require('express');\nconst app = express();\n\n// Substitua pelo valor do seu ambiente\nconst VERIFY_BASE_URL = '&lt;VERIFY_BASE_URL&gt;';\n\napp.get('/api/verificacao/:txnId', async (req, res) =&gt; {\n  const { txnId } = req.params;\n\n  const response = await fetch(\n    `${VERIFY_BASE_URL}/v1/verify/vp-result/${txnId}`\n  );\n  const results = await response.json();\n\n  const verified = results.some(r =&gt; r.vcStatus === 'SUCCESS');\n  res.json({ verified, results });\n});",
+    "crumbs": [
+      "Referência",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api-reference.html#resumo-de-placeholders",
+    "href": "api-reference.html#resumo-de-placeholders",
+    "title": "API Reference",
+    "section": "Resumo de Placeholders",
+    "text": "Resumo de Placeholders\n\n\n\n\n\n\n\n\nPlaceholder\nDescrição\nExemplo\n\n\n\n\n&lt;VERIFY_BASE_URL&gt;\nURL base do INJI Verify Service\nhttps://verify.seu-dominio.com.br\n\n\n&lt;SEU_DOMINIO&gt;\nDomínio público da VM\nverify.seu-dominio.com.br\n\n\n\n\n\n\n\n\n\nNota\n\n\n\nEsses valores são definidos durante o setup do INJI Verify Service e o Onboarding.",
+    "crumbs": [
+      "Referência",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html",
+    "href": "arquitetura.html",
+    "title": "Arquitetura em 1 Página",
+    "section": "",
+    "text": "Entender os componentes do sistema e como eles se conectam.",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html#objetivo",
+    "href": "arquitetura.html#objetivo",
+    "title": "Arquitetura em 1 Página",
+    "section": "",
+    "text": "Entender os componentes do sistema e como eles se conectam.",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html#diagrama-de-arquitetura",
+    "href": "arquitetura.html#diagrama-de-arquitetura",
+    "title": "Arquitetura em 1 Página",
+    "section": "Diagrama de Arquitetura",
+    "text": "Diagrama de Arquitetura\n\n\n\n\n\nflowchart LR\n    subgraph Cidadão\n        A[Carteira Digital\\nINJI Wallet]\n    end\n\n    subgraph \"Verificador (você)\"\n        B[\"App React\\n+ INJI Verify SDK\"]\n        C[\"INJI Verify Service\\nSpring Boot + PostgreSQL\\n(Docker na sua VM)\"]\n    end\n\n    subgraph Governo\n        E[Emissor de\\nCredenciais]\n    end\n\n    B &lt;--&gt;|\"REST API\\n(verifyServiceUrl)\"| C\n    C &lt;--&gt;|\"OpenID4VP\\n(VP submission)\"| A\n    B -.-&gt;|\"QR Code ou Deep Link\\n(authorizationUrl)\"| A\n    E -.-&gt;|\"emitiu credencial\"| A",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html#componentes",
+    "href": "arquitetura.html#componentes",
+    "title": "Arquitetura em 1 Página",
+    "section": "Componentes",
+    "text": "Componentes\n\n\n\n\n\n\n\n\n\nComponente\nResponsável\nTecnologia\nDescrição\n\n\n\n\nCarteira Digital\nCidadão\nINJI Wallet (app mobile)\nArmazena a credencial de idade emitida pelo governo\n\n\nApp React + SDK\nVerificador (você)\nReact 18 + @mosip/react-inji-verify-sdk\nComponentes React que gerenciam o fluxo de verificação\n\n\nINJI Verify Service\nVerificador (você)\nJava 21, Spring Boot 3.2, PostgreSQL 13\nBackend que valida criptograficamente a credencial via OpenID4VP\n\n\nEmissor\nGoverno\n—\nEmitiu a credencial. Não participa do fluxo em tempo real",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html#como-os-componentes-se-comunicam",
+    "href": "arquitetura.html#como-os-componentes-se-comunicam",
+    "title": "Arquitetura em 1 Página",
+    "section": "Como os componentes se comunicam",
+    "text": "Como os componentes se comunicam\n\nO SDK React chama o INJI Verify Service via REST API para criar uma solicitação de verificação (VP Request)\nO SDK exibe um QR Code (desktop) ou abre um Deep Link (mobile) contendo a URL de autorização\nO cidadão abre a Carteira Digital, que se comunica diretamente com o INJI Verify Service para apresentar a credencial\nO SDK faz long-polling no Service até receber o resultado\nO resultado chega ao SDK via callback (onVpReceived ou onVpProcessed)",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html#regras-fundamentais",
+    "href": "arquitetura.html#regras-fundamentais",
+    "title": "Arquitetura em 1 Página",
+    "section": "Regras Fundamentais",
+    "text": "Regras Fundamentais\n\nNão é necessário um backend customizado — o INJI Verify SDK e o INJI Verify Service fazem toda a orquestração.\nO INJI Verify Service roda dentro da sua infraestrutura (sua VM, via Docker).\nA Carteira Digital do cidadão precisa acessar o INJI Verify Service pela internet — o Service precisa de um domínio público.\nO governo não participa da verificação em tempo real — a credencial já está com o cidadão.\nA identidade do verificador é baseada em DID Web (did:web:seu-dominio.com.br:v1:verify).\n\n\n\n\n\n\n\nImportante\n\n\n\nO INJI Verify Service precisa ser acessível publicamente pela Carteira Digital do cidadão. Em desenvolvimento local, use um túnel (ex: ngrok).",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "producao.html",
+    "href": "producao.html",
+    "title": "Produção e Operação",
+    "section": "",
+    "text": "Preparar o ambiente para deploy em produção com segurança e monitoramento.",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#objetivo",
+    "href": "producao.html#objetivo",
+    "title": "Produção e Operação",
+    "section": "",
+    "text": "Preparar o ambiente para deploy em produção com segurança e monitoramento.",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#checklist-de-produção",
+    "href": "producao.html#checklist-de-produção",
+    "title": "Produção e Operação",
+    "section": "Checklist de Produção",
+    "text": "Checklist de Produção\n\nDomínio público com HTTPS (certificado SSL/TLS)\nDIDs e INJI_VP_SUBMISSION_BASE_URL apontando para o domínio real\nReverse proxy (Nginx) na frente do INJI Verify Service\nSenha do PostgreSQL alterada (não usar padrão)\nKeystore PKCS12 próprio (não usar test.p12)\nINJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true\nLogs centralizados com rotação\nMonitoramento e alertas\nBackup do PostgreSQL",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#docker-compose-para-produção",
+    "href": "producao.html#docker-compose-para-produção",
+    "title": "Produção e Operação",
+    "section": "Docker Compose para Produção",
+    "text": "Docker Compose para Produção\n# docker-compose.prod.yml\nversion: '3.8'\n\nservices:\n  verify-service:\n    container_name: verify-service\n    image: injistackdev/inji-verify-service:develop\n    restart: always\n    ports:\n      - \"127.0.0.1:8080:8080\"  # Apenas localhost — Nginx faz o proxy\n    environment:\n      - active_profile_env=default\n      - DATABASE_HOST=postgres\n      - DATABASE_PORT=5432\n      - DATABASE_NAME=inji_verify\n      - DATABASE_SCHEMA=verify\n      - DATABASE_USERNAME=${DB_USER}\n      - DATABASE_PASSWORD=${DB_PASSWORD}\n      - INJI_VP_SUBMISSION_BASE_URL=https://verify.seu-dominio.com.br/v1/verify\n      - INJI_DID_VERIFY_URI=did:web:verify.seu-dominio.com.br:v1:verify\n      - INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:verify.seu-dominio.com.br:v1:verify#key-0\n      - INJI_KEYSTORE_FILE_PASS=${KEYSTORE_PASS}\n      - INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=55000\n      - INJI_VERIFY_REDIRECT_URI=https://verify.seu-dominio.com.br\n      - INJI_VERIFY_RESPONSE_CODE_EXPIRY_TIME_IN_MINS=5\n      - INJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true\n      - INJI_VERIFY_CLAIMS_WITH_META_DATA=_sd,_sd_alg,iss,cnf,sub,aud,exp,nbf,iat,cti\n    logging:\n      driver: json-file\n      options:\n        max-size: \"10m\"\n        max-file: \"5\"\n    deploy:\n      resources:\n        limits:\n          memory: 2G\n          cpus: '2'\n    depends_on:\n      - postgres\n\n  postgres:\n    image: postgres:13\n    container_name: postgres-db\n    restart: always\n    environment:\n      POSTGRES_USER: ${DB_USER}\n      POSTGRES_PASSWORD: ${DB_PASSWORD}\n      POSTGRES_DB: inji_verify\n    ports:\n      - \"127.0.0.1:5432:5432\"  # Apenas localhost\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n      - ./db-init:/docker-entrypoint-initdb.d\n    logging:\n      driver: json-file\n      options:\n        max-size: \"10m\"\n        max-file: \"3\"\n\nvolumes:\n  pgdata:\n\n\n\n\n\n\nImportante\n\n\n\nNote 127.0.0.1:8080:8080 e 127.0.0.1:5432:5432 — isso garante que ambos os serviços só aceitam conexões locais. O Nginx faz o proxy HTTPS para o mundo externo.",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#nginx-como-reverse-proxy",
+    "href": "producao.html#nginx-como-reverse-proxy",
+    "title": "Produção e Operação",
+    "section": "Nginx como Reverse Proxy",
+    "text": "Nginx como Reverse Proxy\n# /etc/nginx/sites-available/verificaidade\nserver {\n    listen 443 ssl;\n    server_name verify.seu-dominio.com.br;\n\n    ssl_certificate /etc/letsencrypt/live/verify.seu-dominio.com.br/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/verify.seu-dominio.com.br/privkey.pem;\n\n    # INJI Verify Service\n    location /v1/verify/ {\n        proxy_pass http://localhost:8080/v1/verify/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n\n        # Long-polling precisa de timeout maior\n        proxy_read_timeout 60s;\n    }\n}\n\nserver {\n    listen 80;\n    server_name verify.seu-dominio.com.br;\n    return 301 https://$server_name$request_uri;\n}\nsudo ln -s /etc/nginx/sites-available/verificaidade /etc/nginx/sites-enabled/\nsudo nginx -t\nsudo systemctl reload nginx",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#certificado-ssl-com-lets-encrypt",
+    "href": "producao.html#certificado-ssl-com-lets-encrypt",
+    "title": "Produção e Operação",
+    "section": "Certificado SSL com Let’s Encrypt",
+    "text": "Certificado SSL com Let’s Encrypt\nsudo apt install -y certbot python3-certbot-nginx\nsudo certbot --nginx -d verify.seu-dominio.com.br",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#monitoramento",
+    "href": "producao.html#monitoramento",
+    "title": "Produção e Operação",
+    "section": "Monitoramento",
+    "text": "Monitoramento\n\nHealth Check\ncurl -s https://verify.seu-dominio.com.br/v1/verify/health\n\n\nScript de monitoramento\n#!/bin/bash\n# monitor.sh — executar via cron a cada minuto\nHEALTH=$(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/v1/verify/health)\n\nif [ \"$HEALTH\" != \"200\" ]; then\n  echo \"$(date) ALERTA: INJI Verify Service indisponível (HTTP $HEALTH)\" \\\n    &gt;&gt; /var/log/verificaidade-monitor.log\nfi\n# Adicionar ao cron\ncrontab -e\n# * * * * * /home/ubuntu/monitor.sh",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#backup-do-postgresql",
+    "href": "producao.html#backup-do-postgresql",
+    "title": "Produção e Operação",
+    "section": "Backup do PostgreSQL",
+    "text": "Backup do PostgreSQL\n#!/bin/bash\n# backup-db.sh\nBACKUP_DIR=/home/ubuntu/backups\nmkdir -p $BACKUP_DIR\ndocker exec postgres-db pg_dump -U ${DB_USER} inji_verify \\\n  | gzip &gt; $BACKUP_DIR/inji_verify_$(date +%Y%m%d_%H%M%S).sql.gz\n\n# Manter apenas últimos 7 dias\nfind $BACKUP_DIR -name \"*.sql.gz\" -mtime +7 -delete",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#atualização-do-service",
+    "href": "producao.html#atualização-do-service",
+    "title": "Produção e Operação",
+    "section": "Atualização do Service",
+    "text": "Atualização do Service\ncd ~/verificaidade\ndocker compose -f docker-compose.prod.yml pull\ndocker compose -f docker-compose.prod.yml up -d\ncurl -s http://localhost:8080/v1/verify/health\n\n\n\n\n\n\nAviso\n\n\n\nTeste atualizações em ambiente de homologação antes de aplicar em produção.",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#próximo-passo",
+    "href": "producao.html#próximo-passo",
+    "title": "Produção e Operação",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nConsulte a API Reference para detalhes dos endpoints.",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Introdução",
+    "title": "Boas-vindas",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.",
+    "text": "O VerificaIdade é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis. O governo emite a credencial digital para o cidadão; o seu sistema verifica usando o INJI Verify.",
     "crumbs": [
-      "Introdução"
+      "Boas-vindas"
     ]
   },
   {
-    "objectID": "index.html#arquitetura",
-    "href": "index.html#arquitetura",
-    "title": "Introdução",
-    "section": "Arquitetura",
-    "text": "Arquitetura\n\n\n\nArquitetura",
+    "objectID": "index.html#o-que-é-o-verificaidade",
+    "href": "index.html#o-que-é-o-verificaidade",
+    "title": "Boas-vindas",
+    "section": "",
+    "text": "O VerificaIdade é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis. O governo emite a credencial digital para o cidadão; o seu sistema verifica usando o INJI Verify.",
     "crumbs": [
-      "Introdução"
+      "Boas-vindas"
     ]
   },
   {
-    "objectID": "index.html#componentes",
-    "href": "index.html#componentes",
-    "title": "Introdução",
+    "objectID": "index.html#como-funciona",
+    "href": "index.html#como-funciona",
+    "title": "Boas-vindas",
+    "section": "Como funciona",
+    "text": "Como funciona\n\nVocê integra o INJI Verify SDK (pacote NPM React) na sua aplicação web\nO SDK se comunica com o INJI Verify Service (backend Java/Spring Boot que roda na sua VM)\nO cidadão apresenta sua credencial via QR Code (desktop) ou Deep Link (mobile)\nO Service valida a credencial criptograficamente e retorna o resultado ao SDK\n\nNão é necessário criar um backend customizado para orquestrar a verificação.",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "index.html#para-quem-é-este-portal",
+    "href": "index.html#para-quem-é-este-portal",
+    "title": "Boas-vindas",
+    "section": "Para quem é este portal?",
+    "text": "Para quem é este portal?\nPara desenvolvedores que precisam integrar verificação de idade em aplicações React (Web).",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "index.html#o-que-você-vai-encontrar-aqui",
+    "href": "index.html#o-que-você-vai-encontrar-aqui",
+    "title": "Boas-vindas",
+    "section": "O que você vai encontrar aqui",
+    "text": "O que você vai encontrar aqui\n\n\n\nSeção\nO que resolve\n\n\n\n\nArquitetura em 1 Página\nVisão geral dos componentes\n\n\nIntegre em 1 Hora\nChecklist passo a passo\n\n\nSetup da VM e Docker\nPreparar a infraestrutura\n\n\nINJI Verify Service\nSubir o backend com Docker Compose\n\n\nFluxo de Verificação\nEntender o ciclo completo\n\n\nIntegração Web (QR Code)\nFluxo cross-device no desktop\n\n\nIntegração Mobile (Deep Link)\nFluxo same-device no celular\n\n\nPolicy 18+\nPresentation Definition de idade\n\n\nSegurança e LGPD\nBoas práticas\n\n\nProdução e Operação\nDeploy em produção\n\n\nAPI Reference\nEndpoints do INJI Verify Service\n\n\nTroubleshooting\nErros comuns\n\n\nOnboarding\nGateway e credenciamento",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "index.html#pré-requisitos",
+    "href": "index.html#pré-requisitos",
+    "title": "Boas-vindas",
+    "section": "Pré-requisitos",
+    "text": "Pré-requisitos\n\nReact 18.2.0+ com TypeScript 4.9.5+\nAcesso a uma VM com Docker para rodar o INJI Verify Service\nCredenciais de acesso ao gateway (obtidas no Onboarding)\n\n\n\n\n\n\n\nNota\n\n\n\nO objetivo é que você consiga integrar em 1 dia. Comece pelo Integre em 1 Hora.",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html",
+    "href": "seguranca-lgpd.html",
+    "title": "Segurança e LGPD",
+    "section": "",
+    "text": "Garantir que a integração siga boas práticas de segurança e esteja em conformidade com a LGPD.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#objetivo",
+    "href": "seguranca-lgpd.html#objetivo",
+    "title": "Segurança e LGPD",
+    "section": "",
+    "text": "Garantir que a integração siga boas práticas de segurança e esteja em conformidade com a LGPD.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#princípios",
+    "href": "seguranca-lgpd.html#princípios",
+    "title": "Segurança e LGPD",
+    "section": "Princípios",
+    "text": "Princípios\n\n\n\n\n\n\n\nPrincípio\nAplicação\n\n\n\n\nMinimização de dados\nCom SD-JWT, o cidadão revela apenas ageOver18, não a data de nascimento\n\n\nFinalidade\nUse o resultado apenas para controle de acesso por idade\n\n\nNão armazenamento\nNão armazene a credencial do cidadão\n\n\nTransparência\nInforme ao usuário o que está sendo verificado",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#checklist-de-segurança",
+    "href": "seguranca-lgpd.html#checklist-de-segurança",
+    "title": "Segurança e LGPD",
+    "section": "Checklist de Segurança",
+    "text": "Checklist de Segurança\n\nINJI Verify Service\n\nAcessível pela internet apenas via HTTPS (reverse proxy)\nPostgreSQL não exposto à internet (apenas localhost ou rede Docker)\nSenha do banco alterada (não usar postgres/postgres em produção)\nKeystore PKCS12 com senha forte (INJI_KEYSTORE_FILE_PASS)\nLogs com rotação configurada\n\n\n\nAplicação React\n\nonVpReceived (com validação no backend) em vez de onVpProcessed em produção\nSem dados de credencial armazenados no frontend (localStorage, sessionStorage, etc.)\nCSP (Content Security Policy) configurado\n\n\n\nInfraestrutura\n\nVM com firewall configurado\nAcesso SSH por chave, não senha\nDocker com usuário não-root (quando possível)\nCertificado SSL/TLS válido",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#onvpreceived-vs-onvpprocessed-segurança",
+    "href": "seguranca-lgpd.html#onvpreceived-vs-onvpprocessed-segurança",
+    "title": "Segurança e LGPD",
+    "section": "onVpReceived vs onVpProcessed — Segurança",
+    "text": "onVpReceived vs onVpProcessed — Segurança\n\n\n\nAspecto\nonVpReceived\nonVpProcessed\n\n\n\n\nResultado chega ao\nBackend (via txnId)\nFrontend (direto)\n\n\nAdulteração possível?\nNão (backend valida)\nSim (DevTools)\n\n\nUso recomendado\nProdução\nDesenvolvimento\n\n\n\nEm produção, o fluxo seguro é:\n\nSDK recebe txnId via onVpReceived\nFrontend envia txnId ao seu backend\nSeu backend chama GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{txnId}\nBackend decide se libera o acesso\n\n// Frontend\nonVpReceived={async (txnId) =&gt; {\n  const res = await fetch(`/api/verificacao/${txnId}`);\n  const data = await res.json();\n  if (data.verified) { /* liberar */ }\n}}\n// Backend (Node/Express) — opcional mas recomendado para produção\napp.get('/api/verificacao/:txnId', async (req, res) =&gt; {\n  const { txnId } = req.params;\n  // Substitua pelo valor do seu ambiente\n  const result = await fetch(\n    `&lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/${txnId}`\n  );\n  const data = await result.json();\n  const verified = data.some(r =&gt; r.vcStatus === 'SUCCESS');\n  res.json({ verified });\n});\n\n\n\n\n\n\nImportante\n\n\n\nO backend acima é simples e opcional — serve apenas para isolar a decisão de acesso do frontend. Não é um orquestrador de todo o fluxo.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#did-e-keystore",
+    "href": "seguranca-lgpd.html#did-e-keystore",
+    "title": "Segurança e LGPD",
+    "section": "DID e Keystore",
+    "text": "DID e Keystore\nO INJI Verify Service se identifica com um DID Web e assina requisições com um keystore PKCS12.\n\nO DID (did:web:seu-dominio.com.br:v1:verify) deve resolver para o seu domínio público\nO keystore (test.p12) é usado para assinar as authorization requests\nEm produção, gere um keystore próprio com chave forte\n\n\n\n\n\n\n\nAviso\n\n\n\nO test.p12 incluído no INJI é para desenvolvimento apenas. Gere um keystore próprio para produção.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#claims-filtradas-como-metadados",
+    "href": "seguranca-lgpd.html#claims-filtradas-como-metadados",
+    "title": "Segurança e LGPD",
+    "section": "Claims filtradas como metadados",
+    "text": "Claims filtradas como metadados\nA variável INJI_VERIFY_CLAIMS_WITH_META_DATA define campos tratados como metadados internos (não exibidos):\n_sd, _sd_alg, iss, cnf, sub, aud, exp, nbf, iat, cti\nEsses campos são estruturais do SD-JWT e não contêm dados pessoais.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#consentimento-do-usuário",
+    "href": "seguranca-lgpd.html#consentimento-do-usuário",
+    "title": "Segurança e LGPD",
+    "section": "Consentimento do Usuário",
+    "text": "Consentimento do Usuário\nAntes de iniciar a verificação, informe ao usuário:\n\nO que está sendo verificado (idade &gt;= 18)\nQuem é o verificador (sua organização)\nQue nenhum dado pessoal além de ageOver18 é compartilhado\nQue o cidadão autoriza ativamente na Carteira Digital",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#próximo-passo",
+    "href": "seguranca-lgpd.html#próximo-passo",
+    "title": "Segurança e LGPD",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nVeja como levar para Produção e Operação.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html",
+    "href": "troubleshooting.html",
+    "title": "Troubleshooting",
+    "section": "",
+    "text": "Resolver problemas comuns durante a integração e operação.",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#objetivo",
+    "href": "troubleshooting.html#objetivo",
+    "title": "Troubleshooting",
+    "section": "",
+    "text": "Resolver problemas comuns durante a integração e operação.",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#container-não-sobe",
+    "href": "troubleshooting.html#container-não-sobe",
+    "title": "Troubleshooting",
+    "section": "Container não sobe",
+    "text": "Container não sobe\n\nSintoma\ndocker compose up -d falha ou container reinicia em loop.\n\n\nDiagnóstico\ndocker logs verify-service --tail 100\ndocker ps -a | grep verify\ndocker stats --no-stream\n\n\nSoluções\n\n\n\nCausa\nSolução\n\n\n\n\nPorta 8080 em uso\nsudo lsof -i :8080 e encerrar o processo\n\n\nPostgreSQL não iniciou\nVerificar logs: docker logs postgres-db\n\n\nScripts de banco faltando\nCopiar scripts SQL para db-init/\n\n\nMemória insuficiente\nMínimo 4 GB RAM na VM",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#health-check-falha",
+    "href": "troubleshooting.html#health-check-falha",
+    "title": "Troubleshooting",
+    "section": "Health check falha",
+    "text": "Health check falha\n\nSintoma\ncurl http://localhost:8080/v1/verify/health retorna erro ou timeout.\n\n\nDiagnóstico\ndocker ps | grep verify-service\ndocker logs verify-service --tail 20\n\n\nSoluções\n\nContainer não está rodando → docker compose up -d\nServiço ainda iniciando → aguardar 30-60 segundos (Spring Boot demora para iniciar)\nBanco inacessível → verificar se PostgreSQL está rodando",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#schema-do-banco-não-existe",
+    "href": "troubleshooting.html#schema-do-banco-não-existe",
+    "title": "Troubleshooting",
+    "section": "Schema do banco não existe",
+    "text": "Schema do banco não existe\n\nSintoma\nLogs do verify-service mostram erros de “relation does not exist”.\n\n\nCausa\nspring.jpa.hibernate.ddl-auto=none — o schema não é criado automaticamente.\n\n\nSolução\nCopie os scripts de inicialização do repositório oficial do INJI Verify para db-init/ e recrie o container do PostgreSQL:\ndocker compose down\ndocker volume rm verificaidade_pgdata  # Remove dados antigos\ndocker compose up -d",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#qr-code-não-funciona",
+    "href": "troubleshooting.html#qr-code-não-funciona",
+    "title": "Troubleshooting",
+    "section": "QR Code não funciona",
+    "text": "QR Code não funciona\n\nSintoma\nUsuário escaneia o QR Code mas a Carteira Digital não responde.\n\n\nCausas e soluções\n\n\n\n\n\n\n\nCausa\nSolução\n\n\n\n\nCarteira Digital não instalada\nOrientar o usuário a instalar a INJI Wallet\n\n\nINJI Verify Service inacessível pelo celular\nVerificar que INJI_VP_SUBMISSION_BASE_URL é um domínio público\n\n\nDID não resolve\nVerificar INJI_DID_VERIFY_URI corresponde ao domínio público\n\n\nURL expirada\nSessão expirou; iniciar nova verificação\n\n\nUsando localhost\nEm desenvolvimento, use ngrok ou túnel equivalente\n\n\n\n\n\n\n\n\n\nImportante\n\n\n\nA causa mais comum é INJI_VP_SUBMISSION_BASE_URL apontando para localhost. A Carteira Digital no celular não consegue acessar localhost do seu computador.",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#deep-link-não-abre-a-carteira-mobile",
+    "href": "troubleshooting.html#deep-link-não-abre-a-carteira-mobile",
+    "title": "Troubleshooting",
+    "section": "Deep Link não abre a Carteira (Mobile)",
+    "text": "Deep Link não abre a Carteira (Mobile)\n\nSintoma\nNo celular, o link openid4vp://... não abre nada.\n\n\nSoluções\n\nINJI Wallet não instalada → instalar a Carteira Digital\nNavegador bloqueia o scheme → testar em Chrome/Safari\nApp não registrou o scheme → verificar se a versão da Wallet suporta openid4vp://",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#sdk-mostra-erro-de-props",
+    "href": "troubleshooting.html#sdk-mostra-erro-de-props",
+    "title": "Troubleshooting",
+    "section": "SDK mostra erro de props",
+    "text": "SDK mostra erro de props\n\nSintoma\nConsole mostra erro de validação do SDK.\n\n\nCausas comuns\nError: Cannot provide both presentationDefinition and presentationDefinitionId\n→ Use uma ou outra, não ambas.\nError: Cannot provide both onVpReceived and onVpProcessed\n→ Use um ou outro, não ambos.\nError: verifyServiceUrl is required\n→ Passe a URL do INJI Verify Service.",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#long-polling-retorna-timeout",
+    "href": "troubleshooting.html#long-polling-retorna-timeout",
+    "title": "Troubleshooting",
+    "section": "Long-polling retorna timeout",
+    "text": "Long-polling retorna timeout\n\nSintoma\nO SDK fica aguardando e depois de ~55 segundos não recebe resultado.\n\n\nCausas\n\nCidadão não apresentou a credencial (normal — aguardar ou expirar)\nWallet não consegue acessar o INJI Verify Service (ver “QR Code não funciona”)\nVP Submission falhou na Wallet\n\n\n\nSolução\n\nAumente o timeout se necessário: INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=120000 (120s)\nVerifique os logs: docker logs verify-service -f\nO SDK refaz o long-polling automaticamente; o QR Code expira após o timeout configurado",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#erro-cors-no-navegador",
+    "href": "troubleshooting.html#erro-cors-no-navegador",
+    "title": "Troubleshooting",
+    "section": "Erro CORS no navegador",
+    "text": "Erro CORS no navegador\n\nSintoma\nConsole mostra Access-Control-Allow-Origin bloqueado.\n\n\nSolução\nConfigure o Nginx como reverse proxy para servir tanto o frontend quanto a API no mesmo domínio. Ou configure CORS no INJI Verify Service (se suportado).\nAlternativa com Nginx:\nlocation /v1/verify/ {\n    proxy_pass http://localhost:8080/v1/verify/;\n    # Headers CORS (se necessário)\n    add_header Access-Control-Allow-Origin \"https://seu-frontend.com.br\" always;\n    add_header Access-Control-Allow-Methods \"GET, POST, OPTIONS\" always;\n    add_header Access-Control-Allow-Headers \"Content-Type\" always;\n}",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "troubleshooting.html#postgresql-sem-espaço-em-disco",
+    "href": "troubleshooting.html#postgresql-sem-espaço-em-disco",
+    "title": "Troubleshooting",
+    "section": "PostgreSQL sem espaço em disco",
+    "text": "PostgreSQL sem espaço em disco\n\nSintoma\nErros de escrita no banco de dados.\n\n\nSolução\n# Verificar espaço\ndf -h\n\n# Limpar dados antigos (se aplicável)\ndocker exec postgres-db psql -U postgres -d inji_verify \\\n  -c \"DELETE FROM vp_requests WHERE created_at &lt; NOW() - INTERVAL '30 days';\"\n\n# Vacuum\ndocker exec postgres-db psql -U postgres -d inji_verify -c \"VACUUM FULL;\"",
+    "crumbs": [
+      "Referência",
+      "Troubleshooting"
+    ]
+  },
+  {
+    "objectID": "inji-verify.html",
+    "href": "inji-verify.html",
+    "title": "Subindo o INJI Verify Service",
+    "section": "",
+    "text": "Colocar o INJI Verify Service rodando com Docker Compose na sua VM.",
+    "crumbs": [
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
+    ]
+  },
+  {
+    "objectID": "inji-verify.html#objetivo",
+    "href": "inji-verify.html#objetivo",
+    "title": "Subindo o INJI Verify Service",
+    "section": "",
+    "text": "Colocar o INJI Verify Service rodando com Docker Compose na sua VM.",
+    "crumbs": [
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
+    ]
+  },
+  {
+    "objectID": "inji-verify.html#componentes",
+    "href": "inji-verify.html#componentes",
+    "title": "Subindo o INJI Verify Service",
     "section": "Componentes",
-    "text": "Componentes",
+    "text": "Componentes\nO INJI Verify Service é composto por 3 containers:\n\n\n\n\n\n\n\n\n\nContainer\nImagem\nPorta\nFunção\n\n\n\n\nverify-service\ninjistackdev/inji-verify-service:develop\n8080\nBackend Spring Boot — validação de credenciais\n\n\nverify-ui\ninjistackdev/inji-verify-ui:develop\n3000\nUI de referência (opcional se você usa o SDK)\n\n\npostgres\npostgres:13\n5432\nBanco de dados\n\n\n\n\n\n\n\n\n\nNota\n\n\n\nO container verify-ui é a interface de referência do INJI. Se você está integrando o SDK no seu próprio app React, ele é opcional mas útil para testes.",
     "crumbs": [
-      "Introdução"
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
     ]
   },
   {
-    "objectID": "index.html#processo-de-integração",
-    "href": "index.html#processo-de-integração",
-    "title": "Introdução",
-    "section": "Processo de Integração",
-    "text": "Processo de Integração",
+    "objectID": "inji-verify.html#passo-1-criar-estrutura-de-diretórios",
+    "href": "inji-verify.html#passo-1-criar-estrutura-de-diretórios",
+    "title": "Subindo o INJI Verify Service",
+    "section": "Passo 1 — Criar estrutura de diretórios",
+    "text": "Passo 1 — Criar estrutura de diretórios\nmkdir -p ~/verificaidade/db-init\ncd ~/verificaidade",
     "crumbs": [
-      "Introdução"
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
     ]
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "inji-verify.html#passo-2-obter-scripts-de-inicialização-do-banco",
+    "href": "inji-verify.html#passo-2-obter-scripts-de-inicialização-do-banco",
+    "title": "Subindo o INJI Verify Service",
+    "section": "Passo 2 — Obter scripts de inicialização do banco",
+    "text": "Passo 2 — Obter scripts de inicialização do banco\nOs scripts SQL de inicialização do schema estão no repositório oficial do INJI Verify. Copie-os para db-init/:\n# Substitua pela URL do repositório oficial\n# Os scripts criam o schema 'verify' e as tabelas necessárias\n\n\n\n\n\n\nAviso\n\n\n\nO spring.jpa.hibernate.ddl-auto=none significa que o banco não é criado automaticamente. Você precisa dos scripts de inicialização.",
+    "crumbs": [
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
+    ]
+  },
+  {
+    "objectID": "inji-verify.html#passo-3-criar-docker-compose.yml",
+    "href": "inji-verify.html#passo-3-criar-docker-compose.yml",
+    "title": "Subindo o INJI Verify Service",
+    "section": "Passo 3 — Criar docker-compose.yml",
+    "text": "Passo 3 — Criar docker-compose.yml\nSubstitua SEU_DOMINIO_PUBLICO pelo domínio público da sua VM (ou URL do ngrok em desenvolvimento).\n# docker-compose.yml\nversion: '3.8'\n\nservices:\n  verify-service:\n    container_name: verify-service\n    image: injistackdev/inji-verify-service:develop\n    user: root\n    ports:\n      - \"8080:8080\"\n    environment:\n      - active_profile_env=default\n      - DATABASE_HOST=postgres\n      - DATABASE_PORT=5432\n      - DATABASE_NAME=inji_verify\n      - DATABASE_SCHEMA=verify\n      - DATABASE_USERNAME=postgres\n      - DATABASE_PASSWORD=postgres\n      # URL pública — a Carteira Digital precisa alcançar este endereço\n      - INJI_VP_SUBMISSION_BASE_URL=https://SEU_DOMINIO_PUBLICO/v1/verify\n      # DID do verificador — deve corresponder ao domínio público\n      - INJI_DID_VERIFY_URI=did:web:SEU_DOMINIO_PUBLICO:v1:verify\n      - INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:SEU_DOMINIO_PUBLICO:v1:verify#key-0\n      - INJI_KEYSTORE_FILE_PASS=mosip\n      - INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=55000\n      - INJI_VERIFY_REDIRECT_URI=https://SEU_DOMINIO_PUBLICO\n      - INJI_VERIFY_RESPONSE_CODE_EXPIRY_TIME_IN_MINS=5\n      - INJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true\n      - INJI_VERIFY_CLAIMS_WITH_META_DATA=_sd,_sd_alg,iss,cnf,sub,aud,exp,nbf,iat,cti\n    depends_on:\n      - postgres\n\n  postgres:\n    image: postgres:13\n    container_name: postgres-db\n    environment:\n      POSTGRES_USER: postgres\n      POSTGRES_PASSWORD: postgres\n      POSTGRES_DB: inji_verify\n    ports:\n      - \"5432:5432\"\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n      - ./db-init:/docker-entrypoint-initdb.d\n\nvolumes:\n  pgdata:",
+    "crumbs": [
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
+    ]
+  },
+  {
+    "objectID": "inji-verify.html#passo-4-subir-os-containers",
+    "href": "inji-verify.html#passo-4-subir-os-containers",
+    "title": "Subindo o INJI Verify Service",
+    "section": "Passo 4 — Subir os containers",
+    "text": "Passo 4 — Subir os containers\ndocker compose up -d",
+    "crumbs": [
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
+    ]
+  },
+  {
+    "objectID": "inji-verify.html#passo-5-verificar-se-está-rodando",
+    "href": "inji-verify.html#passo-5-verificar-se-está-rodando",
+    "title": "Subindo o INJI Verify Service",
+    "section": "Passo 5 — Verificar se está rodando",
+    "text": "Passo 5 — Verificar se está rodando\n# Ver containers ativos\ndocker ps\n\n# Ver logs do Service\ndocker logs verify-service --tail 50\n\n# Health check\ncurl -s http://localhost:8080/v1/verify/health\nResultado esperado:\n{\n  \"status\": \"UP\"\n}",
+    "crumbs": [
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
+    ]
+  },
+  {
+    "objectID": "inji-verify.html#variáveis-de-ambiente-referência",
+    "href": "inji-verify.html#variáveis-de-ambiente-referência",
+    "title": "Subindo o INJI Verify Service",
+    "section": "Variáveis de Ambiente — Referência",
+    "text": "Variáveis de Ambiente — Referência\n\n\n\n\n\n\n\n\nVariável\nPadrão\nDescrição\n\n\n\n\nDATABASE_HOST\n—\nHost do PostgreSQL\n\n\nDATABASE_PORT\n5432\nPorta do PostgreSQL\n\n\nDATABASE_NAME\ninji_verify\nNome do banco\n\n\nDATABASE_SCHEMA\nverify\nSchema do banco\n\n\nINJI_VP_SUBMISSION_BASE_URL\n—\nURL pública do Service (a Wallet envia VP para cá)\n\n\nINJI_DID_VERIFY_URI\n—\nDID Web do verificador\n\n\nINJI_DID_VERIFY_PUBLIC_KEY_URI\n—\nURI da chave pública do DID\n\n\nINJI_KEYSTORE_FILE_PASS\nmosip\nSenha do keystore PKCS12\n\n\nINJI_VP_REQUEST_LONG_POLLING_TIMEOUT\n55000\nTimeout do long-polling (ms)\n\n\nINJI_VERIFY_REDIRECT_URI\n—\nURI de redirecionamento pós-verificação\n\n\nINJI_VERIFY_RESPONSE_CODE_EXPIRY_TIME_IN_MINS\n5\nTTL do response code (min)\n\n\n\n\n\n\n\n\n\nImportante\n\n\n\nINJI_VP_SUBMISSION_BASE_URL e os DIDs devem usar seu domínio público real. A Carteira Digital do cidadão precisa resolver esses endereços pela internet.",
+    "crumbs": [
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
+    ]
+  },
+  {
+    "objectID": "inji-verify.html#comandos-úteis",
+    "href": "inji-verify.html#comandos-úteis",
+    "title": "Subindo o INJI Verify Service",
+    "section": "Comandos úteis",
+    "text": "Comandos úteis\n\n\n\nComando\nO que faz\n\n\n\n\ndocker compose up -d\nInicia os serviços\n\n\ndocker compose down\nPara os serviços\n\n\ndocker compose restart verify-service\nReinicia o Service\n\n\ndocker logs verify-service -f\nAcompanha logs em tempo real\n\n\ndocker compose pull\nAtualiza as imagens",
+    "crumbs": [
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
+    ]
+  },
+  {
+    "objectID": "inji-verify.html#próximo-passo",
+    "href": "inji-verify.html#próximo-passo",
+    "title": "Subindo o INJI Verify Service",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nServiço rodando. Agora entenda o Fluxo de Verificação.",
+    "crumbs": [
+      "Infraestrutura",
+      "Subindo o INJI Verify Service"
+    ]
+  },
+  {
+    "objectID": "quickstart.html",
+    "href": "quickstart.html",
+    "title": "Integre em 1 Hora",
     "section": "",
-    "text": "About this site"
+    "text": "Sair do zero até uma verificação de idade funcionando em ambiente de desenvolvimento.",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "quickstart.html#objetivo",
+    "href": "quickstart.html#objetivo",
+    "title": "Integre em 1 Hora",
+    "section": "",
+    "text": "Sair do zero até uma verificação de idade funcionando em ambiente de desenvolvimento.",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "quickstart.html#checklist",
+    "href": "quickstart.html#checklist",
+    "title": "Integre em 1 Hora",
+    "section": "Checklist",
+    "text": "Checklist\n\n\n\n\n\n\n\n\n\n#\nEtapa\nTempo\nResultado esperado\n\n\n\n\n1\nPreparar VM com Docker\n10 min\ndocker compose version funciona\n\n\n2\nSubir INJI Verify Service\n10 min\nHealth check retorna UP\n\n\n3\nExpor o Service publicamente\n5 min\nCarteira Digital alcança o Service\n\n\n4\nInstalar o SDK no projeto React\n5 min\n@mosip/react-inji-verify-sdk instalado\n\n\n5\nAdicionar componente de verificação\n15 min\nQR Code exibido na tela\n\n\n6\nTestar ponta a ponta\n15 min\nCredencial verificada com sucesso",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "quickstart.html#etapa-1-preparar-vm-com-docker",
+    "href": "quickstart.html#etapa-1-preparar-vm-com-docker",
+    "title": "Integre em 1 Hora",
+    "section": "Etapa 1 — Preparar VM com Docker",
+    "text": "Etapa 1 — Preparar VM com Docker\ndocker --version\ndocker compose version\nSe não tiver Docker, veja Setup da VM e Docker.\nResultado: Docker e Docker Compose funcionando.",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "quickstart.html#etapa-2-subir-inji-verify-service",
+    "href": "quickstart.html#etapa-2-subir-inji-verify-service",
+    "title": "Integre em 1 Hora",
+    "section": "Etapa 2 — Subir INJI Verify Service",
+    "text": "Etapa 2 — Subir INJI Verify Service\nCrie o arquivo docker-compose.yml e suba os containers:\ndocker compose up -d\nVeja a configuração completa em Subindo o INJI Verify Service.\nResultado:\ncurl -s http://localhost:8080/v1/verify/health\n# { \"status\": \"UP\" }",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "quickstart.html#etapa-3-expor-o-service-publicamente",
+    "href": "quickstart.html#etapa-3-expor-o-service-publicamente",
+    "title": "Integre em 1 Hora",
+    "section": "Etapa 3 — Expor o Service publicamente",
+    "text": "Etapa 3 — Expor o Service publicamente\nA Carteira Digital (no celular do cidadão) precisa acessar o INJI Verify Service. Em desenvolvimento, use ngrok:\nngrok http 8080\nAnote a URL pública (ex: https://abc123.ngrok-free.app). Atualize as variáveis de ambiente do Service:\n\nINJI_VP_SUBMISSION_BASE_URL=https://abc123.ngrok-free.app/v1/verify\nINJI_DID_VERIFY_URI=did:web:abc123.ngrok-free.app:v1:verify\nINJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:abc123.ngrok-free.app:v1:verify#key-0\n\nReinicie o Service:\ndocker compose down && docker compose up -d\n\n\n\n\n\n\nAviso\n\n\n\nEm produção, use um domínio real com HTTPS. Veja Produção e Operação.\n\n\nResultado: URL pública acessível pelo celular.",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "quickstart.html#etapa-4-instalar-o-sdk-no-projeto-react",
+    "href": "quickstart.html#etapa-4-instalar-o-sdk-no-projeto-react",
+    "title": "Integre em 1 Hora",
+    "section": "Etapa 4 — Instalar o SDK no projeto React",
+    "text": "Etapa 4 — Instalar o SDK no projeto React\nnpm install @mosip/react-inji-verify-sdk\n\n\n\n\n\n\nNota\n\n\n\nO SDK requer React 18.2.0+ e TypeScript 4.9.5+ como peer dependencies.\n\n\nResultado: Pacote instalado sem erros.",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "quickstart.html#etapa-5-adicionar-componente-de-verificação",
+    "href": "quickstart.html#etapa-5-adicionar-componente-de-verificação",
+    "title": "Integre em 1 Hora",
+    "section": "Etapa 5 — Adicionar componente de verificação",
+    "text": "Etapa 5 — Adicionar componente de verificação\n// src/components/VerificaIdade.tsx\nimport { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';\n\n// Substitua pela URL do seu INJI Verify Service\nconst VERIFY_SERVICE_URL = 'https://abc123.ngrok-free.app/v1/verify';\n\n// Substitua pelo DID do seu verificador\nconst CLIENT_ID_DID = 'did:web:abc123.ngrok-free.app:v1:verify';\n\n// Presentation Definition para verificação de idade 18+\n// Substitua pela definição fornecida no seu credenciamento\nconst presentationDefinition = {\n  id: 'age-verification-18-plus',\n  input_descriptors: [\n    {\n      id: 'age_credential',\n      format: {\n        'vc+sd-jwt': {\n          'sd-jwt_alg_values': ['ES256']\n        }\n      },\n      constraints: {\n        fields: [\n          {\n            path: ['$.ageOver18'],\n            filter: {\n              type: 'boolean',\n              const: true\n            }\n          }\n        ]\n      }\n    }\n  ]\n};\n\nexport function VerificaIdade() {\n  const handleVerificado = (txnId: string) =&gt; {\n    console.log('Verificação concluída. Transaction ID:', txnId);\n    // Busque o resultado no seu backend se necessário\n    // ou use onVpProcessed para receber o resultado direto\n  };\n\n  const handleErro = (error: unknown) =&gt; {\n    console.error('Erro na verificação:', error);\n  };\n\n  const handleQrExpirado = () =&gt; {\n    console.log('QR Code expirou');\n  };\n\n  return (\n    &lt;div&gt;\n      &lt;h2&gt;Verificação de Idade&lt;/h2&gt;\n      &lt;OpenID4VPVerification\n        verifyServiceUrl={VERIFY_SERVICE_URL}\n        clientId={CLIENT_ID_DID}\n        protocol=\"openid4vp://\"\n        presentationDefinition={presentationDefinition}\n        onVpReceived={handleVerificado}\n        onError={handleErro}\n        onQrCodeExpired={handleQrExpirado}\n      /&gt;\n    &lt;/div&gt;\n  );\n}\nResultado: Componente renderiza QR Code na tela.",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "quickstart.html#etapa-6-testar-ponta-a-ponta",
+    "href": "quickstart.html#etapa-6-testar-ponta-a-ponta",
+    "title": "Integre em 1 Hora",
+    "section": "Etapa 6 — Testar ponta a ponta",
+    "text": "Etapa 6 — Testar ponta a ponta\n\nAcesse sua aplicação React no navegador\nO QR Code aparece na tela\nAbra a INJI Wallet no celular\nEscaneie o QR Code\nAutorize o compartilhamento da credencial na Wallet\nO SDK recebe o resultado via callback\n\nResultado esperado (no console):\nVerificação concluída. Transaction ID: abc-123-def-456",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "quickstart.html#alternativa-receber-resultado-completo-no-frontend",
+    "href": "quickstart.html#alternativa-receber-resultado-completo-no-frontend",
+    "title": "Integre em 1 Hora",
+    "section": "Alternativa: Receber resultado completo no frontend",
+    "text": "Alternativa: Receber resultado completo no frontend\nSe preferir receber o resultado diretamente (sem buscar no backend), use onVpProcessed em vez de onVpReceived:\n&lt;OpenID4VPVerification\n  verifyServiceUrl={VERIFY_SERVICE_URL}\n  clientId={CLIENT_ID_DID}\n  protocol=\"openid4vp://\"\n  presentationDefinition={presentationDefinition}\n  onVpProcessed={(results) =&gt; {\n    // results: Array&lt;{ vc: unknown, vcStatus: \"SUCCESS\" | \"INVALID\" | \"EXPIRED\" }&gt;\n    const verificado = results.some(r =&gt; r.vcStatus === 'SUCCESS');\n    console.log('Idade verificada:', verificado);\n  }}\n  onError={(error) =&gt; console.error(error)}\n  onQrCodeExpired={() =&gt; console.log('QR expirou')}\n/&gt;\n\n\n\n\n\n\nAviso\n\n\n\nA documentação do INJI recomenda usar onVpReceived em produção e buscar o resultado pelo txnId no backend para maior segurança. O onVpProcessed é adequado para desenvolvimento e testes.",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "quickstart.html#próximo-passo",
+    "href": "quickstart.html#próximo-passo",
+    "title": "Integre em 1 Hora",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nPara entender o fluxo em detalhes, veja Fluxo de Verificação.",
+    "crumbs": [
+      "Início Rápido",
+      "Integre em 1 Hora"
+    ]
+  },
+  {
+    "objectID": "fluxo-verificacao.html",
+    "href": "fluxo-verificacao.html",
+    "title": "Fluxo de Verificação (Visão Geral)",
+    "section": "",
+    "text": "Entender o ciclo completo de uma verificação de idade, do início ao resultado.",
+    "crumbs": [
+      "Integração",
+      "Fluxo de Verificação (Visão Geral)"
+    ]
+  },
+  {
+    "objectID": "fluxo-verificacao.html#objetivo",
+    "href": "fluxo-verificacao.html#objetivo",
+    "title": "Fluxo de Verificação (Visão Geral)",
+    "section": "",
+    "text": "Entender o ciclo completo de uma verificação de idade, do início ao resultado.",
+    "crumbs": [
+      "Integração",
+      "Fluxo de Verificação (Visão Geral)"
+    ]
+  },
+  {
+    "objectID": "fluxo-verificacao.html#fluxo-ponta-a-ponta-cross-device-qr-code",
+    "href": "fluxo-verificacao.html#fluxo-ponta-a-ponta-cross-device-qr-code",
+    "title": "Fluxo de Verificação (Visão Geral)",
+    "section": "Fluxo Ponta a Ponta (Cross-Device — QR Code)",
+    "text": "Fluxo Ponta a Ponta (Cross-Device — QR Code)\n\n\n\n\n\nsequenceDiagram\n    participant U as Usuário (Desktop)\n    participant SDK as App React + SDK\n    participant VS as INJI Verify Service\n    participant W as Carteira Digital (Celular)\n\n    U-&gt;&gt;SDK: Clica \"Verificar Idade\"\n    SDK-&gt;&gt;VS: POST /v1/verify/vp-request\n    VS--&gt;&gt;SDK: requestId + authorizationUrl\n    SDK-&gt;&gt;U: Exibe QR Code (authorizationUrl)\n    U-&gt;&gt;W: Escaneia QR Code com a Carteira\n    W-&gt;&gt;VS: Apresenta credencial (VP submission)\n    VS-&gt;&gt;VS: Valida credencial + policy 18+\n    Note over SDK,VS: SDK faz long-polling em /vp-request/{id}/status\n    VS--&gt;&gt;SDK: Resultado da verificação\n    SDK-&gt;&gt;U: \"Idade verificada!\" (callback)",
+    "crumbs": [
+      "Integração",
+      "Fluxo de Verificação (Visão Geral)"
+    ]
+  },
+  {
+    "objectID": "fluxo-verificacao.html#fluxo-same-device-deep-link-mobile",
+    "href": "fluxo-verificacao.html#fluxo-same-device-deep-link-mobile",
+    "title": "Fluxo de Verificação (Visão Geral)",
+    "section": "Fluxo Same-Device (Deep Link — Mobile)",
+    "text": "Fluxo Same-Device (Deep Link — Mobile)\n\n\n\n\n\nsequenceDiagram\n    participant U as Usuário (Celular)\n    participant SDK as App React + SDK\n    participant VS as INJI Verify Service\n    participant W as Carteira Digital\n\n    U-&gt;&gt;SDK: Toca \"Verificar Idade\"\n    SDK-&gt;&gt;VS: POST /v1/verify/vp-request\n    VS--&gt;&gt;SDK: requestId + authorizationUrl\n    SDK-&gt;&gt;W: Abre Deep Link (openid4vp://...)\n    W-&gt;&gt;VS: Apresenta credencial (VP submission)\n    Note over W: Usuário volta ao app\n    SDK-&gt;&gt;VS: Long-polling /vp-request/{id}/status\n    VS--&gt;&gt;SDK: Resultado da verificação\n    SDK-&gt;&gt;U: \"Idade verificada!\" (callback)",
+    "crumbs": [
+      "Integração",
+      "Fluxo de Verificação (Visão Geral)"
+    ]
+  },
+  {
+    "objectID": "fluxo-verificacao.html#o-que-o-sdk-faz-internamente",
+    "href": "fluxo-verificacao.html#o-que-o-sdk-faz-internamente",
+    "title": "Fluxo de Verificação (Visão Geral)",
+    "section": "O que o SDK faz internamente",
+    "text": "O que o SDK faz internamente\nO INJI Verify SDK gerencia todo o ciclo:\n\nCria a VP Request — chama POST /v1/verify/vp-request com a Presentation Definition\nDetecta o dispositivo — se mobile, usa Deep Link; se desktop, renderiza QR Code\nLong-polling — consulta GET /v1/verify/vp-request/{id}/status repetidamente (timeout padrão: 55s)\nBusca resultado — quando a Wallet envia a credencial, obtém o resultado via GET /v1/verify/vp-result/{id}\nDispara callback — chama onVpReceived(txnId) ou onVpProcessed(results)\n\nVocê não precisa implementar nenhuma dessas etapas manualmente.",
+    "crumbs": [
+      "Integração",
+      "Fluxo de Verificação (Visão Geral)"
+    ]
+  },
+  {
+    "objectID": "fluxo-verificacao.html#estados-da-verificação",
+    "href": "fluxo-verificacao.html#estados-da-verificação",
+    "title": "Fluxo de Verificação (Visão Geral)",
+    "section": "Estados da Verificação",
+    "text": "Estados da Verificação\n\n\n\nEstado\nSignificado\n\n\n\n\nVP Request criada\nAguardando apresentação da credencial\n\n\nVP submetida\nCarteira enviou a credencial ao Service\n\n\nSUCCESS\nCredencial válida e policy satisfeita\n\n\nINVALID\nCredencial inválida (assinatura, emissor, formato)\n\n\nEXPIRED\nCredencial ou sessão expirada",
+    "crumbs": [
+      "Integração",
+      "Fluxo de Verificação (Visão Geral)"
+    ]
+  },
+  {
+    "objectID": "fluxo-verificacao.html#callbacks-do-sdk",
+    "href": "fluxo-verificacao.html#callbacks-do-sdk",
+    "title": "Fluxo de Verificação (Visão Geral)",
+    "section": "Callbacks do SDK",
+    "text": "Callbacks do SDK\nO SDK oferece dois modos de receber o resultado (mutuamente exclusivos):\n\nonVpReceived(txnId) — Recomendado para produção\nRetorna apenas o txnId. Você busca o resultado no seu backend ou diretamente no INJI Verify Service.\n&lt;OpenID4VPVerification\n  // ...\n  onVpReceived={(txnId) =&gt; {\n    // Buscar resultado no Service: GET /v1/verify/vp-result/{txnId}\n    console.log('Transaction ID:', txnId);\n  }}\n/&gt;\n\n\nonVpProcessed(results) — Para desenvolvimento\nRetorna o resultado completo diretamente no frontend.\n&lt;OpenID4VPVerification\n  // ...\n  onVpProcessed={(results) =&gt; {\n    // results: Array&lt;{ vc: unknown, vcStatus: \"SUCCESS\" | \"INVALID\" | \"EXPIRED\" }&gt;\n    const ok = results.some(r =&gt; r.vcStatus === 'SUCCESS');\n    console.log('Verificado:', ok);\n  }}\n/&gt;\n\n\n\n\n\n\nAviso\n\n\n\nonVpProcessed expõe o resultado diretamente no frontend. Em produção, use onVpReceived e valide o resultado no backend para evitar adulteração.",
+    "crumbs": [
+      "Integração",
+      "Fluxo de Verificação (Visão Geral)"
+    ]
+  },
+  {
+    "objectID": "fluxo-verificacao.html#próximo-passo",
+    "href": "fluxo-verificacao.html#próximo-passo",
+    "title": "Fluxo de Verificação (Visão Geral)",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nEscolha sua jornada:\n\nIntegração Web — QR Code (cross-device)\nIntegração Mobile — Deep Link (same-device)",
+    "crumbs": [
+      "Integração",
+      "Fluxo de Verificação (Visão Geral)"
+    ]
   }
 ]
