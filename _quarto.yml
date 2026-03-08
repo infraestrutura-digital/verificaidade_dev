@@ -36,9 +36,10 @@ website:
 format:
   html:
     lang: pt-BR
-    theme:
-      - cosmo
+    theme: default
     css: styles.css
     toc: true
     code-copy: true
     code-overflow: wrap
+    grid:
+      sidebar-width: 340px
