@@ -291,23 +291,35 @@ ul.task-list li input[type="checkbox"] {
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart LR
-    subgraph Cidadão
-        A[Carteira Digital\nINJI Wallet]
+    subgraph cidadao["👤 Cidadão"]
+        A["📱 Carteira Digital&lt;br&gt;(INJI Wallet)"]
     end
 
-    subgraph "Verificador (você)"
-        B["App React\n+ INJI Verify SDK"]
-        C["INJI Verify Service\nSpring Boot + PostgreSQL\n(Docker na sua VM)"]
+    subgraph verificador["🔍 Verificador — você"]
+        B["🌐 App React&lt;br&gt;+ INJI Verify SDK"]
+        C["⚙️ INJI Verify Service&lt;br&gt;Spring Boot · PostgreSQL&lt;br&gt;Docker · VM"]
     end
 
-    subgraph Governo
-        E[Emissor de\nCredenciais]
+    subgraph governo["🏛️ Governo"]
+        E["🏢 Emissor de&lt;br&gt;Credenciais"]
     end
 
-    B &lt;--&gt;|"REST API\n(verifyServiceUrl)"| C
-    C &lt;--&gt;|"OpenID4VP\n(VP submission)"| A
-    B -.-&gt;|"QR Code ou Deep Link\n(authorizationUrl)"| A
-    E -.-&gt;|"emitiu credencial"| A
+    B &lt;--&gt;|"REST API&lt;br&gt;(verifyServiceUrl)"| C
+    C &lt;--&gt;|"OpenID4VP&lt;br&gt;(VP submission)"| A
+    B -.-&gt;|"QR Code / Deep Link&lt;br&gt;(authorizationUrl)"| A
+    E &lt;-.-&gt;|"OpenID4VCI"| A
+
+    classDef estiloCidadao fill:#ffffff,stroke:#2563eb,color:#1e3a8a
+    classDef estiloVerificador fill:#ffffff,stroke:#059669,color:#064e3b
+    classDef estiloGoverno fill:#ffffff,stroke:#d97706,color:#78350f
+
+    class A estiloCidadao
+    class B,C estiloVerificador
+    class E estiloGoverno
+
+    style cidadao fill:#ffffff,stroke:#2563eb,color:#1e3a8a
+    style verificador fill:#ffffff,stroke:#059669,color:#064e3b
+    style governo fill:#ffffff,stroke:#d97706,color:#78350f
 </pre>
 </div>
 <p></p></figure><p></p>

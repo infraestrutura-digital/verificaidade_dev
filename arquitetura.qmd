@@ -10,23 +10,35 @@ Entender os componentes do sistema e como eles se conectam.
 
 ```{mermaid}
 flowchart LR
-    subgraph Cidadão
-        A[Carteira Digital\nINJI Wallet]
+    subgraph cidadao["👤 Cidadão"]
+        A["📱 Carteira Digital<br>(INJI Wallet)"]
     end
 
-    subgraph "Verificador (você)"
-        B["App React\n+ INJI Verify SDK"]
-        C["INJI Verify Service\nSpring Boot + PostgreSQL\n(Docker na sua VM)"]
+    subgraph verificador["🔍 Verificador — você"]
+        B["🌐 App React<br>+ INJI Verify SDK"]
+        C["⚙️ INJI Verify Service<br>Spring Boot · PostgreSQL<br>Docker · VM"]
     end
 
-    subgraph Governo
-        E[Emissor de\nCredenciais]
+    subgraph governo["🏛️ Governo"]
+        E["🏢 Emissor de<br>Credenciais"]
     end
 
-    B <-->|"REST API\n(verifyServiceUrl)"| C
-    C <-->|"OpenID4VP\n(VP submission)"| A
-    B -.->|"QR Code ou Deep Link\n(authorizationUrl)"| A
-    E -.->|"emitiu credencial"| A
+    B <-->|"REST API<br>(verifyServiceUrl)"| C
+    C <-->|"OpenID4VP<br>(VP submission)"| A
+    B -.->|"QR Code / Deep Link<br>(authorizationUrl)"| A
+    E <-.->|"OpenID4VCI"| A
+
+    classDef estiloCidadao fill:#ffffff,stroke:#2563eb,color:#1e3a8a
+    classDef estiloVerificador fill:#ffffff,stroke:#059669,color:#064e3b
+    classDef estiloGoverno fill:#ffffff,stroke:#d97706,color:#78350f
+
+    class A estiloCidadao
+    class B,C estiloVerificador
+    class E estiloGoverno
+
+    style cidadao fill:#ffffff,stroke:#2563eb,color:#1e3a8a
+    style verificador fill:#ffffff,stroke:#059669,color:#064e3b
+    style governo fill:#ffffff,stroke:#d97706,color:#78350f
 ```
 
 ## Componentes
