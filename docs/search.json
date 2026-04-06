@@ -1420,5 +1420,126 @@
       "Integração",
       "Fluxo de Verificação (Visão Geral)"
     ]
+  },
+  {
+    "objectID": "politica-privacidade.html",
+    "href": "politica-privacidade.html",
+    "title": "Política de Privacidade",
+    "section": "",
+    "text": "Última atualização: julho de 2025\nO aplicativo Carteira (“Aplicativo”) é uma carteira digital de credenciais verificáveis desenvolvida no âmbito do projeto VerificaIdade. Esta Política de Privacidade descreve como coletamos, usamos e protegemos suas informações.",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
+  },
+  {
+    "objectID": "politica-privacidade.html#dados-que-coletamos",
+    "href": "politica-privacidade.html#dados-que-coletamos",
+    "title": "Política de Privacidade",
+    "section": "1. Dados que coletamos",
+    "text": "1. Dados que coletamos\n\n1.1 Dados de autenticação\nO Aplicativo utiliza o login Gov.br (via protocolo OAuth 2.0 com PKCE) para autenticar sua identidade. Durante esse processo, recebemos do Gov.br:\n\nNome\nCPF\nE-mail\nNível de confiabilidade da conta\n\nEsses dados são usados exclusivamente para vincular sua identidade às credenciais verificáveis emitidas.\n\n\n1.2 Credenciais verificáveis\nO Aplicativo armazena localmente no seu dispositivo credenciais verificáveis (ex: comprovante de maioridade). Essas credenciais são baixadas de emissores autorizados e ficam sob seu controle.\n\n\n1.3 Dados biométricos\nO Aplicativo pode solicitar autenticação biométrica (impressão digital ou reconhecimento facial) para autorizar o compartilhamento de credenciais. Nenhum dado biométrico é coletado, transmitido ou armazenado pelo Aplicativo — a autenticação é processada inteiramente pelo sistema operacional do dispositivo.\n\n\n1.4 Câmera\nO Aplicativo acessa a câmera exclusivamente para leitura de QR Codes durante o fluxo de verificação de idade. Nenhuma imagem ou vídeo é capturado ou armazenado.",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
+  },
+  {
+    "objectID": "politica-privacidade.html#como-usamos-seus-dados",
+    "href": "politica-privacidade.html#como-usamos-seus-dados",
+    "title": "Política de Privacidade",
+    "section": "2. Como usamos seus dados",
+    "text": "2. Como usamos seus dados\n\n\n\n\n\n\n\n\nDado\nFinalidade\nArmazenamento\n\n\n\n\nDados Gov.br (nome, CPF, e-mail)\nAutenticação e emissão de credenciais\nLocal no dispositivo (criptografado)\n\n\nCredenciais verificáveis\nComprovação de maioridade quando solicitado\nLocal no dispositivo (criptografado)\n\n\nBiometria\nAutorização de compartilhamento\nApenas no sistema operacional\n\n\nCâmera\nLeitura de QR Code\nSem armazenamento",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
+  },
+  {
+    "objectID": "politica-privacidade.html#compartilhamento-de-dados",
+    "href": "politica-privacidade.html#compartilhamento-de-dados",
+    "title": "Política de Privacidade",
+    "section": "3. Compartilhamento de dados",
+    "text": "3. Compartilhamento de dados\n\n3.1 Princípio de minimização\nQuando você autoriza uma verificação de idade, o Aplicativo compartilha apenas a informação de que você é maior de 18 anos (ageOver18: true). Sua data de nascimento, CPF, nome e demais dados pessoais não são compartilhados com o solicitante.\n\n\n3.2 Consentimento explícito\nTodo compartilhamento de dados requer sua autorização explícita. Antes de compartilhar, o Aplicativo exibe:\n\nQuem está solicitando a verificação\nQuais dados serão compartilhados\nA política de retenção do solicitante\n\nVocê pode recusar o compartilhamento a qualquer momento.\n\n\n3.3 Uso único\nAs verificações são de uso único — o solicitante recebe o resultado da verificação sem armazenar sua credencial.",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
+  },
+  {
+    "objectID": "politica-privacidade.html#armazenamento-e-segurança",
+    "href": "politica-privacidade.html#armazenamento-e-segurança",
+    "title": "Política de Privacidade",
+    "section": "4. Armazenamento e segurança",
+    "text": "4. Armazenamento e segurança\n\nAs credenciais são armazenadas localmente no dispositivo utilizando armazenamento seguro criptografado (Secure Store)\nA comunicação com servidores é feita exclusivamente via HTTPS\nO protocolo OpenID for Verifiable Presentations (OpenID4VP) garante a integridade criptográfica das verificações\nNenhum dado pessoal é armazenado em servidores do Aplicativo",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
+  },
+  {
+    "objectID": "politica-privacidade.html#seus-direitos-lgpd",
+    "href": "politica-privacidade.html#seus-direitos-lgpd",
+    "title": "Política de Privacidade",
+    "section": "5. Seus direitos (LGPD)",
+    "text": "5. Seus direitos (LGPD)\nEm conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), você tem direito a:\n\nAcesso — consultar quais credenciais estão armazenadas no Aplicativo\nEliminação — remover suas credenciais e dados a qualquer momento desinstalando o Aplicativo ou limpando os dados do app\nRevogação — recusar qualquer solicitação de compartilhamento\nInformação — saber quais dados são compartilhados antes de autorizar",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
+  },
+  {
+    "objectID": "politica-privacidade.html#dados-de-crianças-e-adolescentes",
+    "href": "politica-privacidade.html#dados-de-crianças-e-adolescentes",
+    "title": "Política de Privacidade",
+    "section": "6. Dados de crianças e adolescentes",
+    "text": "6. Dados de crianças e adolescentes\nO Aplicativo é destinado exclusivamente a maiores de 18 anos. Não coletamos intencionalmente dados de menores de idade.",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
+  },
+  {
+    "objectID": "politica-privacidade.html#serviços-de-terceiros",
+    "href": "politica-privacidade.html#serviços-de-terceiros",
+    "title": "Política de Privacidade",
+    "section": "7. Serviços de terceiros",
+    "text": "7. Serviços de terceiros\n\n\n\nServiço\nFinalidade\nPolítica de Privacidade\n\n\n\n\nGov.br (Governo Federal)\nAutenticação de identidade\nTermos de Uso Gov.br\n\n\nMOSIP INJI\nInfraestrutura de credenciais verificáveis\nMOSIP Privacy Policy",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
+  },
+  {
+    "objectID": "politica-privacidade.html#permissões-do-aplicativo",
+    "href": "politica-privacidade.html#permissões-do-aplicativo",
+    "title": "Política de Privacidade",
+    "section": "8. Permissões do aplicativo",
+    "text": "8. Permissões do aplicativo\n\n\n\n\n\n\n\nPermissão\nMotivo\n\n\n\n\nCAMERA\nLeitura de QR Codes para verificação\n\n\nUSE_BIOMETRIC / USE_FINGERPRINT\nAutenticação biométrica para autorizar compartilhamento\n\n\nINTERNET\nComunicação com serviços de autenticação e verificação",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
+  },
+  {
+    "objectID": "politica-privacidade.html#alterações-nesta-política",
+    "href": "politica-privacidade.html#alterações-nesta-política",
+    "title": "Política de Privacidade",
+    "section": "9. Alterações nesta política",
+    "text": "9. Alterações nesta política\nPodemos atualizar esta Política de Privacidade periodicamente. A data de “Última atualização” no topo será alterada. Recomendamos que você revise esta página regularmente.",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
+  },
+  {
+    "objectID": "politica-privacidade.html#contato",
+    "href": "politica-privacidade.html#contato",
+    "title": "Política de Privacidade",
+    "section": "10. Contato",
+    "text": "10. Contato\nPara dúvidas, solicitações ou exercício dos seus direitos previstos na LGPD, entre em contato:\n\nE-mail: ayslan.sousa@dataprev.gov.br",
+    "crumbs": [
+      "Referência",
+      "Política de Privacidade"
+    ]
   }
 ]
