@@ -1,0 +1,102 @@
+---
+title: "Política de Privacidade"
+---
+
+**Última atualização:** julho de 2025
+
+O aplicativo é uma carteira digital de credenciais verificáveis. Esta Política de Privacidade descreve como coletamos, usamos e protegemos suas informações.
+
+## 1. Dados que coletamos
+
+### 1.1 Dados de autenticação
+
+O Aplicativo utiliza o login **Gov.br** (via protocolo OAuth 2.0 com PKCE) para autenticar sua identidade. Durante esse processo, recebemos do Gov.br:
+
+- Nome
+- CPF
+- E-mail
+- Nível de confiabilidade da conta
+
+Esses dados são usados exclusivamente para vincular sua identidade às credenciais verificáveis emitidas.
+
+### 1.2 Credenciais verificáveis
+
+O Aplicativo armazena localmente no seu dispositivo credenciais verificáveis (ex: comprovante de maioridade). Essas credenciais são baixadas de emissores autorizados e ficam sob seu controle.
+
+### 1.3 Dados biométricos
+
+O Aplicativo pode solicitar autenticação biométrica (impressão digital ou reconhecimento facial) para autorizar o compartilhamento de credenciais. **Nenhum dado biométrico é coletado, transmitido ou armazenado pelo Aplicativo** — a autenticação é processada inteiramente pelo sistema operacional do dispositivo.
+
+### 1.4 Câmera
+
+O Aplicativo acessa a câmera exclusivamente para leitura de QR Codes durante o fluxo de verificação de idade. Nenhuma imagem ou vídeo é capturado ou armazenado.
+
+## 2. Como usamos seus dados
+
+| Dado | Finalidade | Armazenamento |
+|------|-----------|---------------|
+| Dados Gov.br (nome, CPF, e-mail) | Autenticação e emissão de credenciais | Local no dispositivo (criptografado) |
+| Credenciais verificáveis | Comprovação de maioridade quando solicitado | Local no dispositivo (criptografado) |
+| Biometria | Autorização de compartilhamento | Apenas no sistema operacional |
+| Câmera | Leitura de QR Code | Sem armazenamento |
+
+## 3. Compartilhamento de dados
+
+### 3.1 Princípio de minimização
+
+Quando você autoriza uma verificação de idade, o Aplicativo compartilha **apenas** a informação de que você é maior de 18 anos (`ageOver18: true`). Sua data de nascimento, CPF, nome e demais dados pessoais **não são compartilhados** com o solicitante.
+
+### 3.2 Consentimento explícito
+
+Todo compartilhamento de dados requer sua autorização explícita. Antes de compartilhar, o Aplicativo exibe:
+
+- Quem está solicitando a verificação
+- Quais dados serão compartilhados
+- A política de retenção do solicitante
+
+Você pode recusar o compartilhamento a qualquer momento.
+
+### 3.3 Uso único
+
+As verificações são de **uso único** — o solicitante recebe o resultado da verificação sem armazenar sua credencial.
+
+## 4. Armazenamento e segurança
+
+- As credenciais são armazenadas localmente no dispositivo utilizando armazenamento seguro criptografado (Secure Store)
+- A comunicação com servidores é feita exclusivamente via HTTPS
+- O protocolo OpenID for Verifiable Presentations (OpenID4VP) garante a integridade criptográfica das verificações
+- Nenhum dado pessoal é armazenado em servidores do Aplicativo
+
+## 5. Seus direitos (LGPD)
+
+Em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), você tem direito a:
+
+- **Acesso** — consultar quais credenciais estão armazenadas no Aplicativo
+- **Eliminação** — remover suas credenciais e dados a qualquer momento desinstalando o Aplicativo ou limpando os dados do app
+- **Revogação** — recusar qualquer solicitação de compartilhamento
+- **Informação** — saber quais dados são compartilhados antes de autorizar
+
+## 6. Serviços de terceiros
+
+| Serviço | Finalidade | Política de Privacidade |
+|---------|-----------|------------------------|
+| Gov.br (Governo Federal) | Autenticação de identidade | [Termos de Uso Gov.br](https://www.gov.br) |
+| MOSIP INJI | Infraestrutura de credenciais verificáveis | [MOSIP Privacy Policy](https://mosip.io) |
+
+## 7. Permissões do aplicativo
+
+| Permissão | Motivo |
+|-----------|--------|
+| `CAMERA` | Leitura de QR Codes para verificação |
+| `USE_BIOMETRIC` / `USE_FINGERPRINT` | Autenticação biométrica para autorizar compartilhamento |
+| `INTERNET` | Comunicação com serviços de autenticação e verificação |
+
+## 8. Alterações nesta política
+
+Podemos atualizar esta Política de Privacidade periodicamente. A data de "Última atualização" no topo será alterada. Recomendamos que você revise esta página regularmente.
+
+## 9. Contato
+
+Para dúvidas, solicitações ou exercício dos seus direitos previstos na LGPD, entre em contato:
+
+- **E-mail:** [ayslan.sousa@dataprev.gov.br](mailto:ayslan.sousa@dataprev.gov.br)
