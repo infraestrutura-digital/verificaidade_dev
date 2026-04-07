@@ -460,6 +460,396 @@
     ]
   },
   {
+    "objectID": "seguranca-lgpd.html",
+    "href": "seguranca-lgpd.html",
+    "title": "Segurança e LGPD",
+    "section": "",
+    "text": "Garantir que a integração siga boas práticas de segurança e esteja em conformidade com a LGPD.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#objetivo",
+    "href": "seguranca-lgpd.html#objetivo",
+    "title": "Segurança e LGPD",
+    "section": "",
+    "text": "Garantir que a integração siga boas práticas de segurança e esteja em conformidade com a LGPD.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#princípios",
+    "href": "seguranca-lgpd.html#princípios",
+    "title": "Segurança e LGPD",
+    "section": "Princípios",
+    "text": "Princípios\n\n\n\n\n\n\n\nPrincípio\nAplicação\n\n\n\n\nMinimização de dados\nCom SD-JWT, o cidadão revela apenas ageOver18, não a data de nascimento\n\n\nFinalidade\nUse o resultado apenas para controle de acesso por idade\n\n\nNão armazenamento\nNão armazene a credencial do cidadão\n\n\nTransparência\nInforme ao usuário o que está sendo verificado",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#checklist-de-segurança",
+    "href": "seguranca-lgpd.html#checklist-de-segurança",
+    "title": "Segurança e LGPD",
+    "section": "Checklist de Segurança",
+    "text": "Checklist de Segurança\n\nINJI Verify Service\n\nAcessível pela internet apenas via HTTPS (reverse proxy)\nPostgreSQL não exposto à internet (apenas localhost ou rede Docker)\nSenha do banco alterada (não usar postgres/postgres em produção)\nKeystore PKCS12 com senha forte (INJI_KEYSTORE_FILE_PASS)\nLogs com rotação configurada\n\n\n\nAplicação React\n\nonVpReceived (com validação no backend) em vez de onVpProcessed em produção\nSem dados de credencial armazenados no frontend (localStorage, sessionStorage, etc.)\nCSP (Content Security Policy) configurado\n\n\n\nInfraestrutura\n\nVM com firewall configurado\nAcesso SSH por chave, não senha\nDocker com usuário não-root (quando possível)\nCertificado SSL/TLS válido",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#onvpreceived-vs-onvpprocessed-segurança",
+    "href": "seguranca-lgpd.html#onvpreceived-vs-onvpprocessed-segurança",
+    "title": "Segurança e LGPD",
+    "section": "onVpReceived vs onVpProcessed — Segurança",
+    "text": "onVpReceived vs onVpProcessed — Segurança\n\n\n\nAspecto\nonVpReceived\nonVpProcessed\n\n\n\n\nResultado chega ao\nBackend (via txnId)\nFrontend (direto)\n\n\nAdulteração possível?\nNão (backend valida)\nSim (DevTools)\n\n\nUso recomendado\nProdução\nDesenvolvimento\n\n\n\nEm produção, o fluxo seguro é:\n\nSDK recebe txnId via onVpReceived\nFrontend envia txnId ao seu backend\nSeu backend chama GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{txnId}\nBackend decide se libera o acesso\n\n// Frontend\nonVpReceived={async (txnId) =&gt; {\n  const res = await fetch(`/api/verificacao/${txnId}`);\n  const data = await res.json();\n  if (data.verified) { /* liberar */ }\n}}\n// Backend (Node/Express) — opcional mas recomendado para produção\napp.get('/api/verificacao/:txnId', async (req, res) =&gt; {\n  const { txnId } = req.params;\n  // Substitua pelo valor do seu ambiente\n  const result = await fetch(\n    `&lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/${txnId}`\n  );\n  const data = await result.json();\n  const verified = data.some(r =&gt; r.vcStatus === 'SUCCESS');\n  res.json({ verified });\n});\n\n\n\n\n\n\nImportante\n\n\n\nO backend acima é simples e opcional — serve apenas para isolar a decisão de acesso do frontend. Não é um orquestrador de todo o fluxo.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#did-e-keystore",
+    "href": "seguranca-lgpd.html#did-e-keystore",
+    "title": "Segurança e LGPD",
+    "section": "DID e Keystore",
+    "text": "DID e Keystore\nO INJI Verify Service se identifica com um DID Web e assina requisições com um keystore PKCS12.\n\nO DID (did:web:seu-dominio.com.br:v1:verify) deve resolver para o seu domínio público\nO keystore (test.p12) é usado para assinar as authorization requests\nEm produção, gere um keystore próprio com chave forte\n\n\n\n\n\n\n\nAviso\n\n\n\nO test.p12 incluído no INJI é para desenvolvimento apenas. Gere um keystore próprio para produção.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#claims-filtradas-como-metadados",
+    "href": "seguranca-lgpd.html#claims-filtradas-como-metadados",
+    "title": "Segurança e LGPD",
+    "section": "Claims filtradas como metadados",
+    "text": "Claims filtradas como metadados\nA variável INJI_VERIFY_CLAIMS_WITH_META_DATA define campos tratados como metadados internos (não exibidos):\n_sd, _sd_alg, iss, cnf, sub, aud, exp, nbf, iat, cti\nEsses campos são estruturais do SD-JWT e não contêm dados pessoais.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#consentimento-do-usuário",
+    "href": "seguranca-lgpd.html#consentimento-do-usuário",
+    "title": "Segurança e LGPD",
+    "section": "Consentimento do Usuário",
+    "text": "Consentimento do Usuário\nAntes de iniciar a verificação, informe ao usuário:\n\nO que está sendo verificado (idade &gt;= 18)\nQuem é o verificador (sua organização)\nQue nenhum dado pessoal além de ageOver18 é compartilhado\nQue o cidadão autoriza ativamente na Carteira Digital",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "seguranca-lgpd.html#próximo-passo",
+    "href": "seguranca-lgpd.html#próximo-passo",
+    "title": "Segurança e LGPD",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nVeja como levar para Produção e Operação.",
+    "crumbs": [
+      "Referência",
+      "Segurança e LGPD"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Boas-vindas",
+    "section": "",
+    "text": "O VerificaIdade é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis.\nEssa solução de governo é baseada na stack MOSIP INJI e funciona sobre o protocolo Open ID for Verifiable Credentials (OID4VC) que é interoperável com outras soluções e adotado por diversos países e organizações, estando já presente em forma experimental nos browsers Chrome e Safari mais recentes.",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "index.html#o-que-é-o-verificaidade",
+    "href": "index.html#o-que-é-o-verificaidade",
+    "title": "Boas-vindas",
+    "section": "",
+    "text": "O VerificaIdade é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis.\nEssa solução de governo é baseada na stack MOSIP INJI e funciona sobre o protocolo Open ID for Verifiable Credentials (OID4VC) que é interoperável com outras soluções e adotado por diversos países e organizações, estando já presente em forma experimental nos browsers Chrome e Safari mais recentes.",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "index.html#para-quem-é-este-portal",
+    "href": "index.html#para-quem-é-este-portal",
+    "title": "Boas-vindas",
+    "section": "Para quem é este portal?",
+    "text": "Para quem é este portal?\nPara desenvolvedores de Plataformas Digitais, web ou mobile apps que precisam verificar idade de acordo com o ECA Digital.",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "index.html#como-funciona",
+    "href": "index.html#como-funciona",
+    "title": "Boas-vindas",
+    "section": "Como funciona",
+    "text": "Como funciona\n\nVocê integra o INJI Verify SDK Web em sua aplicação web ou o INJI Verify SDK Mobile em sua aplicação mobile.\nO SDK se comunica com o INJI Verify Service (backend Java/Spring Boot que roda na sua VM)\nO cidadão apresenta sua credencial via QR Code (desktop) ou Deep Link (mobile)\nO Verify Service valida a credencial criptograficamente e retorna o resultado ao SDK",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "index.html#o-que-você-vai-encontrar-aqui",
+    "href": "index.html#o-que-você-vai-encontrar-aqui",
+    "title": "Boas-vindas",
+    "section": "O que você vai encontrar aqui",
+    "text": "O que você vai encontrar aqui\n\n\n\nSeção\nO que resolve\n\n\n\n\nArquitetura em 1 Página\nVisão geral dos componentes\n\n\nIntegre em 1 Hora\nChecklist passo a passo\n\n\nSetup da VM e Docker\nPreparar a infraestrutura\n\n\nINJI Verify Service\nSubir o backend com Docker Compose\n\n\nFluxo de Verificação\nEntender o ciclo completo\n\n\nIntegração Web (QR Code)\nFluxo cross-device no desktop\n\n\nIntegração Mobile (Deep Link)\nFluxo same-device no celular\n\n\nPolicy 18+\nPresentation Definition de idade\n\n\nSegurança e LGPD\nBoas práticas\n\n\nProdução e Operação\nDeploy em produção\n\n\nAPI Reference\nEndpoints do INJI Verify Service\n\n\nTroubleshooting\nErros comuns\n\n\nOnboarding\nGateway e credenciamento",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "index.html#pré-requisitos",
+    "href": "index.html#pré-requisitos",
+    "title": "Boas-vindas",
+    "section": "Pré-requisitos",
+    "text": "Pré-requisitos\n\nAcesso a uma VM com Docker para rodar o INJI Verify Service ? Credenciais de acesso ao gateway (obtidas no Onboarding)\n\n\n\n\n\n\n\nNota\n\n\n\nO objetivo é que um desenvolvedor experiente consiga integrar em 1 dia. Comece pelo Integre em 1 Dia.",
+    "crumbs": [
+      "Boas-vindas"
+    ]
+  },
+  {
+    "objectID": "producao.html",
+    "href": "producao.html",
+    "title": "Produção e Operação",
+    "section": "",
+    "text": "Preparar o ambiente para deploy em produção com segurança e monitoramento.",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#objetivo",
+    "href": "producao.html#objetivo",
+    "title": "Produção e Operação",
+    "section": "",
+    "text": "Preparar o ambiente para deploy em produção com segurança e monitoramento.",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#checklist-de-produção",
+    "href": "producao.html#checklist-de-produção",
+    "title": "Produção e Operação",
+    "section": "Checklist de Produção",
+    "text": "Checklist de Produção\n\nDomínio público com HTTPS (certificado SSL/TLS)\nDIDs e INJI_VP_SUBMISSION_BASE_URL apontando para o domínio real\nReverse proxy (Nginx) na frente do INJI Verify Service\nSenha do PostgreSQL alterada (não usar padrão)\nKeystore PKCS12 próprio (não usar test.p12)\nINJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true\nLogs centralizados com rotação\nMonitoramento e alertas\nBackup do PostgreSQL",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#docker-compose-para-produção",
+    "href": "producao.html#docker-compose-para-produção",
+    "title": "Produção e Operação",
+    "section": "Docker Compose para Produção",
+    "text": "Docker Compose para Produção\n# docker-compose.prod.yml\nversion: '3.8'\n\nservices:\n  verify-service:\n    container_name: verify-service\n    image: injistackdev/inji-verify-service:develop\n    restart: always\n    ports:\n      - \"127.0.0.1:8080:8080\"  # Apenas localhost — Nginx faz o proxy\n    environment:\n      - active_profile_env=default\n      - DATABASE_HOST=postgres\n      - DATABASE_PORT=5432\n      - DATABASE_NAME=inji_verify\n      - DATABASE_SCHEMA=verify\n      - DATABASE_USERNAME=${DB_USER}\n      - DATABASE_PASSWORD=${DB_PASSWORD}\n      - INJI_VP_SUBMISSION_BASE_URL=https://verify.seu-dominio.com.br/v1/verify\n      - INJI_DID_VERIFY_URI=did:web:verify.seu-dominio.com.br:v1:verify\n      - INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:verify.seu-dominio.com.br:v1:verify#key-0\n      - INJI_KEYSTORE_FILE_PASS=${KEYSTORE_PASS}\n      - INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=55000\n      - INJI_VERIFY_REDIRECT_URI=https://verify.seu-dominio.com.br\n      - INJI_VERIFY_RESPONSE_CODE_EXPIRY_TIME_IN_MINS=5\n      - INJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true\n      - INJI_VERIFY_CLAIMS_WITH_META_DATA=_sd,_sd_alg,iss,cnf,sub,aud,exp,nbf,iat,cti\n    logging:\n      driver: json-file\n      options:\n        max-size: \"10m\"\n        max-file: \"5\"\n    deploy:\n      resources:\n        limits:\n          memory: 2G\n          cpus: '2'\n    depends_on:\n      - postgres\n\n  postgres:\n    image: postgres:13\n    container_name: postgres-db\n    restart: always\n    environment:\n      POSTGRES_USER: ${DB_USER}\n      POSTGRES_PASSWORD: ${DB_PASSWORD}\n      POSTGRES_DB: inji_verify\n    ports:\n      - \"127.0.0.1:5432:5432\"  # Apenas localhost\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n      - ./db-init:/docker-entrypoint-initdb.d\n    logging:\n      driver: json-file\n      options:\n        max-size: \"10m\"\n        max-file: \"3\"\n\nvolumes:\n  pgdata:\n\n\n\n\n\n\nImportante\n\n\n\nNote 127.0.0.1:8080:8080 e 127.0.0.1:5432:5432 — isso garante que ambos os serviços só aceitam conexões locais. O Nginx faz o proxy HTTPS para o mundo externo.",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#nginx-como-reverse-proxy",
+    "href": "producao.html#nginx-como-reverse-proxy",
+    "title": "Produção e Operação",
+    "section": "Nginx como Reverse Proxy",
+    "text": "Nginx como Reverse Proxy\n# /etc/nginx/sites-available/verificaidade\nserver {\n    listen 443 ssl;\n    server_name verify.seu-dominio.com.br;\n\n    ssl_certificate /etc/letsencrypt/live/verify.seu-dominio.com.br/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/verify.seu-dominio.com.br/privkey.pem;\n\n    # INJI Verify Service\n    location /v1/verify/ {\n        proxy_pass http://localhost:8080/v1/verify/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n\n        # Long-polling precisa de timeout maior\n        proxy_read_timeout 60s;\n    }\n}\n\nserver {\n    listen 80;\n    server_name verify.seu-dominio.com.br;\n    return 301 https://$server_name$request_uri;\n}\nsudo ln -s /etc/nginx/sites-available/verificaidade /etc/nginx/sites-enabled/\nsudo nginx -t\nsudo systemctl reload nginx",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#certificado-ssl-com-lets-encrypt",
+    "href": "producao.html#certificado-ssl-com-lets-encrypt",
+    "title": "Produção e Operação",
+    "section": "Certificado SSL com Let’s Encrypt",
+    "text": "Certificado SSL com Let’s Encrypt\nsudo apt install -y certbot python3-certbot-nginx\nsudo certbot --nginx -d verify.seu-dominio.com.br",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#monitoramento",
+    "href": "producao.html#monitoramento",
+    "title": "Produção e Operação",
+    "section": "Monitoramento",
+    "text": "Monitoramento\n\nHealth Check\ncurl -s https://verify.seu-dominio.com.br/v1/verify/health\n\n\nScript de monitoramento\n#!/bin/bash\n# monitor.sh — executar via cron a cada minuto\nHEALTH=$(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/v1/verify/health)\n\nif [ \"$HEALTH\" != \"200\" ]; then\n  echo \"$(date) ALERTA: INJI Verify Service indisponível (HTTP $HEALTH)\" \\\n    &gt;&gt; /var/log/verificaidade-monitor.log\nfi\n# Adicionar ao cron\ncrontab -e\n# * * * * * /home/ubuntu/monitor.sh",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#backup-do-postgresql",
+    "href": "producao.html#backup-do-postgresql",
+    "title": "Produção e Operação",
+    "section": "Backup do PostgreSQL",
+    "text": "Backup do PostgreSQL\n#!/bin/bash\n# backup-db.sh\nBACKUP_DIR=/home/ubuntu/backups\nmkdir -p $BACKUP_DIR\ndocker exec postgres-db pg_dump -U ${DB_USER} inji_verify \\\n  | gzip &gt; $BACKUP_DIR/inji_verify_$(date +%Y%m%d_%H%M%S).sql.gz\n\n# Manter apenas últimos 7 dias\nfind $BACKUP_DIR -name \"*.sql.gz\" -mtime +7 -delete",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#atualização-do-service",
+    "href": "producao.html#atualização-do-service",
+    "title": "Produção e Operação",
+    "section": "Atualização do Service",
+    "text": "Atualização do Service\ncd ~/verificaidade\ndocker compose -f docker-compose.prod.yml pull\ndocker compose -f docker-compose.prod.yml up -d\ncurl -s http://localhost:8080/v1/verify/health\n\n\n\n\n\n\nAviso\n\n\n\nTeste atualizações em ambiente de homologação antes de aplicar em produção.",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "producao.html#próximo-passo",
+    "href": "producao.html#próximo-passo",
+    "title": "Produção e Operação",
+    "section": "Próximo passo",
+    "text": "Próximo passo\nConsulte a API Reference para detalhes dos endpoints.",
+    "crumbs": [
+      "Referência",
+      "Produção e Operação"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html",
+    "href": "arquitetura.html",
+    "title": "Arquitetura em 1 Página",
+    "section": "",
+    "text": "Entender os componentes do sistema e como eles se conectam.",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html#objetivo",
+    "href": "arquitetura.html#objetivo",
+    "title": "Arquitetura em 1 Página",
+    "section": "",
+    "text": "Entender os componentes do sistema e como eles se conectam.",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html#diagrama-de-arquitetura",
+    "href": "arquitetura.html#diagrama-de-arquitetura",
+    "title": "Arquitetura em 1 Página",
+    "section": "Diagrama de Arquitetura",
+    "text": "Diagrama de Arquitetura\n\n\n\n\n\nflowchart LR\n    subgraph cidadao[\"👤 Cidadão\"]\n        A[\"📱 Carteira Digital&lt;br&gt;(INJI Wallet)\"]\n    end\n\n    subgraph verificador[\"🔍 Verificador — você\"]\n        B[\"🌐 App React&lt;br&gt;+ INJI Verify SDK\"]\n        C[\"⚙️ INJI Verify Service&lt;br&gt;Spring Boot · PostgreSQL&lt;br&gt;Docker · VM\"]\n    end\n\n    subgraph governo[\"🏛️ Governo\"]\n        E[\"🏢 Emissor de&lt;br&gt;Credenciais\"]\n    end\n\n    B &lt;--&gt;|\"REST API&lt;br&gt;(verifyServiceUrl)\"| C\n    C &lt;--&gt;|\"OpenID4VP&lt;br&gt;(VP submission)\"| A\n    B -.-&gt;|\"QR Code / Deep Link&lt;br&gt;(authorizationUrl)\"| A\n    E &lt;-.-&gt;|\"OpenID4VCI\"| A\n\n    classDef estiloCidadao fill:#ffffff,stroke:#2563eb,color:#1e3a8a\n    classDef estiloVerificador fill:#ffffff,stroke:#059669,color:#064e3b\n    classDef estiloGoverno fill:#ffffff,stroke:#d97706,color:#78350f\n\n    class A estiloCidadao\n    class B,C estiloVerificador\n    class E estiloGoverno\n\n    style cidadao fill:#ffffff,stroke:#2563eb,color:#1e3a8a\n    style verificador fill:#ffffff,stroke:#059669,color:#064e3b\n    style governo fill:#ffffff,stroke:#d97706,color:#78350f",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html#componentes",
+    "href": "arquitetura.html#componentes",
+    "title": "Arquitetura em 1 Página",
+    "section": "Componentes",
+    "text": "Componentes\n\n\n\n\n\n\n\n\n\nComponente\nResponsável\nTecnologia\nDescrição\n\n\n\n\nCarteira Digital\nCidadão\nINJI Wallet (app mobile)\nArmazena a credencial de idade emitida pelo governo\n\n\nApp React + SDK\nVerificador (você)\nReact 18 + @mosip/react-inji-verify-sdk\nComponentes React que gerenciam o fluxo de verificação\n\n\nINJI Verify Service\nVerificador (você)\nJava 21, Spring Boot 3.2, PostgreSQL 13\nBackend que valida criptograficamente a credencial via OpenID4VP\n\n\nEmissor\nGoverno\n—\nEmitiu a credencial. Não participa do fluxo em tempo real",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html#como-os-componentes-se-comunicam",
+    "href": "arquitetura.html#como-os-componentes-se-comunicam",
+    "title": "Arquitetura em 1 Página",
+    "section": "Como os componentes se comunicam",
+    "text": "Como os componentes se comunicam\n\nO SDK React chama o INJI Verify Service via REST API para criar uma solicitação de verificação (VP Request)\nO SDK exibe um QR Code (desktop) ou abre um Deep Link (mobile) contendo a URL de autorização\nO cidadão abre a Carteira Digital, que se comunica diretamente com o INJI Verify Service para apresentar a credencial\nO SDK faz long-polling no Service até receber o resultado\nO resultado chega ao SDK via callback (onVpReceived ou onVpProcessed)",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "arquitetura.html#regras-fundamentais",
+    "href": "arquitetura.html#regras-fundamentais",
+    "title": "Arquitetura em 1 Página",
+    "section": "Regras Fundamentais",
+    "text": "Regras Fundamentais\n\nNão é necessário um backend customizado — o INJI Verify SDK e o INJI Verify Service fazem toda a orquestração.\nO INJI Verify Service roda dentro da sua infraestrutura (sua VM, via Docker).\nA Carteira Digital do cidadão precisa acessar o INJI Verify Service pela internet — o Service precisa de um domínio público.\nO governo não participa da verificação em tempo real — a credencial já está com o cidadão.\nA identidade do verificador é baseada em DID Web (did:web:seu-dominio.com.br:v1:verify).\n\n\n\n\n\n\n\nImportante\n\n\n\nO INJI Verify Service precisa ser acessível publicamente pela Carteira Digital do cidadão. Em desenvolvimento local, use um túnel (ex: ngrok).",
+    "crumbs": [
+      "Início Rápido",
+      "Arquitetura em 1 Página"
+    ]
+  },
+  {
+    "objectID": "api-reference.html",
+    "href": "api-reference.html",
+    "title": "API Reference",
+    "section": "",
+    "text": "Referência dos endpoints REST do INJI Verify Service. O context path é /v1/verify.\n\n\n\n\n\n\nNota\n\n\n\nEm uso normal, o SDK gerencia todas as chamadas a esses endpoints automaticamente. Esta referência é útil para debugging, integração com apps nativos, ou uso de onVpReceived com backend.",
+    "crumbs": [
+      "Referência",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api-reference.html#objetivo",
+    "href": "api-reference.html#objetivo",
+    "title": "API Reference",
+    "section": "",
+    "text": "Referência dos endpoints REST do INJI Verify Service. O context path é /v1/verify.\n\n\n\n\n\n\nNota\n\n\n\nEm uso normal, o SDK gerencia todas as chamadas a esses endpoints automaticamente. Esta referência é útil para debugging, integração com apps nativos, ou uso de onVpReceived com backend.",
+    "crumbs": [
+      "Referência",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api-reference.html#endpoints-do-inji-verify-service",
+    "href": "api-reference.html#endpoints-do-inji-verify-service",
+    "title": "API Reference",
+    "section": "Endpoints do INJI Verify Service",
+    "text": "Endpoints do INJI Verify Service\n\nCriar VP Request\nInicia uma solicitação de verificação OpenID4VP.\nPOST &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-request\nRequest Body:\n{\n  \"presentationDefinition\": {\n    \"id\": \"age-verification-18-plus\",\n    \"input_descriptors\": [\n      {\n        \"id\": \"age_credential\",\n        \"format\": {\n          \"vc+sd-jwt\": {\n            \"sd-jwt_alg_values\": [\"ES256\"]\n          }\n        },\n        \"constraints\": {\n          \"fields\": [\n            {\n              \"path\": [\"$.ageOver18\"],\n              \"filter\": {\n                \"type\": \"boolean\",\n                \"const\": true\n              }\n            }\n          ]\n        }\n      }\n    ]\n  }\n}\nResponse — 200 OK:\n{\n  \"requestId\": \"abc-123-def-456\",\n  \"authorizationUrl\": \"openid4vp://authorize?request_uri=https://...\"\n}\n\n\n\nConsultar Status da VP Request (Long-Polling)\nAguarda até que a Carteira Digital envie a credencial ou o timeout seja atingido.\nGET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-request/{requestId}/status\nO timeout padrão do long-polling é 55 segundos (configurável via INJI_VP_REQUEST_LONG_POLLING_TIMEOUT).\nResponse — 200 OK (credencial recebida):\n{\n  \"status\": \"COMPLETED\",\n  \"requestId\": \"abc-123-def-456\"\n}\nResponse — 200 OK (aguardando):\n{\n  \"status\": \"PENDING\",\n  \"requestId\": \"abc-123-def-456\"\n}\n\n\n\nObter Resultado da Verificação\nBusca o resultado completo após a Wallet ter submetido a credencial.\nGET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{requestId}\nResponse — 200 OK:\n[\n  {\n    \"vc\": {\n      \"ageOver18\": true\n    },\n    \"vcStatus\": \"SUCCESS\"\n  }\n]\nValores possíveis de vcStatus:\n\n\n\nValor\nSignificado\n\n\n\n\nSUCCESS\nCredencial válida, policy satisfeita\n\n\nINVALID\nCredencial inválida (assinatura, emissor, formato)\n\n\nEXPIRED\nCredencial expirada\n\n\n\n\n\n\nVP Submission (Wallet → Service)\nEndpoint chamado pela Carteira Digital para enviar a credencial. Você não chama este endpoint diretamente.\nPOST &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-submission\n\n\n\nVC Verification (QR Code Scan/Upload)\nPara o fluxo de QR Code scan/upload (não OpenID4VP), o SDK usa:\nPOST &lt;VERIFY_BASE_URL&gt;/v1/verify/vc-verification\n\n\n\nHealth Check\nGET &lt;VERIFY_BASE_URL&gt;/v1/verify/health\nResponse — 200 OK:\n{\n  \"status\": \"UP\"\n}",
+    "crumbs": [
+      "Referência",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api-reference.html#uso-com-onvpreceived-backend",
+    "href": "api-reference.html#uso-com-onvpreceived-backend",
+    "title": "API Reference",
+    "section": "Uso com onVpReceived (Backend)",
+    "text": "Uso com onVpReceived (Backend)\nQuando você usa onVpReceived, o SDK retorna apenas o txnId. Para buscar o resultado no backend:\n// Backend Node/Express (exemplo)\nconst express = require('express');\nconst app = express();\n\n// Substitua pelo valor do seu ambiente\nconst VERIFY_BASE_URL = '&lt;VERIFY_BASE_URL&gt;';\n\napp.get('/api/verificacao/:txnId', async (req, res) =&gt; {\n  const { txnId } = req.params;\n\n  const response = await fetch(\n    `${VERIFY_BASE_URL}/v1/verify/vp-result/${txnId}`\n  );\n  const results = await response.json();\n\n  const verified = results.some(r =&gt; r.vcStatus === 'SUCCESS');\n  res.json({ verified, results });\n});",
+    "crumbs": [
+      "Referência",
+      "API Reference"
+    ]
+  },
+  {
+    "objectID": "api-reference.html#resumo-de-placeholders",
+    "href": "api-reference.html#resumo-de-placeholders",
+    "title": "API Reference",
+    "section": "Resumo de Placeholders",
+    "text": "Resumo de Placeholders\n\n\n\n\n\n\n\n\nPlaceholder\nDescrição\nExemplo\n\n\n\n\n&lt;VERIFY_BASE_URL&gt;\nURL base do INJI Verify Service\nhttps://verify.seu-dominio.com.br\n\n\n&lt;SEU_DOMINIO&gt;\nDomínio público da VM\nverify.seu-dominio.com.br\n\n\n\n\n\n\n\n\n\nNota\n\n\n\nEsses valores são definidos durante o setup do INJI Verify Service e o Onboarding.",
+    "crumbs": [
+      "Referência",
+      "API Reference"
+    ]
+  },
+  {
     "objectID": "integra-mobile.html",
     "href": "integra-mobile.html",
     "title": "Integração Mobile (Deep Link)",
@@ -581,393 +971,113 @@
     ]
   },
   {
-    "objectID": "api-reference.html",
-    "href": "api-reference.html",
-    "title": "API Reference",
+    "objectID": "politica-privacidade.html",
+    "href": "politica-privacidade.html",
+    "title": "Política de Privacidade",
     "section": "",
-    "text": "Referência dos endpoints REST do INJI Verify Service. O context path é /v1/verify.\n\n\n\n\n\n\nNota\n\n\n\nEm uso normal, o SDK gerencia todas as chamadas a esses endpoints automaticamente. Esta referência é útil para debugging, integração com apps nativos, ou uso de onVpReceived com backend.",
+    "text": "Última atualização: julho de 2025\nO aplicativo é uma carteira digital de credenciais verificáveis. Esta Política de Privacidade descreve como coletamos, usamos e protegemos suas informações.",
     "crumbs": [
       "Referência",
-      "API Reference"
+      "Política de Privacidade"
     ]
   },
   {
-    "objectID": "api-reference.html#objetivo",
-    "href": "api-reference.html#objetivo",
-    "title": "API Reference",
-    "section": "",
-    "text": "Referência dos endpoints REST do INJI Verify Service. O context path é /v1/verify.\n\n\n\n\n\n\nNota\n\n\n\nEm uso normal, o SDK gerencia todas as chamadas a esses endpoints automaticamente. Esta referência é útil para debugging, integração com apps nativos, ou uso de onVpReceived com backend.",
+    "objectID": "politica-privacidade.html#dados-que-coletamos",
+    "href": "politica-privacidade.html#dados-que-coletamos",
+    "title": "Política de Privacidade",
+    "section": "1. Dados que coletamos",
+    "text": "1. Dados que coletamos\n\n1.1 Dados de autenticação\nO Aplicativo utiliza o login Gov.br (via protocolo OAuth 2.0 com PKCE) para autenticar sua identidade. Durante esse processo, recebemos do Gov.br:\n\nNome\nCPF\nE-mail\nNível de confiabilidade da conta\n\nEsses dados são usados exclusivamente para vincular sua identidade às credenciais verificáveis emitidas.\n\n\n1.2 Credenciais verificáveis\nO Aplicativo armazena localmente no seu dispositivo credenciais verificáveis (ex: comprovante de maioridade). Essas credenciais são baixadas de emissores autorizados e ficam sob seu controle.\n\n\n1.3 Dados biométricos\nO Aplicativo pode solicitar autenticação biométrica (impressão digital ou reconhecimento facial) para autorizar o compartilhamento de credenciais. Nenhum dado biométrico é coletado, transmitido ou armazenado pelo Aplicativo — a autenticação é processada inteiramente pelo sistema operacional do dispositivo.\n\n\n1.4 Câmera\nO Aplicativo acessa a câmera exclusivamente para leitura de QR Codes durante o fluxo de verificação de idade. Nenhuma imagem ou vídeo é capturado ou armazenado.",
     "crumbs": [
       "Referência",
-      "API Reference"
+      "Política de Privacidade"
     ]
   },
   {
-    "objectID": "api-reference.html#endpoints-do-inji-verify-service",
-    "href": "api-reference.html#endpoints-do-inji-verify-service",
-    "title": "API Reference",
-    "section": "Endpoints do INJI Verify Service",
-    "text": "Endpoints do INJI Verify Service\n\nCriar VP Request\nInicia uma solicitação de verificação OpenID4VP.\nPOST &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-request\nRequest Body:\n{\n  \"presentationDefinition\": {\n    \"id\": \"age-verification-18-plus\",\n    \"input_descriptors\": [\n      {\n        \"id\": \"age_credential\",\n        \"format\": {\n          \"vc+sd-jwt\": {\n            \"sd-jwt_alg_values\": [\"ES256\"]\n          }\n        },\n        \"constraints\": {\n          \"fields\": [\n            {\n              \"path\": [\"$.ageOver18\"],\n              \"filter\": {\n                \"type\": \"boolean\",\n                \"const\": true\n              }\n            }\n          ]\n        }\n      }\n    ]\n  }\n}\nResponse — 200 OK:\n{\n  \"requestId\": \"abc-123-def-456\",\n  \"authorizationUrl\": \"openid4vp://authorize?request_uri=https://...\"\n}\n\n\n\nConsultar Status da VP Request (Long-Polling)\nAguarda até que a Carteira Digital envie a credencial ou o timeout seja atingido.\nGET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-request/{requestId}/status\nO timeout padrão do long-polling é 55 segundos (configurável via INJI_VP_REQUEST_LONG_POLLING_TIMEOUT).\nResponse — 200 OK (credencial recebida):\n{\n  \"status\": \"COMPLETED\",\n  \"requestId\": \"abc-123-def-456\"\n}\nResponse — 200 OK (aguardando):\n{\n  \"status\": \"PENDING\",\n  \"requestId\": \"abc-123-def-456\"\n}\n\n\n\nObter Resultado da Verificação\nBusca o resultado completo após a Wallet ter submetido a credencial.\nGET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{requestId}\nResponse — 200 OK:\n[\n  {\n    \"vc\": {\n      \"ageOver18\": true\n    },\n    \"vcStatus\": \"SUCCESS\"\n  }\n]\nValores possíveis de vcStatus:\n\n\n\nValor\nSignificado\n\n\n\n\nSUCCESS\nCredencial válida, policy satisfeita\n\n\nINVALID\nCredencial inválida (assinatura, emissor, formato)\n\n\nEXPIRED\nCredencial expirada\n\n\n\n\n\n\nVP Submission (Wallet → Service)\nEndpoint chamado pela Carteira Digital para enviar a credencial. Você não chama este endpoint diretamente.\nPOST &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-submission\n\n\n\nVC Verification (QR Code Scan/Upload)\nPara o fluxo de QR Code scan/upload (não OpenID4VP), o SDK usa:\nPOST &lt;VERIFY_BASE_URL&gt;/v1/verify/vc-verification\n\n\n\nHealth Check\nGET &lt;VERIFY_BASE_URL&gt;/v1/verify/health\nResponse — 200 OK:\n{\n  \"status\": \"UP\"\n}",
+    "objectID": "politica-privacidade.html#como-usamos-seus-dados",
+    "href": "politica-privacidade.html#como-usamos-seus-dados",
+    "title": "Política de Privacidade",
+    "section": "2. Como usamos seus dados",
+    "text": "2. Como usamos seus dados\n\n\n\n\n\n\n\n\nDado\nFinalidade\nArmazenamento\n\n\n\n\nDados Gov.br (nome, CPF, e-mail)\nAutenticação e emissão de credenciais\nLocal no dispositivo (criptografado)\n\n\nCredenciais verificáveis\nComprovação de maioridade quando solicitado\nLocal no dispositivo (criptografado)\n\n\nBiometria\nAutorização de compartilhamento\nApenas no sistema operacional\n\n\nCâmera\nLeitura de QR Code\nSem armazenamento",
     "crumbs": [
       "Referência",
-      "API Reference"
+      "Política de Privacidade"
     ]
   },
   {
-    "objectID": "api-reference.html#uso-com-onvpreceived-backend",
-    "href": "api-reference.html#uso-com-onvpreceived-backend",
-    "title": "API Reference",
-    "section": "Uso com onVpReceived (Backend)",
-    "text": "Uso com onVpReceived (Backend)\nQuando você usa onVpReceived, o SDK retorna apenas o txnId. Para buscar o resultado no backend:\n// Backend Node/Express (exemplo)\nconst express = require('express');\nconst app = express();\n\n// Substitua pelo valor do seu ambiente\nconst VERIFY_BASE_URL = '&lt;VERIFY_BASE_URL&gt;';\n\napp.get('/api/verificacao/:txnId', async (req, res) =&gt; {\n  const { txnId } = req.params;\n\n  const response = await fetch(\n    `${VERIFY_BASE_URL}/v1/verify/vp-result/${txnId}`\n  );\n  const results = await response.json();\n\n  const verified = results.some(r =&gt; r.vcStatus === 'SUCCESS');\n  res.json({ verified, results });\n});",
+    "objectID": "politica-privacidade.html#compartilhamento-de-dados",
+    "href": "politica-privacidade.html#compartilhamento-de-dados",
+    "title": "Política de Privacidade",
+    "section": "3. Compartilhamento de dados",
+    "text": "3. Compartilhamento de dados\n\n3.1 Princípio de minimização\nQuando você autoriza uma verificação de idade, o Aplicativo compartilha apenas a informação de que você é maior de 18 anos (ageOver18: true). Sua data de nascimento, CPF, nome e demais dados pessoais não são compartilhados com o solicitante.\n\n\n3.2 Consentimento explícito\nTodo compartilhamento de dados requer sua autorização explícita. Antes de compartilhar, o Aplicativo exibe:\n\nQuem está solicitando a verificação\nQuais dados serão compartilhados\nA política de retenção do solicitante\n\nVocê pode recusar o compartilhamento a qualquer momento.\n\n\n3.3 Uso único\nAs verificações são de uso único — o solicitante recebe o resultado da verificação sem armazenar sua credencial.",
     "crumbs": [
       "Referência",
-      "API Reference"
+      "Política de Privacidade"
     ]
   },
   {
-    "objectID": "api-reference.html#resumo-de-placeholders",
-    "href": "api-reference.html#resumo-de-placeholders",
-    "title": "API Reference",
-    "section": "Resumo de Placeholders",
-    "text": "Resumo de Placeholders\n\n\n\n\n\n\n\n\nPlaceholder\nDescrição\nExemplo\n\n\n\n\n&lt;VERIFY_BASE_URL&gt;\nURL base do INJI Verify Service\nhttps://verify.seu-dominio.com.br\n\n\n&lt;SEU_DOMINIO&gt;\nDomínio público da VM\nverify.seu-dominio.com.br\n\n\n\n\n\n\n\n\n\nNota\n\n\n\nEsses valores são definidos durante o setup do INJI Verify Service e o Onboarding.",
+    "objectID": "politica-privacidade.html#armazenamento-e-segurança",
+    "href": "politica-privacidade.html#armazenamento-e-segurança",
+    "title": "Política de Privacidade",
+    "section": "4. Armazenamento e segurança",
+    "text": "4. Armazenamento e segurança\n\nAs credenciais são armazenadas localmente no dispositivo utilizando armazenamento seguro criptografado (Secure Store)\nA comunicação com servidores é feita exclusivamente via HTTPS\nO protocolo OpenID for Verifiable Presentations (OpenID4VP) garante a integridade criptográfica das verificações\nNenhum dado pessoal é armazenado em servidores do Aplicativo",
     "crumbs": [
       "Referência",
-      "API Reference"
+      "Política de Privacidade"
     ]
   },
   {
-    "objectID": "arquitetura.html",
-    "href": "arquitetura.html",
-    "title": "Arquitetura em 1 Página",
-    "section": "",
-    "text": "Entender os componentes do sistema e como eles se conectam.",
-    "crumbs": [
-      "Início Rápido",
-      "Arquitetura em 1 Página"
-    ]
-  },
-  {
-    "objectID": "arquitetura.html#objetivo",
-    "href": "arquitetura.html#objetivo",
-    "title": "Arquitetura em 1 Página",
-    "section": "",
-    "text": "Entender os componentes do sistema e como eles se conectam.",
-    "crumbs": [
-      "Início Rápido",
-      "Arquitetura em 1 Página"
-    ]
-  },
-  {
-    "objectID": "arquitetura.html#diagrama-de-arquitetura",
-    "href": "arquitetura.html#diagrama-de-arquitetura",
-    "title": "Arquitetura em 1 Página",
-    "section": "Diagrama de Arquitetura",
-    "text": "Diagrama de Arquitetura\n\n\n\n\n\nflowchart LR\n    subgraph cidadao[\"👤 Cidadão\"]\n        A[\"📱 Carteira Digital&lt;br&gt;(INJI Wallet)\"]\n    end\n\n    subgraph verificador[\"🔍 Verificador — você\"]\n        B[\"🌐 App React&lt;br&gt;+ INJI Verify SDK\"]\n        C[\"⚙️ INJI Verify Service&lt;br&gt;Spring Boot · PostgreSQL&lt;br&gt;Docker · VM\"]\n    end\n\n    subgraph governo[\"🏛️ Governo\"]\n        E[\"🏢 Emissor de&lt;br&gt;Credenciais\"]\n    end\n\n    B &lt;--&gt;|\"REST API&lt;br&gt;(verifyServiceUrl)\"| C\n    C &lt;--&gt;|\"OpenID4VP&lt;br&gt;(VP submission)\"| A\n    B -.-&gt;|\"QR Code / Deep Link&lt;br&gt;(authorizationUrl)\"| A\n    E &lt;-.-&gt;|\"OpenID4VCI\"| A\n\n    classDef estiloCidadao fill:#ffffff,stroke:#2563eb,color:#1e3a8a\n    classDef estiloVerificador fill:#ffffff,stroke:#059669,color:#064e3b\n    classDef estiloGoverno fill:#ffffff,stroke:#d97706,color:#78350f\n\n    class A estiloCidadao\n    class B,C estiloVerificador\n    class E estiloGoverno\n\n    style cidadao fill:#ffffff,stroke:#2563eb,color:#1e3a8a\n    style verificador fill:#ffffff,stroke:#059669,color:#064e3b\n    style governo fill:#ffffff,stroke:#d97706,color:#78350f",
-    "crumbs": [
-      "Início Rápido",
-      "Arquitetura em 1 Página"
-    ]
-  },
-  {
-    "objectID": "arquitetura.html#componentes",
-    "href": "arquitetura.html#componentes",
-    "title": "Arquitetura em 1 Página",
-    "section": "Componentes",
-    "text": "Componentes\n\n\n\n\n\n\n\n\n\nComponente\nResponsável\nTecnologia\nDescrição\n\n\n\n\nCarteira Digital\nCidadão\nINJI Wallet (app mobile)\nArmazena a credencial de idade emitida pelo governo\n\n\nApp React + SDK\nVerificador (você)\nReact 18 + @mosip/react-inji-verify-sdk\nComponentes React que gerenciam o fluxo de verificação\n\n\nINJI Verify Service\nVerificador (você)\nJava 21, Spring Boot 3.2, PostgreSQL 13\nBackend que valida criptograficamente a credencial via OpenID4VP\n\n\nEmissor\nGoverno\n—\nEmitiu a credencial. Não participa do fluxo em tempo real",
-    "crumbs": [
-      "Início Rápido",
-      "Arquitetura em 1 Página"
-    ]
-  },
-  {
-    "objectID": "arquitetura.html#como-os-componentes-se-comunicam",
-    "href": "arquitetura.html#como-os-componentes-se-comunicam",
-    "title": "Arquitetura em 1 Página",
-    "section": "Como os componentes se comunicam",
-    "text": "Como os componentes se comunicam\n\nO SDK React chama o INJI Verify Service via REST API para criar uma solicitação de verificação (VP Request)\nO SDK exibe um QR Code (desktop) ou abre um Deep Link (mobile) contendo a URL de autorização\nO cidadão abre a Carteira Digital, que se comunica diretamente com o INJI Verify Service para apresentar a credencial\nO SDK faz long-polling no Service até receber o resultado\nO resultado chega ao SDK via callback (onVpReceived ou onVpProcessed)",
-    "crumbs": [
-      "Início Rápido",
-      "Arquitetura em 1 Página"
-    ]
-  },
-  {
-    "objectID": "arquitetura.html#regras-fundamentais",
-    "href": "arquitetura.html#regras-fundamentais",
-    "title": "Arquitetura em 1 Página",
-    "section": "Regras Fundamentais",
-    "text": "Regras Fundamentais\n\nNão é necessário um backend customizado — o INJI Verify SDK e o INJI Verify Service fazem toda a orquestração.\nO INJI Verify Service roda dentro da sua infraestrutura (sua VM, via Docker).\nA Carteira Digital do cidadão precisa acessar o INJI Verify Service pela internet — o Service precisa de um domínio público.\nO governo não participa da verificação em tempo real — a credencial já está com o cidadão.\nA identidade do verificador é baseada em DID Web (did:web:seu-dominio.com.br:v1:verify).\n\n\n\n\n\n\n\nImportante\n\n\n\nO INJI Verify Service precisa ser acessível publicamente pela Carteira Digital do cidadão. Em desenvolvimento local, use um túnel (ex: ngrok).",
-    "crumbs": [
-      "Início Rápido",
-      "Arquitetura em 1 Página"
-    ]
-  },
-  {
-    "objectID": "producao.html",
-    "href": "producao.html",
-    "title": "Produção e Operação",
-    "section": "",
-    "text": "Preparar o ambiente para deploy em produção com segurança e monitoramento.",
+    "objectID": "politica-privacidade.html#seus-direitos-lgpd",
+    "href": "politica-privacidade.html#seus-direitos-lgpd",
+    "title": "Política de Privacidade",
+    "section": "5. Seus direitos (LGPD)",
+    "text": "5. Seus direitos (LGPD)\nEm conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), você tem direito a:\n\nAcesso — consultar quais credenciais estão armazenadas no Aplicativo\nEliminação — remover suas credenciais e dados a qualquer momento desinstalando o Aplicativo ou limpando os dados do app\nRevogação — recusar qualquer solicitação de compartilhamento\nInformação — saber quais dados são compartilhados antes de autorizar",
     "crumbs": [
       "Referência",
-      "Produção e Operação"
+      "Política de Privacidade"
     ]
   },
   {
-    "objectID": "producao.html#objetivo",
-    "href": "producao.html#objetivo",
-    "title": "Produção e Operação",
-    "section": "",
-    "text": "Preparar o ambiente para deploy em produção com segurança e monitoramento.",
+    "objectID": "politica-privacidade.html#serviços-de-terceiros",
+    "href": "politica-privacidade.html#serviços-de-terceiros",
+    "title": "Política de Privacidade",
+    "section": "6. Serviços de terceiros",
+    "text": "6. Serviços de terceiros\n\n\n\nServiço\nFinalidade\nPolítica de Privacidade\n\n\n\n\nGov.br (Governo Federal)\nAutenticação de identidade\nTermos de Uso Gov.br\n\n\nMOSIP INJI\nInfraestrutura de credenciais verificáveis\nMOSIP Privacy Policy",
     "crumbs": [
       "Referência",
-      "Produção e Operação"
+      "Política de Privacidade"
     ]
   },
   {
-    "objectID": "producao.html#checklist-de-produção",
-    "href": "producao.html#checklist-de-produção",
-    "title": "Produção e Operação",
-    "section": "Checklist de Produção",
-    "text": "Checklist de Produção\n\nDomínio público com HTTPS (certificado SSL/TLS)\nDIDs e INJI_VP_SUBMISSION_BASE_URL apontando para o domínio real\nReverse proxy (Nginx) na frente do INJI Verify Service\nSenha do PostgreSQL alterada (não usar padrão)\nKeystore PKCS12 próprio (não usar test.p12)\nINJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true\nLogs centralizados com rotação\nMonitoramento e alertas\nBackup do PostgreSQL",
+    "objectID": "politica-privacidade.html#permissões-do-aplicativo",
+    "href": "politica-privacidade.html#permissões-do-aplicativo",
+    "title": "Política de Privacidade",
+    "section": "7. Permissões do aplicativo",
+    "text": "7. Permissões do aplicativo\n\n\n\n\n\n\n\nPermissão\nMotivo\n\n\n\n\nCAMERA\nLeitura de QR Codes para verificação\n\n\nUSE_BIOMETRIC / USE_FINGERPRINT\nAutenticação biométrica para autorizar compartilhamento\n\n\nINTERNET\nComunicação com serviços de autenticação e verificação",
     "crumbs": [
       "Referência",
-      "Produção e Operação"
+      "Política de Privacidade"
     ]
   },
   {
-    "objectID": "producao.html#docker-compose-para-produção",
-    "href": "producao.html#docker-compose-para-produção",
-    "title": "Produção e Operação",
-    "section": "Docker Compose para Produção",
-    "text": "Docker Compose para Produção\n# docker-compose.prod.yml\nversion: '3.8'\n\nservices:\n  verify-service:\n    container_name: verify-service\n    image: injistackdev/inji-verify-service:develop\n    restart: always\n    ports:\n      - \"127.0.0.1:8080:8080\"  # Apenas localhost — Nginx faz o proxy\n    environment:\n      - active_profile_env=default\n      - DATABASE_HOST=postgres\n      - DATABASE_PORT=5432\n      - DATABASE_NAME=inji_verify\n      - DATABASE_SCHEMA=verify\n      - DATABASE_USERNAME=${DB_USER}\n      - DATABASE_PASSWORD=${DB_PASSWORD}\n      - INJI_VP_SUBMISSION_BASE_URL=https://verify.seu-dominio.com.br/v1/verify\n      - INJI_DID_VERIFY_URI=did:web:verify.seu-dominio.com.br:v1:verify\n      - INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:verify.seu-dominio.com.br:v1:verify#key-0\n      - INJI_KEYSTORE_FILE_PASS=${KEYSTORE_PASS}\n      - INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=55000\n      - INJI_VERIFY_REDIRECT_URI=https://verify.seu-dominio.com.br\n      - INJI_VERIFY_RESPONSE_CODE_EXPIRY_TIME_IN_MINS=5\n      - INJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true\n      - INJI_VERIFY_CLAIMS_WITH_META_DATA=_sd,_sd_alg,iss,cnf,sub,aud,exp,nbf,iat,cti\n    logging:\n      driver: json-file\n      options:\n        max-size: \"10m\"\n        max-file: \"5\"\n    deploy:\n      resources:\n        limits:\n          memory: 2G\n          cpus: '2'\n    depends_on:\n      - postgres\n\n  postgres:\n    image: postgres:13\n    container_name: postgres-db\n    restart: always\n    environment:\n      POSTGRES_USER: ${DB_USER}\n      POSTGRES_PASSWORD: ${DB_PASSWORD}\n      POSTGRES_DB: inji_verify\n    ports:\n      - \"127.0.0.1:5432:5432\"  # Apenas localhost\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n      - ./db-init:/docker-entrypoint-initdb.d\n    logging:\n      driver: json-file\n      options:\n        max-size: \"10m\"\n        max-file: \"3\"\n\nvolumes:\n  pgdata:\n\n\n\n\n\n\nImportante\n\n\n\nNote 127.0.0.1:8080:8080 e 127.0.0.1:5432:5432 — isso garante que ambos os serviços só aceitam conexões locais. O Nginx faz o proxy HTTPS para o mundo externo.",
+    "objectID": "politica-privacidade.html#alterações-nesta-política",
+    "href": "politica-privacidade.html#alterações-nesta-política",
+    "title": "Política de Privacidade",
+    "section": "8. Alterações nesta política",
+    "text": "8. Alterações nesta política\nPodemos atualizar esta Política de Privacidade periodicamente. A data de “Última atualização” no topo será alterada. Recomendamos que você revise esta página regularmente.",
     "crumbs": [
       "Referência",
-      "Produção e Operação"
+      "Política de Privacidade"
     ]
   },
   {
-    "objectID": "producao.html#nginx-como-reverse-proxy",
-    "href": "producao.html#nginx-como-reverse-proxy",
-    "title": "Produção e Operação",
-    "section": "Nginx como Reverse Proxy",
-    "text": "Nginx como Reverse Proxy\n# /etc/nginx/sites-available/verificaidade\nserver {\n    listen 443 ssl;\n    server_name verify.seu-dominio.com.br;\n\n    ssl_certificate /etc/letsencrypt/live/verify.seu-dominio.com.br/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/verify.seu-dominio.com.br/privkey.pem;\n\n    # INJI Verify Service\n    location /v1/verify/ {\n        proxy_pass http://localhost:8080/v1/verify/;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n\n        # Long-polling precisa de timeout maior\n        proxy_read_timeout 60s;\n    }\n}\n\nserver {\n    listen 80;\n    server_name verify.seu-dominio.com.br;\n    return 301 https://$server_name$request_uri;\n}\nsudo ln -s /etc/nginx/sites-available/verificaidade /etc/nginx/sites-enabled/\nsudo nginx -t\nsudo systemctl reload nginx",
+    "objectID": "politica-privacidade.html#contato",
+    "href": "politica-privacidade.html#contato",
+    "title": "Política de Privacidade",
+    "section": "9. Contato",
+    "text": "9. Contato\nPara dúvidas, solicitações ou exercício dos seus direitos previstos na LGPD, entre em contato:\n\nE-mail: ayslan.sousa@dataprev.gov.br",
     "crumbs": [
       "Referência",
-      "Produção e Operação"
-    ]
-  },
-  {
-    "objectID": "producao.html#certificado-ssl-com-lets-encrypt",
-    "href": "producao.html#certificado-ssl-com-lets-encrypt",
-    "title": "Produção e Operação",
-    "section": "Certificado SSL com Let’s Encrypt",
-    "text": "Certificado SSL com Let’s Encrypt\nsudo apt install -y certbot python3-certbot-nginx\nsudo certbot --nginx -d verify.seu-dominio.com.br",
-    "crumbs": [
-      "Referência",
-      "Produção e Operação"
-    ]
-  },
-  {
-    "objectID": "producao.html#monitoramento",
-    "href": "producao.html#monitoramento",
-    "title": "Produção e Operação",
-    "section": "Monitoramento",
-    "text": "Monitoramento\n\nHealth Check\ncurl -s https://verify.seu-dominio.com.br/v1/verify/health\n\n\nScript de monitoramento\n#!/bin/bash\n# monitor.sh — executar via cron a cada minuto\nHEALTH=$(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/v1/verify/health)\n\nif [ \"$HEALTH\" != \"200\" ]; then\n  echo \"$(date) ALERTA: INJI Verify Service indisponível (HTTP $HEALTH)\" \\\n    &gt;&gt; /var/log/verificaidade-monitor.log\nfi\n# Adicionar ao cron\ncrontab -e\n# * * * * * /home/ubuntu/monitor.sh",
-    "crumbs": [
-      "Referência",
-      "Produção e Operação"
-    ]
-  },
-  {
-    "objectID": "producao.html#backup-do-postgresql",
-    "href": "producao.html#backup-do-postgresql",
-    "title": "Produção e Operação",
-    "section": "Backup do PostgreSQL",
-    "text": "Backup do PostgreSQL\n#!/bin/bash\n# backup-db.sh\nBACKUP_DIR=/home/ubuntu/backups\nmkdir -p $BACKUP_DIR\ndocker exec postgres-db pg_dump -U ${DB_USER} inji_verify \\\n  | gzip &gt; $BACKUP_DIR/inji_verify_$(date +%Y%m%d_%H%M%S).sql.gz\n\n# Manter apenas últimos 7 dias\nfind $BACKUP_DIR -name \"*.sql.gz\" -mtime +7 -delete",
-    "crumbs": [
-      "Referência",
-      "Produção e Operação"
-    ]
-  },
-  {
-    "objectID": "producao.html#atualização-do-service",
-    "href": "producao.html#atualização-do-service",
-    "title": "Produção e Operação",
-    "section": "Atualização do Service",
-    "text": "Atualização do Service\ncd ~/verificaidade\ndocker compose -f docker-compose.prod.yml pull\ndocker compose -f docker-compose.prod.yml up -d\ncurl -s http://localhost:8080/v1/verify/health\n\n\n\n\n\n\nAviso\n\n\n\nTeste atualizações em ambiente de homologação antes de aplicar em produção.",
-    "crumbs": [
-      "Referência",
-      "Produção e Operação"
-    ]
-  },
-  {
-    "objectID": "producao.html#próximo-passo",
-    "href": "producao.html#próximo-passo",
-    "title": "Produção e Operação",
-    "section": "Próximo passo",
-    "text": "Próximo passo\nConsulte a API Reference para detalhes dos endpoints.",
-    "crumbs": [
-      "Referência",
-      "Produção e Operação"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Boas-vindas",
-    "section": "",
-    "text": "O VerificaIdade é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis.\nEssa solução de governo é baseada na stack MOSIP INJI e funciona sobre o protocolo Open ID for Verifiable Credentials (OID4VC) que é interoperável com outras soluções e adotado por diversos países e organizações, estando já presente em forma experimental nos browsers Chrome e Safari mais recentes.",
-    "crumbs": [
-      "Boas-vindas"
-    ]
-  },
-  {
-    "objectID": "index.html#o-que-é-o-verificaidade",
-    "href": "index.html#o-que-é-o-verificaidade",
-    "title": "Boas-vindas",
-    "section": "",
-    "text": "O VerificaIdade é a solução nacional de verificação de idade (18+) baseada em credenciais verificáveis.\nEssa solução de governo é baseada na stack MOSIP INJI e funciona sobre o protocolo Open ID for Verifiable Credentials (OID4VC) que é interoperável com outras soluções e adotado por diversos países e organizações, estando já presente em forma experimental nos browsers Chrome e Safari mais recentes.",
-    "crumbs": [
-      "Boas-vindas"
-    ]
-  },
-  {
-    "objectID": "index.html#para-quem-é-este-portal",
-    "href": "index.html#para-quem-é-este-portal",
-    "title": "Boas-vindas",
-    "section": "Para quem é este portal?",
-    "text": "Para quem é este portal?\nPara desenvolvedores de Plataformas Digitais, web ou mobile apps que precisam verificar idade de acordo com o ECA Digital.",
-    "crumbs": [
-      "Boas-vindas"
-    ]
-  },
-  {
-    "objectID": "index.html#como-funciona",
-    "href": "index.html#como-funciona",
-    "title": "Boas-vindas",
-    "section": "Como funciona",
-    "text": "Como funciona\n\nVocê integra o INJI Verify SDK Web em sua aplicação web ou o INJI Verify SDK Mobile em sua aplicação mobile.\nO SDK se comunica com o INJI Verify Service (backend Java/Spring Boot que roda na sua VM)\nO cidadão apresenta sua credencial via QR Code (desktop) ou Deep Link (mobile)\nO Verify Service valida a credencial criptograficamente e retorna o resultado ao SDK",
-    "crumbs": [
-      "Boas-vindas"
-    ]
-  },
-  {
-    "objectID": "index.html#o-que-você-vai-encontrar-aqui",
-    "href": "index.html#o-que-você-vai-encontrar-aqui",
-    "title": "Boas-vindas",
-    "section": "O que você vai encontrar aqui",
-    "text": "O que você vai encontrar aqui\n\n\n\nSeção\nO que resolve\n\n\n\n\nArquitetura em 1 Página\nVisão geral dos componentes\n\n\nIntegre em 1 Hora\nChecklist passo a passo\n\n\nSetup da VM e Docker\nPreparar a infraestrutura\n\n\nINJI Verify Service\nSubir o backend com Docker Compose\n\n\nFluxo de Verificação\nEntender o ciclo completo\n\n\nIntegração Web (QR Code)\nFluxo cross-device no desktop\n\n\nIntegração Mobile (Deep Link)\nFluxo same-device no celular\n\n\nPolicy 18+\nPresentation Definition de idade\n\n\nSegurança e LGPD\nBoas práticas\n\n\nProdução e Operação\nDeploy em produção\n\n\nAPI Reference\nEndpoints do INJI Verify Service\n\n\nTroubleshooting\nErros comuns\n\n\nOnboarding\nGateway e credenciamento",
-    "crumbs": [
-      "Boas-vindas"
-    ]
-  },
-  {
-    "objectID": "index.html#pré-requisitos",
-    "href": "index.html#pré-requisitos",
-    "title": "Boas-vindas",
-    "section": "Pré-requisitos",
-    "text": "Pré-requisitos\n\nAcesso a uma VM com Docker para rodar o INJI Verify Service ? Credenciais de acesso ao gateway (obtidas no Onboarding)\n\n\n\n\n\n\n\nNota\n\n\n\nO objetivo é que um desenvolvedor experiente consiga integrar em 1 dia. Comece pelo Integre em 1 Dia.",
-    "crumbs": [
-      "Boas-vindas"
-    ]
-  },
-  {
-    "objectID": "seguranca-lgpd.html",
-    "href": "seguranca-lgpd.html",
-    "title": "Segurança e LGPD",
-    "section": "",
-    "text": "Garantir que a integração siga boas práticas de segurança e esteja em conformidade com a LGPD.",
-    "crumbs": [
-      "Referência",
-      "Segurança e LGPD"
-    ]
-  },
-  {
-    "objectID": "seguranca-lgpd.html#objetivo",
-    "href": "seguranca-lgpd.html#objetivo",
-    "title": "Segurança e LGPD",
-    "section": "",
-    "text": "Garantir que a integração siga boas práticas de segurança e esteja em conformidade com a LGPD.",
-    "crumbs": [
-      "Referência",
-      "Segurança e LGPD"
-    ]
-  },
-  {
-    "objectID": "seguranca-lgpd.html#princípios",
-    "href": "seguranca-lgpd.html#princípios",
-    "title": "Segurança e LGPD",
-    "section": "Princípios",
-    "text": "Princípios\n\n\n\n\n\n\n\nPrincípio\nAplicação\n\n\n\n\nMinimização de dados\nCom SD-JWT, o cidadão revela apenas ageOver18, não a data de nascimento\n\n\nFinalidade\nUse o resultado apenas para controle de acesso por idade\n\n\nNão armazenamento\nNão armazene a credencial do cidadão\n\n\nTransparência\nInforme ao usuário o que está sendo verificado",
-    "crumbs": [
-      "Referência",
-      "Segurança e LGPD"
-    ]
-  },
-  {
-    "objectID": "seguranca-lgpd.html#checklist-de-segurança",
-    "href": "seguranca-lgpd.html#checklist-de-segurança",
-    "title": "Segurança e LGPD",
-    "section": "Checklist de Segurança",
-    "text": "Checklist de Segurança\n\nINJI Verify Service\n\nAcessível pela internet apenas via HTTPS (reverse proxy)\nPostgreSQL não exposto à internet (apenas localhost ou rede Docker)\nSenha do banco alterada (não usar postgres/postgres em produção)\nKeystore PKCS12 com senha forte (INJI_KEYSTORE_FILE_PASS)\nLogs com rotação configurada\n\n\n\nAplicação React\n\nonVpReceived (com validação no backend) em vez de onVpProcessed em produção\nSem dados de credencial armazenados no frontend (localStorage, sessionStorage, etc.)\nCSP (Content Security Policy) configurado\n\n\n\nInfraestrutura\n\nVM com firewall configurado\nAcesso SSH por chave, não senha\nDocker com usuário não-root (quando possível)\nCertificado SSL/TLS válido",
-    "crumbs": [
-      "Referência",
-      "Segurança e LGPD"
-    ]
-  },
-  {
-    "objectID": "seguranca-lgpd.html#onvpreceived-vs-onvpprocessed-segurança",
-    "href": "seguranca-lgpd.html#onvpreceived-vs-onvpprocessed-segurança",
-    "title": "Segurança e LGPD",
-    "section": "onVpReceived vs onVpProcessed — Segurança",
-    "text": "onVpReceived vs onVpProcessed — Segurança\n\n\n\nAspecto\nonVpReceived\nonVpProcessed\n\n\n\n\nResultado chega ao\nBackend (via txnId)\nFrontend (direto)\n\n\nAdulteração possível?\nNão (backend valida)\nSim (DevTools)\n\n\nUso recomendado\nProdução\nDesenvolvimento\n\n\n\nEm produção, o fluxo seguro é:\n\nSDK recebe txnId via onVpReceived\nFrontend envia txnId ao seu backend\nSeu backend chama GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{txnId}\nBackend decide se libera o acesso\n\n// Frontend\nonVpReceived={async (txnId) =&gt; {\n  const res = await fetch(`/api/verificacao/${txnId}`);\n  const data = await res.json();\n  if (data.verified) { /* liberar */ }\n}}\n// Backend (Node/Express) — opcional mas recomendado para produção\napp.get('/api/verificacao/:txnId', async (req, res) =&gt; {\n  const { txnId } = req.params;\n  // Substitua pelo valor do seu ambiente\n  const result = await fetch(\n    `&lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/${txnId}`\n  );\n  const data = await result.json();\n  const verified = data.some(r =&gt; r.vcStatus === 'SUCCESS');\n  res.json({ verified });\n});\n\n\n\n\n\n\nImportante\n\n\n\nO backend acima é simples e opcional — serve apenas para isolar a decisão de acesso do frontend. Não é um orquestrador de todo o fluxo.",
-    "crumbs": [
-      "Referência",
-      "Segurança e LGPD"
-    ]
-  },
-  {
-    "objectID": "seguranca-lgpd.html#did-e-keystore",
-    "href": "seguranca-lgpd.html#did-e-keystore",
-    "title": "Segurança e LGPD",
-    "section": "DID e Keystore",
-    "text": "DID e Keystore\nO INJI Verify Service se identifica com um DID Web e assina requisições com um keystore PKCS12.\n\nO DID (did:web:seu-dominio.com.br:v1:verify) deve resolver para o seu domínio público\nO keystore (test.p12) é usado para assinar as authorization requests\nEm produção, gere um keystore próprio com chave forte\n\n\n\n\n\n\n\nAviso\n\n\n\nO test.p12 incluído no INJI é para desenvolvimento apenas. Gere um keystore próprio para produção.",
-    "crumbs": [
-      "Referência",
-      "Segurança e LGPD"
-    ]
-  },
-  {
-    "objectID": "seguranca-lgpd.html#claims-filtradas-como-metadados",
-    "href": "seguranca-lgpd.html#claims-filtradas-como-metadados",
-    "title": "Segurança e LGPD",
-    "section": "Claims filtradas como metadados",
-    "text": "Claims filtradas como metadados\nA variável INJI_VERIFY_CLAIMS_WITH_META_DATA define campos tratados como metadados internos (não exibidos):\n_sd, _sd_alg, iss, cnf, sub, aud, exp, nbf, iat, cti\nEsses campos são estruturais do SD-JWT e não contêm dados pessoais.",
-    "crumbs": [
-      "Referência",
-      "Segurança e LGPD"
-    ]
-  },
-  {
-    "objectID": "seguranca-lgpd.html#consentimento-do-usuário",
-    "href": "seguranca-lgpd.html#consentimento-do-usuário",
-    "title": "Segurança e LGPD",
-    "section": "Consentimento do Usuário",
-    "text": "Consentimento do Usuário\nAntes de iniciar a verificação, informe ao usuário:\n\nO que está sendo verificado (idade &gt;= 18)\nQuem é o verificador (sua organização)\nQue nenhum dado pessoal além de ageOver18 é compartilhado\nQue o cidadão autoriza ativamente na Carteira Digital",
-    "crumbs": [
-      "Referência",
-      "Segurança e LGPD"
-    ]
-  },
-  {
-    "objectID": "seguranca-lgpd.html#próximo-passo",
-    "href": "seguranca-lgpd.html#próximo-passo",
-    "title": "Segurança e LGPD",
-    "section": "Próximo passo",
-    "text": "Próximo passo\nVeja como levar para Produção e Operação.",
-    "crumbs": [
-      "Referência",
-      "Segurança e LGPD"
+      "Política de Privacidade"
     ]
   },
   {
@@ -1419,127 +1529,6 @@
     "crumbs": [
       "Integração",
       "Fluxo de Verificação (Visão Geral)"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html",
-    "href": "politica-privacidade.html",
-    "title": "Política de Privacidade",
-    "section": "",
-    "text": "Última atualização: julho de 2025\nO aplicativo Carteira (“Aplicativo”) é uma carteira digital de credenciais verificáveis desenvolvida no âmbito do projeto VerificaIdade. Esta Política de Privacidade descreve como coletamos, usamos e protegemos suas informações.",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html#dados-que-coletamos",
-    "href": "politica-privacidade.html#dados-que-coletamos",
-    "title": "Política de Privacidade",
-    "section": "1. Dados que coletamos",
-    "text": "1. Dados que coletamos\n\n1.1 Dados de autenticação\nO Aplicativo utiliza o login Gov.br (via protocolo OAuth 2.0 com PKCE) para autenticar sua identidade. Durante esse processo, recebemos do Gov.br:\n\nNome\nCPF\nE-mail\nNível de confiabilidade da conta\n\nEsses dados são usados exclusivamente para vincular sua identidade às credenciais verificáveis emitidas.\n\n\n1.2 Credenciais verificáveis\nO Aplicativo armazena localmente no seu dispositivo credenciais verificáveis (ex: comprovante de maioridade). Essas credenciais são baixadas de emissores autorizados e ficam sob seu controle.\n\n\n1.3 Dados biométricos\nO Aplicativo pode solicitar autenticação biométrica (impressão digital ou reconhecimento facial) para autorizar o compartilhamento de credenciais. Nenhum dado biométrico é coletado, transmitido ou armazenado pelo Aplicativo — a autenticação é processada inteiramente pelo sistema operacional do dispositivo.\n\n\n1.4 Câmera\nO Aplicativo acessa a câmera exclusivamente para leitura de QR Codes durante o fluxo de verificação de idade. Nenhuma imagem ou vídeo é capturado ou armazenado.",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html#como-usamos-seus-dados",
-    "href": "politica-privacidade.html#como-usamos-seus-dados",
-    "title": "Política de Privacidade",
-    "section": "2. Como usamos seus dados",
-    "text": "2. Como usamos seus dados\n\n\n\n\n\n\n\n\nDado\nFinalidade\nArmazenamento\n\n\n\n\nDados Gov.br (nome, CPF, e-mail)\nAutenticação e emissão de credenciais\nLocal no dispositivo (criptografado)\n\n\nCredenciais verificáveis\nComprovação de maioridade quando solicitado\nLocal no dispositivo (criptografado)\n\n\nBiometria\nAutorização de compartilhamento\nApenas no sistema operacional\n\n\nCâmera\nLeitura de QR Code\nSem armazenamento",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html#compartilhamento-de-dados",
-    "href": "politica-privacidade.html#compartilhamento-de-dados",
-    "title": "Política de Privacidade",
-    "section": "3. Compartilhamento de dados",
-    "text": "3. Compartilhamento de dados\n\n3.1 Princípio de minimização\nQuando você autoriza uma verificação de idade, o Aplicativo compartilha apenas a informação de que você é maior de 18 anos (ageOver18: true). Sua data de nascimento, CPF, nome e demais dados pessoais não são compartilhados com o solicitante.\n\n\n3.2 Consentimento explícito\nTodo compartilhamento de dados requer sua autorização explícita. Antes de compartilhar, o Aplicativo exibe:\n\nQuem está solicitando a verificação\nQuais dados serão compartilhados\nA política de retenção do solicitante\n\nVocê pode recusar o compartilhamento a qualquer momento.\n\n\n3.3 Uso único\nAs verificações são de uso único — o solicitante recebe o resultado da verificação sem armazenar sua credencial.",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html#armazenamento-e-segurança",
-    "href": "politica-privacidade.html#armazenamento-e-segurança",
-    "title": "Política de Privacidade",
-    "section": "4. Armazenamento e segurança",
-    "text": "4. Armazenamento e segurança\n\nAs credenciais são armazenadas localmente no dispositivo utilizando armazenamento seguro criptografado (Secure Store)\nA comunicação com servidores é feita exclusivamente via HTTPS\nO protocolo OpenID for Verifiable Presentations (OpenID4VP) garante a integridade criptográfica das verificações\nNenhum dado pessoal é armazenado em servidores do Aplicativo",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html#seus-direitos-lgpd",
-    "href": "politica-privacidade.html#seus-direitos-lgpd",
-    "title": "Política de Privacidade",
-    "section": "5. Seus direitos (LGPD)",
-    "text": "5. Seus direitos (LGPD)\nEm conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), você tem direito a:\n\nAcesso — consultar quais credenciais estão armazenadas no Aplicativo\nEliminação — remover suas credenciais e dados a qualquer momento desinstalando o Aplicativo ou limpando os dados do app\nRevogação — recusar qualquer solicitação de compartilhamento\nInformação — saber quais dados são compartilhados antes de autorizar",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html#dados-de-crianças-e-adolescentes",
-    "href": "politica-privacidade.html#dados-de-crianças-e-adolescentes",
-    "title": "Política de Privacidade",
-    "section": "6. Dados de crianças e adolescentes",
-    "text": "6. Dados de crianças e adolescentes\nO Aplicativo é destinado exclusivamente a maiores de 18 anos. Não coletamos intencionalmente dados de menores de idade.",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html#serviços-de-terceiros",
-    "href": "politica-privacidade.html#serviços-de-terceiros",
-    "title": "Política de Privacidade",
-    "section": "7. Serviços de terceiros",
-    "text": "7. Serviços de terceiros\n\n\n\nServiço\nFinalidade\nPolítica de Privacidade\n\n\n\n\nGov.br (Governo Federal)\nAutenticação de identidade\nTermos de Uso Gov.br\n\n\nMOSIP INJI\nInfraestrutura de credenciais verificáveis\nMOSIP Privacy Policy",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html#permissões-do-aplicativo",
-    "href": "politica-privacidade.html#permissões-do-aplicativo",
-    "title": "Política de Privacidade",
-    "section": "8. Permissões do aplicativo",
-    "text": "8. Permissões do aplicativo\n\n\n\n\n\n\n\nPermissão\nMotivo\n\n\n\n\nCAMERA\nLeitura de QR Codes para verificação\n\n\nUSE_BIOMETRIC / USE_FINGERPRINT\nAutenticação biométrica para autorizar compartilhamento\n\n\nINTERNET\nComunicação com serviços de autenticação e verificação",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html#alterações-nesta-política",
-    "href": "politica-privacidade.html#alterações-nesta-política",
-    "title": "Política de Privacidade",
-    "section": "9. Alterações nesta política",
-    "text": "9. Alterações nesta política\nPodemos atualizar esta Política de Privacidade periodicamente. A data de “Última atualização” no topo será alterada. Recomendamos que você revise esta página regularmente.",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
-    ]
-  },
-  {
-    "objectID": "politica-privacidade.html#contato",
-    "href": "politica-privacidade.html#contato",
-    "title": "Política de Privacidade",
-    "section": "10. Contato",
-    "text": "10. Contato\nPara dúvidas, solicitações ou exercício dos seus direitos previstos na LGPD, entre em contato:\n\nE-mail: ayslan.sousa@dataprev.gov.br",
-    "crumbs": [
-      "Referência",
-      "Política de Privacidade"
     ]
   }
 ]
