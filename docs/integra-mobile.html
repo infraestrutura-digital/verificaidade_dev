@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Integração Mobile (Deep Link) – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -19,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -32,15 +70,14 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-723188f279a8567b49f9b5349c77c7ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-55a229089d14938623797807ac366610.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -257,18 +294,11 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo">Objetivo</a></li>
   <li><a href="#fluxo-mobile" id="toc-fluxo-mobile" class="nav-link" data-scroll-target="#fluxo-mobile">Fluxo Mobile</a></li>
-  <li><a href="#cenário" id="toc-cenário" class="nav-link" data-scroll-target="#cenário">Cenário</a></li>
-  <li><a href="#como-funciona" id="toc-como-funciona" class="nav-link" data-scroll-target="#como-funciona">Como funciona</a></li>
-  <li><a href="#passo-1-o-mesmo-componente-funciona" id="toc-passo-1-o-mesmo-componente-funciona" class="nav-link" data-scroll-target="#passo-1-o-mesmo-componente-funciona">Passo 1 — O mesmo componente funciona</a></li>
-  <li><a href="#o-que-acontece-internamente-no-mobile" id="toc-o-que-acontece-internamente-no-mobile" class="nav-link" data-scroll-target="#o-que-acontece-internamente-no-mobile">O que acontece internamente no mobile</a></li>
-  <li><a href="#botão-personalizado-para-mobile" id="toc-botão-personalizado-para-mobile" class="nav-link" data-scroll-target="#botão-personalizado-para-mobile">Botão personalizado para mobile</a></li>
-  <li><a href="#desabilitar-fluxo-same-device" id="toc-desabilitar-fluxo-same-device" class="nav-link" data-scroll-target="#desabilitar-fluxo-same-device">Desabilitar fluxo same-device</a></li>
-  <li><a href="#considerações-mobile" id="toc-considerações-mobile" class="nav-link" data-scroll-target="#considerações-mobile">Considerações Mobile</a>
-  <ul class="collapse">
-  <li><a href="#retorno-ao-app" id="toc-retorno-ao-app" class="nav-link" data-scroll-target="#retorno-ao-app">Retorno ao app</a></li>
-  <li><a href="#carteira-não-instalada" id="toc-carteira-não-instalada" class="nav-link" data-scroll-target="#carteira-não-instalada">Carteira não instalada</a></li>
-  <li><a href="#apps-nativos-flutter-react-native" id="toc-apps-nativos-flutter-react-native" class="nav-link" data-scroll-target="#apps-nativos-flutter-react-native">Apps nativos (Flutter, React Native)</a></li>
-  </ul></li>
+  <li><a href="#pré-requisitos" id="toc-pré-requisitos" class="nav-link" data-scroll-target="#pré-requisitos">Pré-requisitos</a></li>
+  <li><a href="#passo-1-configurar-o-scheme-no-app.json" id="toc-passo-1-configurar-o-scheme-no-app.json" class="nav-link" data-scroll-target="#passo-1-configurar-o-scheme-no-app.json">Passo 1 — Configurar o scheme no app.json</a></li>
+  <li><a href="#passo-2-criar-a-vp-request-e-montar-o-deep-link" id="toc-passo-2-criar-a-vp-request-e-montar-o-deep-link" class="nav-link" data-scroll-target="#passo-2-criar-a-vp-request-e-montar-o-deep-link">Passo 2 — Criar a VP Request e montar o Deep Link</a></li>
+  <li><a href="#passo-3-polling-de-status-e-obtenção-do-resultado" id="toc-passo-3-polling-de-status-e-obtenção-do-resultado" class="nav-link" data-scroll-target="#passo-3-polling-de-status-e-obtenção-do-resultado">Passo 3 — Polling de status e obtenção do resultado</a></li>
+  <li><a href="#passo-4-tela-de-verificação-com-retomada-por-appstate" id="toc-passo-4-tela-de-verificação-com-retomada-por-appstate" class="nav-link" data-scroll-target="#passo-4-tela-de-verificação-com-retomada-por-appstate">Passo 4 — Tela de verificação com retomada por AppState</a></li>
   <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
   </ul>
 </nav>
@@ -297,7 +327,7 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Implementar verificação de idade em um app web mobile usando Deep Link (fluxo same-device).</p>
+<p>Implementar verificação de idade em um <strong>app React Native (Expo)</strong> usando Deep Link — o app abre a Carteira Digital diretamente no dispositivo (fluxo same-device).</p>
 </section>
 <section id="fluxo-mobile" class="level2">
 <h2 class="anchored" data-anchor-id="fluxo-mobile">Fluxo Mobile</h2>
@@ -307,20 +337,23 @@ ul.task-list li input[type="checkbox"] {
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">sequenceDiagram
-    participant U as Usuário (Celular)
-    participant SDK as App React + SDK
-    participant VS as INJI Verify Service
-    participant W as Carteira Digital
+    participant U as Usuário
+    participant App as App React Native
+    participant VS as Verify Service
+    participant W as Inji Wallet
 
-    U-&gt;&gt;SDK: Toca "Verificar Idade"
-    SDK-&gt;&gt;VS: POST /v1/verify/vp-request
-    VS--&gt;&gt;SDK: requestId + authorizationUrl
-    SDK-&gt;&gt;W: Redireciona via Deep Link (openid4vp://...)
+    U-&gt;&gt;App: Toca "Verificar Idade"
+    App-&gt;&gt;VS: POST /v1/verify/vp-request
+    VS--&gt;&gt;App: transactionId + requestId + authorizationDetails
+    App-&gt;&gt;W: Linking.openURL("openid4vp://authorize?...")
+    Note over W: Usuário autoriza credencial
     W-&gt;&gt;VS: POST /v1/verify/vp-submission
-    Note over W: Usuário volta ao app
-    SDK-&gt;&gt;VS: Long-polling /vp-request/{id}/status
-    VS--&gt;&gt;SDK: Resultado
-    SDK-&gt;&gt;U: Callback executado
+    App-&gt;&gt;App: AppState "active" → retoma polling
+    App-&gt;&gt;VS: GET /v1/verify/vp-request/{requestId}/status
+    VS--&gt;&gt;App: VP_SUBMITTED
+    App-&gt;&gt;VS: GET /v1/verify/vp-result/{transactionId}
+    VS--&gt;&gt;App: vcResults[0].vc → isOver18
+    App-&gt;&gt;U: Callback executado
 </pre>
 </div>
 <p></p></figure><p></p>
@@ -328,42 +361,31 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
-<section id="cenário" class="level2">
-<h2 class="anchored" data-anchor-id="cenário">Cenário</h2>
-<p>O usuário está no <strong>celular</strong> acessando seu site via navegador. O SDK detecta que é um dispositivo mobile e, em vez de exibir um QR Code, redireciona automaticamente para a Carteira Digital via Deep Link.</p>
-</section>
-<section id="como-funciona" class="level2">
-<h2 class="anchored" data-anchor-id="como-funciona">Como funciona</h2>
-<p>O SDK usa o <strong>mesmo componente</strong> <code>OpenID4VPVerification</code> — a detecção do dispositivo é automática:</p>
+<section id="pré-requisitos" class="level2">
+<h2 class="anchored" data-anchor-id="pré-requisitos">Pré-requisitos</h2>
 <ul>
-<li><strong>Desktop</strong> → renderiza QR Code</li>
-<li><strong>Mobile/Tablet</strong> → redireciona via Deep Link (<code>openid4vp://...</code>)</li>
+<li>Expo SDK 51+ com <code>expo-linking</code></li>
+<li><code>scheme</code> configurado no <code>app.json</code> (necessário para o wallet retornar ao app)</li>
+<li>Inji Wallet instalado no dispositivo para testes</li>
 </ul>
-<p>A prop <code>isSameDeviceFlowEnabled</code> controla esse comportamento (padrão: <code>true</code>).</p>
 </section>
-<section id="passo-1-o-mesmo-componente-funciona" class="level2">
-<h2 class="anchored" data-anchor-id="passo-1-o-mesmo-componente-funciona">Passo 1 — O mesmo componente funciona</h2>
-<pre class="tsx"><code>// src/components/VerificaIdade.tsx
-// O MESMO código da integração Web funciona no mobile!
-import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
-
-export function VerificaIdade() {
-  return (
-    &lt;OpenID4VPVerification
-      verifyServiceUrl="&lt;VERIFY_BASE_URL&gt;/v1/verify"
-      clientId="did:web:&lt;SEU_DOMINIO&gt;:v1:verify"
-      protocol="openid4vp://"
-      presentationDefinition={presentationDefinition}
-      isSameDeviceFlowEnabled={true}  // padrão — Deep Link no mobile
-      onVpProcessed={(results) =&gt; {
-        const ok = results.some(r =&gt; r.vcStatus === 'SUCCESS');
-        console.log('Verificado:', ok);
-      }}
-      onError={(error) =&gt; console.error(error)}
-      onQrCodeExpired={() =&gt; console.log('Expirou')}
-    /&gt;
-  );
-}</code></pre>
+<section id="passo-1-configurar-o-scheme-no-app.json" class="level2">
+<h2 class="anchored" data-anchor-id="passo-1-configurar-o-scheme-no-app.json">Passo 1 — Configurar o scheme no app.json</h2>
+<p>O scheme é o identificador do seu app para o Deep Link de retorno. O wallet usa o parâmetro <code>origin</code> para saber para onde voltar.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"expo"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"scheme"</span><span class="fu">:</span> <span class="st">"&lt;seu-app&gt;"</span><span class="fu">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"android"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"intentFilters"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"action"</span><span class="fu">:</span> <span class="st">"VIEW"</span><span class="fu">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"data"</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">"scheme"</span><span class="fu">:</span> <span class="st">"&lt;seu-app&gt;"</span> <span class="fu">}</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"category"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"BROWSABLE"</span><span class="ot">,</span> <span class="st">"DEFAULT"</span><span class="ot">]</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -374,81 +396,248 @@ Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Não é necessário código diferente para mobile. O SDK detecta o dispositivo automaticamente e escolhe entre QR Code e Deep Link.</p>
+<p>No iOS o scheme é registrado automaticamente pelo Expo a partir do campo <code>scheme</code>. No Android, o <code>intentFilter</code> acima é necessário para builds standalone.</p>
 </div>
 </div>
 </section>
-<section id="o-que-acontece-internamente-no-mobile" class="level2">
-<h2 class="anchored" data-anchor-id="o-que-acontece-internamente-no-mobile">O que acontece internamente no mobile</h2>
-<ol type="1">
-<li>SDK chama o INJI Verify Service para criar a VP Request</li>
-<li>SDK detecta que o dispositivo é mobile (via user agent)</li>
-<li>SDK redireciona o navegador para <code>openid4vp://authorize?...</code></li>
-<li>A Carteira Digital abre e exibe a credencial para autorização</li>
-<li>Usuário autoriza o compartilhamento</li>
-<li>Carteira envia a VP ao INJI Verify Service</li>
-<li>Usuário volta ao navegador (ou ao app)</li>
-<li>SDK recupera a sessão do <code>sessionStorage</code> e busca o resultado</li>
-</ol>
+<section id="passo-2-criar-a-vp-request-e-montar-o-deep-link" class="level2">
+<h2 class="anchored" data-anchor-id="passo-2-criar-a-vp-request-e-montar-o-deep-link">Passo 2 — Criar a VP Request e montar o Deep Link</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode ts code-with-copy"><code class="sourceCode typescript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// src/services/verifyService.ts</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { Linking } <span class="im">from</span> <span class="st">"react-native"</span><span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> BASE_URL <span class="op">=</span> <span class="st">"https://&lt;VERIFY_BASE_URL&gt;"</span><span class="op">;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> CLIENT_ID <span class="op">=</span> <span class="st">"https://&lt;VERIFY_BASE_URL&gt;"</span><span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> ORIGIN <span class="op">=</span> <span class="st">"&lt;seu-app&gt;://"</span><span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> PRESENTATION_DEFINITION <span class="op">=</span> {</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="st">"eca-age-check"</span><span class="op">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  input_descriptors<span class="op">:</span> [</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      id<span class="op">:</span> <span class="st">"ECACredential"</span><span class="op">,</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      name<span class="op">:</span> <span class="st">"Comprovante de Maioridade"</span><span class="op">,</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      purpose<span class="op">:</span> <span class="st">"Verificar que o usuário é maior de 18 anos"</span><span class="op">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      constraints<span class="op">:</span> {</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        fields<span class="op">:</span> [</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>          {</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            path<span class="op">:</span> [<span class="st">"$.type"</span>]<span class="op">,</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>            filter<span class="op">:</span> { type<span class="op">:</span> <span class="st">"string"</span><span class="op">,</span> pattern<span class="op">:</span> <span class="st">"ECACredential"</span> }<span class="op">,</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>          }<span class="op">,</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        ]<span class="op">,</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">,</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> VPRequestResponse <span class="op">=</span> {</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  transactionId<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  requestId<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  requestUri<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span>  <span class="co">// opcional — alguns ambientes retornam este campo</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  authorizationDetails<span class="op">?:</span> {</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    responseType<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    responseMode<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    nonce<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    responseUri<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    presentationDefinition<span class="op">?:</span> <span class="dt">object</span><span class="op">;</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  expiresAt<span class="op">?:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">buildDeepLinkUrl</span>(data<span class="op">:</span> VPRequestResponse)<span class="op">:</span> <span class="dt">string</span> {</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> params <span class="op">=</span> <span class="kw">new</span> <span class="fu">URLSearchParams</span>()<span class="op">;</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  params<span class="op">.</span><span class="fu">set</span>(<span class="st">"client_id"</span><span class="op">,</span> CLIENT_ID)<span class="op">;</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (data<span class="op">.</span><span class="at">requestUri</span>) {</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Modo request_uri (preferencial)</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    params<span class="op">.</span><span class="fu">set</span>(<span class="st">"request_uri"</span><span class="op">,</span> data<span class="op">.</span><span class="at">requestUri</span>)<span class="op">;</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (data<span class="op">.</span><span class="at">authorizationDetails</span>) {</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> auth <span class="op">=</span> data<span class="op">.</span><span class="at">authorizationDetails</span><span class="op">;</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    params<span class="op">.</span><span class="fu">set</span>(<span class="st">"redirect_uri"</span><span class="op">,</span> auth<span class="op">.</span><span class="at">responseUri</span>)<span class="op">;</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    params<span class="op">.</span><span class="fu">set</span>(<span class="st">"response_type"</span><span class="op">,</span> auth<span class="op">.</span><span class="at">responseType</span>)<span class="op">;</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    params<span class="op">.</span><span class="fu">set</span>(<span class="st">"response_mode"</span><span class="op">,</span> auth<span class="op">.</span><span class="at">responseMode</span>)<span class="op">;</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    params<span class="op">.</span><span class="fu">set</span>(<span class="st">"nonce"</span><span class="op">,</span> auth<span class="op">.</span><span class="at">nonce</span>)<span class="op">;</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    params<span class="op">.</span><span class="fu">set</span>(<span class="st">"state"</span><span class="op">,</span> data<span class="op">.</span><span class="at">requestId</span>)<span class="op">;</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    params<span class="op">.</span><span class="fu">set</span>(</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>      <span class="st">"presentation_definition"</span><span class="op">,</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>      <span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(auth<span class="op">.</span><span class="at">presentationDefinition</span> <span class="op">??</span> PRESENTATION_DEFINITION)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="st">"Resposta inválida: sem requestUri nem authorizationDetails"</span>)<span class="op">;</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  params<span class="op">.</span><span class="fu">set</span>(<span class="st">"origin"</span><span class="op">,</span> ORIGIN)<span class="op">;</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="vs">`openid4vp://authorize?</span><span class="sc">${</span>params<span class="op">.</span><span class="fu">toString</span>()<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">async</span> <span class="kw">function</span> <span class="fu">openWalletForVerification</span>()<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>{</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>  transactionId<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  requestId<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>}<span class="op">&gt;</span> {</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(<span class="vs">`</span><span class="sc">${</span>BASE_URL<span class="sc">}</span><span class="vs">/v1/verify/vp-request`</span><span class="op">,</span> {</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>    method<span class="op">:</span> <span class="st">"POST"</span><span class="op">,</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    headers<span class="op">:</span> { <span class="st">"Content-Type"</span><span class="op">:</span> <span class="st">"application/json"</span> }<span class="op">,</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>    body<span class="op">:</span> <span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>({</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>      clientId<span class="op">:</span> CLIENT_ID<span class="op">,</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>      presentationDefinition<span class="op">:</span> PRESENTATION_DEFINITION<span class="op">,</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    })<span class="op">,</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>response<span class="op">.</span><span class="at">ok</span>) <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="st">"Falha ao criar VP request"</span>)<span class="op">;</span></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> data<span class="op">:</span> VPRequestResponse <span class="op">=</span> <span class="cf">await</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> deepLinkUrl <span class="op">=</span> <span class="fu">buildDeepLinkUrl</span>(data)<span class="op">;</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> {</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">await</span> Linking<span class="op">.</span><span class="fu">openURL</span>(deepLinkUrl)<span class="op">;</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">catch</span> {</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="st">"Nenhum wallet compatível encontrado. Instale o Inji Wallet."</span>)<span class="op">;</span></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { transactionId<span class="op">:</span> data<span class="op">.</span><span class="at">transactionId</span><span class="op">,</span> requestId<span class="op">:</span> data<span class="op">.</span><span class="at">requestId</span> }<span class="op">;</span></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="botão-personalizado-para-mobile" class="level2">
-<h2 class="anchored" data-anchor-id="botão-personalizado-para-mobile">Botão personalizado para mobile</h2>
-<p>Você pode usar <code>triggerElement</code> para criar um botão mais adequado ao mobile:</p>
-<pre class="tsx"><code>&lt;OpenID4VPVerification
-  // ...
-  triggerElement={
-    &lt;button className="btn-verificar-mobile"&gt;
-      Verificar com Carteira Digital
-    &lt;/button&gt;
+<section id="passo-3-polling-de-status-e-obtenção-do-resultado" class="level2">
+<h2 class="anchored" data-anchor-id="passo-3-polling-de-status-e-obtenção-do-resultado">Passo 3 — Polling de status e obtenção do resultado</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode ts code-with-copy"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// src/services/verifyService.ts (continuação)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">async</span> <span class="kw">function</span> <span class="fu">pollVPStatus</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  requestId<span class="op">:</span> <span class="dt">string</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span><span class="st">"ACTIVE"</span> <span class="op">|</span> <span class="st">"VP_SUBMITTED"</span> <span class="op">|</span> <span class="st">"EXPIRED"</span><span class="op">&gt;</span> {</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="vs">`</span><span class="sc">${</span>BASE_URL<span class="sc">}</span><span class="vs">/v1/verify/vp-request/</span><span class="sc">${</span>requestId<span class="sc">}</span><span class="vs">/status`</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>response<span class="op">.</span><span class="at">ok</span>) <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="vs">`Erro ao buscar status: </span><span class="sc">${</span>response<span class="op">.</span><span class="at">status</span><span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> data <span class="op">=</span> <span class="cf">await</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> data<span class="op">.</span><span class="at">status</span><span class="op">;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">async</span> <span class="kw">function</span> <span class="fu">getVPResult</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  transactionId<span class="op">:</span> <span class="dt">string</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>{ verified<span class="op">:</span> <span class="dt">boolean</span><span class="op">;</span> underage<span class="op">:</span> <span class="dt">boolean</span> }<span class="op">&gt;</span> {</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="vs">`</span><span class="sc">${</span>BASE_URL<span class="sc">}</span><span class="vs">/v1/verify/vp-result/</span><span class="sc">${</span>transactionId<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>response<span class="op">.</span><span class="at">ok</span>) <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="vs">`Erro ao buscar resultado: </span><span class="sc">${</span>response<span class="op">.</span><span class="at">status</span><span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> data <span class="op">=</span> <span class="cf">await</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (data<span class="op">.</span><span class="at">vpResultStatus</span> <span class="op">!==</span> <span class="st">"SUCCESS"</span> <span class="op">||</span> <span class="op">!</span>data<span class="op">.</span><span class="at">vcResults</span><span class="op">?.</span><span class="at">length</span>) {</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="vs">`Resultado indisponível: </span><span class="sc">${</span>data<span class="op">.</span><span class="at">vpResultStatus</span><span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vcRaw <span class="op">=</span> data<span class="op">.</span><span class="at">vcResults</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">vc</span><span class="op">;</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vc <span class="op">=</span> <span class="kw">typeof</span> vcRaw <span class="op">===</span> <span class="st">"string"</span> <span class="op">?</span> <span class="bu">JSON</span><span class="op">.</span><span class="fu">parse</span>(vcRaw) <span class="op">:</span> vcRaw<span class="op">;</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> subject <span class="op">=</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    vc<span class="op">?.</span><span class="at">credential</span><span class="op">?.</span><span class="at">credentialSubject</span> <span class="op">??</span> vc<span class="op">?.</span><span class="at">credentialSubject</span> <span class="op">??</span> vc<span class="op">;</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> isOver18 <span class="op">=</span> subject<span class="op">?.</span><span class="at">isOver18</span> <span class="op">===</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { verified<span class="op">:</span> isOver18<span class="op">,</span> underage<span class="op">:</span> <span class="op">!</span>isOver18 }<span class="op">;</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="passo-4-tela-de-verificação-com-retomada-por-appstate" class="level2">
+<h2 class="anchored" data-anchor-id="passo-4-tela-de-verificação-com-retomada-por-appstate">Passo 4 — Tela de verificação com retomada por AppState</h2>
+<p>O ponto crítico do fluxo mobile é detectar quando o usuário <strong>volta ao app</strong> após autorizar na carteira. Use <code>AppState</code> para isso:</p>
+<pre class="tsx"><code>// src/screens/AgeCheckScreen.tsx
+import { useState, useRef, useEffect } from "react";
+import { View, Text, Pressable, AppState } from "react-native";
+import { openWalletForVerification, pollVPStatus, getVPResult } from "../services/verifyService";
+
+export default function AgeCheckScreen({ navigation }) {
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState&lt;string | null&gt;(null);
+  const [error, setError] = useState&lt;string | null&gt;(null);
+  const sessionRef = useRef&lt;{ requestId: string; transactionId: string } | null&gt;(null);
+  const pollingRef = useRef(false);
+
+  async function startPolling(requestId: string, transactionId: string) {
+    if (pollingRef.current) return;
+    pollingRef.current = true;
+    setStatus("Aguardando resposta do wallet…");
+
+    try {
+      while (pollingRef.current) {
+        const vpStatus = await pollVPStatus(requestId);
+
+        if (vpStatus === "VP_SUBMITTED") {
+          pollingRef.current = false;
+          setStatus("Verificando credencial…");
+          const result = await getVPResult(transactionId);
+          if (result.verified) {
+            navigation.replace("Success", { requestId });
+          } else {
+            navigation.replace("Underage");
+          }
+          return;
+        }
+
+        if (vpStatus === "EXPIRED") {
+          pollingRef.current = false;
+          setError("Sessão expirada. Tente novamente.");
+          setLoading(false);
+          return;
+        }
+        // status === "ACTIVE" — aguarda e repete
+      }
+    } catch {
+      pollingRef.current = false;
+      setError("Erro ao verificar status. Tente novamente.");
+      setLoading(false);
+    }
   }
-/&gt;</code></pre>
-</section>
-<section id="desabilitar-fluxo-same-device" class="level2">
-<h2 class="anchored" data-anchor-id="desabilitar-fluxo-same-device">Desabilitar fluxo same-device</h2>
-<p>Se quiser forçar QR Code mesmo no mobile (cenário raro):</p>
-<pre class="tsx"><code>&lt;OpenID4VPVerification
-  // ...
-  isSameDeviceFlowEnabled={false}  // Sempre QR Code
-/&gt;</code></pre>
-</section>
-<section id="considerações-mobile" class="level2">
-<h2 class="anchored" data-anchor-id="considerações-mobile">Considerações Mobile</h2>
-<section id="retorno-ao-app" class="level3">
-<h3 class="anchored" data-anchor-id="retorno-ao-app">Retorno ao app</h3>
-<p>Quando o usuário volta da Carteira Digital ao navegador, o SDK restaura a sessão a partir do <code>sessionStorage</code>. O resultado é obtido automaticamente.</p>
-</section>
-<section id="carteira-não-instalada" class="level3">
-<h3 class="anchored" data-anchor-id="carteira-não-instalada">Carteira não instalada</h3>
-<p>Se a Carteira Digital não estiver instalada, o Deep Link não abrirá nada. Trate isso com uma mensagem orientando o usuário:</p>
-<pre class="tsx"><code>&lt;OpenID4VPVerification
-  // ...
-  onError={(error) =&gt; {
-    // Informar o usuário para instalar a Carteira Digital
-    alert('Instale a Carteira Digital para verificar sua idade.');
-  }}
-/&gt;</code></pre>
-</section>
-<section id="apps-nativos-flutter-react-native" class="level3">
-<h3 class="anchored" data-anchor-id="apps-nativos-flutter-react-native">Apps nativos (Flutter, React Native)</h3>
-<p>O INJI Verify SDK é exclusivo para <strong>React Web</strong>. Para apps nativos, você tem duas opções:</p>
-<ol type="1">
-<li><strong>WebView</strong> — Abrir uma tela React com o SDK dentro de uma WebView</li>
-<li><strong>API direta</strong> — Chamar os endpoints do INJI Verify Service diretamente e implementar a lógica de Deep Link no app nativo</li>
-</ol>
-<div class="callout callout-style-default callout-warning callout-titled">
+
+  // Retoma o polling quando o app volta ao foreground
+  useEffect(() =&gt; {
+    const sub = AppState.addEventListener("change", (nextState) =&gt; {
+      if (nextState === "active" &amp;&amp; sessionRef.current) {
+        pollingRef.current = false;
+        setError(null);
+        setLoading(true);
+        startPolling(sessionRef.current.requestId, sessionRef.current.transactionId);
+      }
+    });
+    return () =&gt; {
+      sub.remove();
+      pollingRef.current = false;
+    };
+  }, []);
+
+  async function handleVerify() {
+    setLoading(true);
+    setError(null);
+    setStatus("Abrindo wallet…");
+    try {
+      const { transactionId, requestId } = await openWalletForVerification();
+      sessionRef.current = { requestId, transactionId };
+      startPolling(requestId, transactionId);
+    } catch (e: any) {
+      setError(e.message);
+      setLoading(false);
+    }
+  }
+
+  return (
+    &lt;View&gt;
+      {status &amp;&amp; &lt;Text&gt;{status}&lt;/Text&gt;}
+      {error &amp;&amp; &lt;Text style={{ color: "red" }}&gt;{error}&lt;/Text&gt;}
+      &lt;Pressable onPress={handleVerify} disabled={loading}&gt;
+        &lt;Text&gt;Verificar Idade&lt;/Text&gt;
+      &lt;/Pressable&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Aviso
+Importante
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>O SDK <strong>não suporta</strong> React Native, Angular, Vue ou SSR (Next.js). Para apps nativos, use a opção de WebView ou API direta.</p>
+<p>O <code>AppState.addEventListener("change")</code> é o mecanismo central do fluxo same-device. Sem ele, o app não sabe quando o usuário voltou da carteira e o polling nunca é retomado.</p>
 </div>
 </div>
-</section>
 </section>
 <section id="próximo-passo" class="level2">
 <h2 class="anchored" data-anchor-id="próximo-passo">Próximo passo</h2>

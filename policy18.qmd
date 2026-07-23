@@ -10,28 +10,25 @@ Entender como configurar a Presentation Definition para verificação de idade (
 
 A Presentation Definition (PD) é um documento JSON que descreve **quais credenciais e campos** você quer que o cidadão apresente. Ela segue o padrão [DIF Presentation Exchange](https://identity.foundation/presentation-exchange/).
 
-No caso do VerificaIdade, a PD solicita uma credencial que contenha `ageOver18: true`.
+No caso do VerificaIdade, a PD solicita uma credencial do tipo `ECACredential`.
 
 ## Presentation Definition para idade 18+
 
 ```json
 {
-  "id": "age-verification-18-plus",
+  "id": "eca-age-check",
   "input_descriptors": [
     {
-      "id": "age_credential",
-      "format": {
-        "vc+sd-jwt": {
-          "sd-jwt_alg_values": ["ES256"]
-        }
-      },
+      "id": "ECACredential",
+      "name": "Comprovante de Maioridade",
+      "purpose": "Verificar que o usuário é maior de 18 anos",
       "constraints": {
         "fields": [
           {
-            "path": ["$.ageOver18"],
+            "path": ["$.type"],
             "filter": {
-              "type": "boolean",
-              "const": true
+              "type": "string",
+              "pattern": "ECACredential"
             }
           }
         ]
@@ -45,69 +42,92 @@ No caso do VerificaIdade, a PD solicita uma credencial que contenha `ageOver18: 
 Esta é uma Presentation Definition **ilustrativa**. A definição exata depende do tipo de credencial emitida pelo governo e do formato suportado. Consulte a documentação do emissor para os campos corretos.
 :::
 
-## Como usar no SDK
+## Como usar
 
-### Opção 1 — Inline (passar diretamente)
+### App React Native
+
+Passe a Presentation Definition no corpo do `POST /v1/verify/vp-request`:
+
+```ts
+await fetch(`${BASE_URL}/v1/verify/vp-request`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    clientId: CLIENT_ID,
+    presentationDefinition: PRESENTATION_DEFINITION,
+  }),
+});
+```
+
+### Web (SDK React)
+
+Instale o SDK:
+
+```bash
+npm install @injistack/react-inji-verify-sdk
+```
+
+Passe a Presentation Definition diretamente na prop `presentationDefinition`:
 
 ```tsx
+import { OpenID4VPVerification } from '@injistack/react-inji-verify-sdk';
+
+const presentationDefinition = {
+  id: 'eca-age-verification',
+  purpose: 'Verificação de idade conforme o Estatuto da Criança e do Adolescente',
+  format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
+  input_descriptors: [
+    {
+      id: 'eca credential',
+      format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
+      constraints: {
+        fields: [
+          {
+            path: ['$.type'],
+            filter: { type: 'object', pattern: 'ECACredential' },
+          },
+        ],
+      },
+    },
+  ],
+};
+
 <OpenID4VPVerification
-  // ...
-  presentationDefinition={{
-    id: 'age-verification-18-plus',
-    input_descriptors: [/* ... */]
+  verifyServiceUrl="<VERIFY_BASE_URL>/v1/verify"
+  clientId="did:web:<SEU_DOMINIO>:v1:verify"
+  protocol="openid4vp://"
+  isSameDeviceFlowEnabled={true}
+  presentationDefinition={presentationDefinition}
+  onVPProcessed={(results) => {
+    const ok = results.some((r) => r.vcStatus === 'SUCCESS');
+    console.log('Verificado:', ok);
   }}
+  onError={(error) => console.error(error)}
+  onQrCodeExpired={() => console.log('Expirou')}
 />
 ```
 
-### Opção 2 — Pré-cadastrada no Service
-
-Se a Presentation Definition estiver cadastrada no INJI Verify Service, use o ID:
-
-```tsx
-<OpenID4VPVerification
-  // ...
-  presentationDefinitionId="age-verification-18-plus"
-/>
-```
-
-::: {.callout-warning}
-Use **uma ou outra** opção, nunca ambas. O SDK rejeita se ambas forem fornecidas.
+::: {.callout-note}
+No contexto web, o SDK detecta automaticamente se o dispositivo é mobile e escolhe entre Deep Link (`isSameDeviceFlowEnabled={true}`) ou QR Code.
 :::
 
 ## O que você recebe
 
-### Verificação com sucesso
+Após o wallet submeter a VP, `GET /v1/verify/vp-result/{transactionId}` retorna:
 
 ```json
-[
-  {
-    "vc": { "...conteúdo da credencial..." },
-    "vcStatus": "SUCCESS"
-  }
-]
+{
+  "vpResultStatus": "SUCCESS",
+  "vcResults": [
+    {
+      "vc": { "credentialSubject": { "isOver18": true } },
+      "vcStatus": "SUCCESS"
+    }
+  ]
+}
 ```
 
-### Credencial inválida
-
-```json
-[
-  {
-    "vc": { "...conteúdo da credencial..." },
-    "vcStatus": "INVALID"
-  }
-]
-```
-
-### Credencial expirada
-
-```json
-[
-  {
-    "vc": { "...conteúdo da credencial..." },
-    "vcStatus": "EXPIRED"
-  }
-]
-```
+O campo relevante para a decisão é `vcResults[0].vc.credentialSubject.isOver18`.
 
 ## O que o INJI Verify Service valida
 
@@ -119,7 +139,7 @@ Use **uma ou outra** opção, nunca ambas. O SDK rejeita se ambas forem fornecid
 
 ## Minimização de dados
 
-A Presentation Definition solicita **apenas o campo `ageOver18`**. Usando SD-JWT (Selective Disclosure), o cidadão pode apresentar **apenas esse campo** sem revelar nome, data de nascimento ou outros dados pessoais.
+A Presentation Definition solicita **apenas o tipo da credencial** (`ECACredential`). O campo `isOver18` é derivado da credencial pelo Verify Service — o app nunca recebe data de nascimento ou outros dados pessoais.
 
 ::: {.callout-note}
 Isso é **privacy by design**. Você confirma que a pessoa tem 18+ sem saber a idade exata ou qualquer outro dado pessoal.

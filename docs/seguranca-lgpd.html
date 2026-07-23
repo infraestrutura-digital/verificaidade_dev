@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Segurança e LGPD – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -67,15 +70,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-723188f279a8567b49f9b5349c77c7ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-55a229089d14938623797807ac366610.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -295,9 +297,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#aplicação-react" id="toc-aplicação-react" class="nav-link" data-scroll-target="#aplicação-react">Aplicação React</a></li>
   <li><a href="#infraestrutura" id="toc-infraestrutura" class="nav-link" data-scroll-target="#infraestrutura">Infraestrutura</a></li>
   </ul></li>
-  <li><a href="#onvpreceived-vs-onvpprocessed-segurança" id="toc-onvpreceived-vs-onvpprocessed-segurança" class="nav-link" data-scroll-target="#onvpreceived-vs-onvpprocessed-segurança"><code>onVpReceived</code> vs <code>onVpProcessed</code> — Segurança</a></li>
+  <li><a href="#onvpprocessed-segurança" id="toc-onvpprocessed-segurança" class="nav-link" data-scroll-target="#onvpprocessed-segurança"><code>onVPProcessed</code> — Segurança</a></li>
   <li><a href="#did-e-keystore" id="toc-did-e-keystore" class="nav-link" data-scroll-target="#did-e-keystore">DID e Keystore</a></li>
-  <li><a href="#claims-filtradas-como-metadados" id="toc-claims-filtradas-como-metadados" class="nav-link" data-scroll-target="#claims-filtradas-como-metadados">Claims filtradas como metadados</a></li>
   <li><a href="#consentimento-do-usuário" id="toc-consentimento-do-usuário" class="nav-link" data-scroll-target="#consentimento-do-usuário">Consentimento do Usuário</a></li>
   <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
   </ul>
@@ -345,7 +346,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td><strong>Minimização de dados</strong></td>
-<td>Com SD-JWT, o cidadão revela apenas <code>ageOver18</code>, não a data de nascimento</td>
+<td>O cidadão revela apenas a credencial <code>ECACredential</code> — o campo <code>isOver18</code> é derivado pelo Verify Service sem expor data de nascimento ou outros dados pessoais</td>
 </tr>
 <tr class="even">
 <td><strong>Finalidade</strong></td>
@@ -377,7 +378,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="aplicação-react" class="level3">
 <h3 class="anchored" data-anchor-id="aplicação-react">Aplicação React</h3>
 <ul class="task-list">
-<li><label><input type="checkbox"><code>onVpReceived</code> (com validação no backend) em vez de <code>onVpProcessed</code> em produção</label></li>
 <li><label><input type="checkbox">Sem dados de credencial armazenados no frontend (localStorage, sessionStorage, etc.)</label></li>
 <li><label><input type="checkbox">CSP (Content Security Policy) configurado</label></li>
 </ul>
@@ -392,71 +392,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 </section>
-<section id="onvpreceived-vs-onvpprocessed-segurança" class="level2">
-<h2 class="anchored" data-anchor-id="onvpreceived-vs-onvpprocessed-segurança"><code>onVpReceived</code> vs <code>onVpProcessed</code> — Segurança</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Aspecto</th>
-<th><code>onVpReceived</code></th>
-<th><code>onVpProcessed</code></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Resultado chega ao</td>
-<td>Backend (via txnId)</td>
-<td>Frontend (direto)</td>
-</tr>
-<tr class="even">
-<td>Adulteração possível?</td>
-<td>Não (backend valida)</td>
-<td>Sim (DevTools)</td>
-</tr>
-<tr class="odd">
-<td>Uso recomendado</td>
-<td><strong>Produção</strong></td>
-<td>Desenvolvimento</td>
-</tr>
-</tbody>
-</table>
-<p>Em produção, o fluxo seguro é:</p>
-<ol type="1">
-<li>SDK recebe <code>txnId</code> via <code>onVpReceived</code></li>
-<li>Frontend envia <code>txnId</code> ao seu backend</li>
-<li>Seu backend chama <code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{txnId}</code></li>
-<li>Backend decide se libera o acesso</li>
-</ol>
+<section id="onvpprocessed-segurança" class="level2">
+<h2 class="anchored" data-anchor-id="onvpprocessed-segurança"><code>onVPProcessed</code> — Segurança</h2>
+<p>O callback <code>onVPProcessed</code> entrega o resultado diretamente no frontend:</p>
 <pre class="tsx"><code>// Frontend
-onVpReceived={async (txnId) =&gt; {
-  const res = await fetch(`/api/verificacao/${txnId}`);
-  const data = await res.json();
-  if (data.verified) { /* liberar */ }
+onVPProcessed={(results) =&gt; {
+  const ok = results.some((r) =&gt; r.vcStatus === 'SUCCESS');
+  if (ok) { /* liberar acesso */ }
 }}</code></pre>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Backend (Node/Express) — opcional mas recomendado para produção</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>app<span class="op">.</span><span class="fu">get</span>(<span class="st">'/api/verificacao/:txnId'</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> {</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { txnId } <span class="op">=</span> req<span class="op">.</span><span class="at">params</span><span class="op">;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Substitua pelo valor do seu ambiente</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="vs">`&lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/</span><span class="sc">${</span>txnId<span class="sc">}</span><span class="vs">`</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> data <span class="op">=</span> <span class="cf">await</span> result<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> verified <span class="op">=</span> data<span class="op">.</span><span class="fu">some</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">vcStatus</span> <span class="op">===</span> <span class="st">'SUCCESS'</span>)<span class="op">;</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  res<span class="op">.</span><span class="fu">json</span>({ verified })<span class="op">;</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Importante
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>O backend acima é <strong>simples e opcional</strong> — serve apenas para isolar a decisão de acesso do frontend. Não é um orquestrador de todo o fluxo.</p>
-</div>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Backend (Node/Express)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>app<span class="op">.</span><span class="fu">get</span>(<span class="st">'/api/verificacao/:transactionId'</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { transactionId } <span class="op">=</span> req<span class="op">.</span><span class="at">params</span><span class="op">;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="vs">`&lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/</span><span class="sc">${</span>transactionId<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> data <span class="op">=</span> <span class="cf">await</span> result<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> verified <span class="op">=</span> data<span class="op">.</span><span class="at">vcResults</span><span class="op">?.</span><span class="fu">some</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">vcStatus</span> <span class="op">===</span> <span class="st">'SUCCESS'</span>) <span class="op">??</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  res<span class="op">.</span><span class="fu">json</span>({ verified })<span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="did-e-keystore" class="level2">
 <h2 class="anchored" data-anchor-id="did-e-keystore">DID e Keystore</h2>
@@ -480,19 +433,13 @@ Aviso
 </div>
 </div>
 </section>
-<section id="claims-filtradas-como-metadados" class="level2">
-<h2 class="anchored" data-anchor-id="claims-filtradas-como-metadados">Claims filtradas como metadados</h2>
-<p>A variável <code>INJI_VERIFY_CLAIMS_WITH_META_DATA</code> define campos tratados como metadados internos (não exibidos):</p>
-<pre><code>_sd, _sd_alg, iss, cnf, sub, aud, exp, nbf, iat, cti</code></pre>
-<p>Esses campos são estruturais do SD-JWT e não contêm dados pessoais.</p>
-</section>
 <section id="consentimento-do-usuário" class="level2">
 <h2 class="anchored" data-anchor-id="consentimento-do-usuário">Consentimento do Usuário</h2>
 <p>Antes de iniciar a verificação, informe ao usuário:</p>
 <ul>
 <li><strong>O que</strong> está sendo verificado (idade &gt;= 18)</li>
 <li><strong>Quem</strong> é o verificador (sua organização)</li>
-<li>Que <strong>nenhum dado pessoal</strong> além de <code>ageOver18</code> é compartilhado</li>
+<li>Que <strong>nenhum dado pessoal</strong> além de <code>isOver18</code> é compartilhado</li>
 <li>Que o cidadão <strong>autoriza ativamente</strong> na Carteira Digital</li>
 </ul>
 </section>

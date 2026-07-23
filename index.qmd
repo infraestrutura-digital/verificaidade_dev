@@ -41,8 +41,8 @@ Para **desenvolvedores** de Plataformas Digitais, web ou mobile apps que precisa
 ## Pré-requisitos
 
 - Acesso a uma **VM com Docker** para rodar o INJI Verify Service
-? Credenciais de acesso ao gateway (obtidas no [Onboarding](onboarding.qmd))
+- Credenciais de acesso ao gateway (obtidas no [Onboarding](onboarding.qmd))
 
 ::: {.callout-note}
-O objetivo é que um desenvolvedor experiente consiga integrar em **1 dia**. Comece pelo [Integre em 1 Dia](quickstart.qmd).
+O objetivo é que um desenvolvedor experiente consiga integrar em **1 hora**. Comece pelo [Integre em 1 Hora](quickstart.qmd).
 :::

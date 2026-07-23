@@ -10,7 +10,7 @@ Garantir que a integração siga boas práticas de segurança e esteja em confor
 
 | Princípio | Aplicação |
 |-----------|-----------|
-| **Minimização de dados** | Com SD-JWT, o cidadão revela apenas `ageOver18`, não a data de nascimento |
+| **Minimização de dados** | O cidadão revela apenas a credencial `ECACredential` — o campo `isOver18` é derivado pelo Verify Service sem expor data de nascimento ou outros dados pessoais |
 | **Finalidade** | Use o resultado apenas para controle de acesso por idade |
 | **Não armazenamento** | Não armazene a credencial do cidadão |
 | **Transparência** | Informe ao usuário o que está sendo verificado |
@@ -27,7 +27,6 @@ Garantir que a integração siga boas práticas de segurança e esteja em confor
 
 ### Aplicação React
 
-- [ ] `onVpReceived` (com validação no backend) em vez de `onVpProcessed` em produção
 - [ ] Sem dados de credencial armazenados no frontend (localStorage, sessionStorage, etc.)
 - [ ] CSP (Content Security Policy) configurado
 
@@ -38,47 +37,30 @@ Garantir que a integração siga boas práticas de segurança e esteja em confor
 - [ ] Docker com usuário não-root (quando possível)
 - [ ] Certificado SSL/TLS válido
 
-## `onVpReceived` vs `onVpProcessed` — Segurança
+## `onVPProcessed` — Segurança
 
-| Aspecto | `onVpReceived` | `onVpProcessed` |
-|---------|---------------|-----------------|
-| Resultado chega ao | Backend (via txnId) | Frontend (direto) |
-| Adulteração possível? | Não (backend valida) | Sim (DevTools) |
-| Uso recomendado | **Produção** | Desenvolvimento |
-
-Em produção, o fluxo seguro é:
-
-1. SDK recebe `txnId` via `onVpReceived`
-2. Frontend envia `txnId` ao seu backend
-3. Seu backend chama `GET <VERIFY_BASE_URL>/v1/verify/vp-result/{txnId}`
-4. Backend decide se libera o acesso
+O callback `onVPProcessed` entrega o resultado diretamente no frontend:
 
 ```tsx
 // Frontend
-onVpReceived={async (txnId) => {
-  const res = await fetch(`/api/verificacao/${txnId}`);
-  const data = await res.json();
-  if (data.verified) { /* liberar */ }
+onVPProcessed={(results) => {
+  const ok = results.some((r) => r.vcStatus === 'SUCCESS');
+  if (ok) { /* liberar acesso */ }
 }}
 ```
 
 ```javascript
-// Backend (Node/Express) — opcional mas recomendado para produção
-app.get('/api/verificacao/:txnId', async (req, res) => {
-  const { txnId } = req.params;
-  // Substitua pelo valor do seu ambiente
+// Backend (Node/Express)
+app.get('/api/verificacao/:transactionId', async (req, res) => {
+  const { transactionId } = req.params;
   const result = await fetch(
-    `<VERIFY_BASE_URL>/v1/verify/vp-result/${txnId}`
+    `<VERIFY_BASE_URL>/v1/verify/vp-result/${transactionId}`
   );
   const data = await result.json();
-  const verified = data.some(r => r.vcStatus === 'SUCCESS');
+  const verified = data.vcResults?.some(r => r.vcStatus === 'SUCCESS') ?? false;
   res.json({ verified });
 });
 ```
-
-::: {.callout-important}
-O backend acima é **simples e opcional** — serve apenas para isolar a decisão de acesso do frontend. Não é um orquestrador de todo o fluxo.
-:::
 
 ## DID e Keystore
 
@@ -92,23 +74,13 @@ O INJI Verify Service se identifica com um **DID Web** e assina requisições co
 O `test.p12` incluído no INJI é para **desenvolvimento apenas**. Gere um keystore próprio para produção.
 :::
 
-## Claims filtradas como metadados
-
-A variável `INJI_VERIFY_CLAIMS_WITH_META_DATA` define campos tratados como metadados internos (não exibidos):
-
-```
-_sd, _sd_alg, iss, cnf, sub, aud, exp, nbf, iat, cti
-```
-
-Esses campos são estruturais do SD-JWT e não contêm dados pessoais.
-
 ## Consentimento do Usuário
 
 Antes de iniciar a verificação, informe ao usuário:
 
 - **O que** está sendo verificado (idade >= 18)
 - **Quem** é o verificador (sua organização)
-- Que **nenhum dado pessoal** além de `ageOver18` é compartilhado
+- Que **nenhum dado pessoal** além de `isOver18` é compartilhado
 - Que o cidadão **autoriza ativamente** na Carteira Digital
 
 ## Próximo passo

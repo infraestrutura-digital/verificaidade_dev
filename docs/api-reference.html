@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>API Reference – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -67,15 +70,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-723188f279a8567b49f9b5349c77c7ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-55a229089d14938623797807ac366610.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -294,10 +296,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#consultar-status-da-vp-request-long-polling" id="toc-consultar-status-da-vp-request-long-polling" class="nav-link" data-scroll-target="#consultar-status-da-vp-request-long-polling">Consultar Status da VP Request (Long-Polling)</a></li>
   <li><a href="#obter-resultado-da-verificação" id="toc-obter-resultado-da-verificação" class="nav-link" data-scroll-target="#obter-resultado-da-verificação">Obter Resultado da Verificação</a></li>
   <li><a href="#vp-submission-wallet-service" id="toc-vp-submission-wallet-service" class="nav-link" data-scroll-target="#vp-submission-wallet-service">VP Submission (Wallet → Service)</a></li>
-  <li><a href="#vc-verification-qr-code-scanupload" id="toc-vc-verification-qr-code-scanupload" class="nav-link" data-scroll-target="#vc-verification-qr-code-scanupload">VC Verification (QR Code Scan/Upload)</a></li>
   <li><a href="#health-check" id="toc-health-check" class="nav-link" data-scroll-target="#health-check">Health Check</a></li>
   </ul></li>
-  <li><a href="#uso-com-onvpreceived-backend" id="toc-uso-com-onvpreceived-backend" class="nav-link" data-scroll-target="#uso-com-onvpreceived-backend">Uso com <code>onVpReceived</code> (Backend)</a></li>
   <li><a href="#resumo-de-placeholders" id="toc-resumo-de-placeholders" class="nav-link" data-scroll-target="#resumo-de-placeholders">Resumo de Placeholders</a></li>
   </ul>
 </nav>
@@ -337,7 +337,7 @@ Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Em uso normal, o <strong>SDK gerencia todas as chamadas</strong> a esses endpoints automaticamente. Esta referência é útil para debugging, integração com apps nativos, ou uso de <code>onVpReceived</code> com backend.</p>
+<p>Em uso normal, o <strong>SDK gerencia todas as chamadas</strong> a esses endpoints automaticamente. Esta referência é útil para debugging ou integração com apps nativos.</p>
 </div>
 </div>
 </section>
@@ -349,68 +349,97 @@ Nota
 <pre><code>POST &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-request</code></pre>
 <p><strong>Request Body:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"presentationDefinition"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"age-verification-18-plus"</span><span class="fu">,</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"input_descriptors"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"age_credential"</span><span class="fu">,</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"format"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"vc+sd-jwt"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"sd-jwt_alg_values"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"ES256"</span><span class="ot">]</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">},</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"constraints"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"fields"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"path"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"$.ageOver18"</span><span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"filter"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"boolean"</span><span class="fu">,</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"const"</span><span class="fu">:</span> <span class="kw">true</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>              <span class="fu">}</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>          <span class="ot">]</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"clientId"</span><span class="fu">:</span> <span class="st">"https://&lt;VERIFY_BASE_URL&gt;"</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"presentationDefinition"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"eca-age-check"</span><span class="fu">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"input_descriptors"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"ECACredential"</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"Comprovante de Maioridade"</span><span class="fu">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"purpose"</span><span class="fu">:</span> <span class="st">"Verificar que o usuário é maior de 18 anos"</span><span class="fu">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"format"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"ldp_vc"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"proof_type"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"Ed25519Signature2020"</span><span class="ot">]</span> <span class="fu">}</span> <span class="fu">},</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"constraints"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"fields"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"path"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"$.type"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"filter"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"pattern"</span><span class="fu">:</span> <span class="st">"ECACredential"</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>              <span class="fu">}</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>          <span class="ot">]</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Response — 200 OK:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"requestId"</span><span class="fu">:</span> <span class="st">"abc-123-def-456"</span><span class="fu">,</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"authorizationUrl"</span><span class="fu">:</span> <span class="st">"openid4vp://authorize?request_uri=https://..."</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"transactionId"</span><span class="fu">:</span> <span class="st">"txn_49dfba0a-d573-43ca-aa9d-71d1fbf03db0"</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"requestId"</span><span class="fu">:</span> <span class="st">"req_46555655-a746-4d87-8cca-1d85a2f3252e"</span><span class="fu">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"authorizationDetails"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"clientId"</span><span class="fu">:</span> <span class="st">"https://&lt;VERIFY_BASE_URL&gt;"</span><span class="fu">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"nonce"</span><span class="fu">:</span> <span class="st">"cecd183d447e3d07d7786fbb373f01fc"</span><span class="fu">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"responseUri"</span><span class="fu">:</span> <span class="st">"https://&lt;VERIFY_BASE_URL&gt;/v1/verify/vp-submission/direct-post"</span><span class="fu">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"responseType"</span><span class="fu">:</span> <span class="st">"vp_token"</span><span class="fu">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"responseMode"</span><span class="fu">:</span> <span class="st">"direct_post"</span><span class="fu">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"issuedAt"</span><span class="fu">:</span> <span class="dv">1784817812646</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"expiresAt"</span><span class="fu">:</span> <span class="dv">1784818112645</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
 <section id="consultar-status-da-vp-request-long-polling" class="level3">
 <h3 class="anchored" data-anchor-id="consultar-status-da-vp-request-long-polling">Consultar Status da VP Request (Long-Polling)</h3>
 <p>Aguarda até que a Carteira Digital envie a credencial ou o timeout seja atingido.</p>
 <pre><code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-request/{requestId}/status</code></pre>
-<p>O timeout padrão do long-polling é <strong>55 segundos</strong> (configurável via <code>INJI_VP_REQUEST_LONG_POLLING_TIMEOUT</code>).</p>
-<p><strong>Response — 200 OK (credencial recebida):</strong></p>
+<p><strong>Response — 200 OK:</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"COMPLETED"</span><span class="fu">,</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"requestId"</span><span class="fu">:</span> <span class="st">"abc-123-def-456"</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Response — 200 OK (aguardando):</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"PENDING"</span><span class="fu">,</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"requestId"</span><span class="fu">:</span> <span class="st">"abc-123-def-456"</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"ACTIVE"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Valores possíveis de <code>status</code>:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Valor</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ACTIVE</code></td>
+<td>Aguardando submissão da carteira</td>
+</tr>
+<tr class="even">
+<td><code>VP_SUBMITTED</code></td>
+<td>Carteira submeteu a credencial — buscar resultado</td>
+</tr>
+<tr class="odd">
+<td><code>EXPIRED</code></td>
+<td>Sessão expirada</td>
+</tr>
+</tbody>
+</table>
 <hr>
 </section>
 <section id="obter-resultado-da-verificação" class="level3">
 <h3 class="anchored" data-anchor-id="obter-resultado-da-verificação">Obter Resultado da Verificação</h3>
 <p>Busca o resultado completo após a Wallet ter submetido a credencial.</p>
-<pre><code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{requestId}</code></pre>
+<pre><code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{transactionId}</code></pre>
 <p><strong>Response — 200 OK:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vc"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"ageOver18"</span><span class="fu">:</span> <span class="kw">true</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"vcStatus"</span><span class="fu">:</span> <span class="st">"SUCCESS"</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"vpResultStatus"</span><span class="fu">:</span> <span class="st">"SUCCESS"</span><span class="fu">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"vcResults"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"vc"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"credentialSubject"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"isOver18"</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"vcStatus"</span><span class="fu">:</span> <span class="st">"SUCCESS"</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Valores possíveis de <code>vcStatus</code>:</strong></p>
 <table class="caption-top table">
 <thead>
@@ -442,43 +471,14 @@ Nota
 <pre><code>POST &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-submission</code></pre>
 <hr>
 </section>
-<section id="vc-verification-qr-code-scanupload" class="level3">
-<h3 class="anchored" data-anchor-id="vc-verification-qr-code-scanupload">VC Verification (QR Code Scan/Upload)</h3>
-<p>Para o fluxo de QR Code scan/upload (não OpenID4VP), o SDK usa:</p>
-<pre><code>POST &lt;VERIFY_BASE_URL&gt;/v1/verify/vc-verification</code></pre>
-<hr>
-</section>
 <section id="health-check" class="level3">
 <h3 class="anchored" data-anchor-id="health-check">Health Check</h3>
-<pre><code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/health</code></pre>
+<pre><code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/actuator/health</code></pre>
 <p><strong>Response — 200 OK:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"UP"</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"UP"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-</section>
-<section id="uso-com-onvpreceived-backend" class="level2">
-<h2 class="anchored" data-anchor-id="uso-com-onvpreceived-backend">Uso com <code>onVpReceived</code> (Backend)</h2>
-<p>Quando você usa <code>onVpReceived</code>, o SDK retorna apenas o <code>txnId</code>. Para buscar o resultado no backend:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Backend Node/Express (exemplo)</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> express <span class="op">=</span> <span class="pp">require</span>(<span class="st">'express'</span>)<span class="op">;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> app <span class="op">=</span> <span class="fu">express</span>()<span class="op">;</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Substitua pelo valor do seu ambiente</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> VERIFY_BASE_URL <span class="op">=</span> <span class="st">'&lt;VERIFY_BASE_URL&gt;'</span><span class="op">;</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>app<span class="op">.</span><span class="fu">get</span>(<span class="st">'/api/verificacao/:txnId'</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> {</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { txnId } <span class="op">=</span> req<span class="op">.</span><span class="at">params</span><span class="op">;</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="vs">`</span><span class="sc">${</span>VERIFY_BASE_URL<span class="sc">}</span><span class="vs">/v1/verify/vp-result/</span><span class="sc">${</span>txnId<span class="sc">}</span><span class="vs">`</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> results <span class="op">=</span> <span class="cf">await</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> verified <span class="op">=</span> results<span class="op">.</span><span class="fu">some</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">vcStatus</span> <span class="op">===</span> <span class="st">'SUCCESS'</span>)<span class="op">;</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  res<span class="op">.</span><span class="fu">json</span>({ verified<span class="op">,</span> results })<span class="op">;</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="resumo-de-placeholders" class="level2">
 <h2 class="anchored" data-anchor-id="resumo-de-placeholders">Resumo de Placeholders</h2>

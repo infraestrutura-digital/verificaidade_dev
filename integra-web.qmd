@@ -4,7 +4,7 @@ title: "Integração Web (QR Code)"
 
 ## Objetivo
 
-Implementar verificação de idade em uma aplicação Web React usando QR Code (fluxo cross-device).
+Implementar verificação de credencial em uma aplicação Web React usando QR Code (fluxo cross-device).
 
 ## Fluxo Web
 
@@ -15,14 +15,14 @@ sequenceDiagram
     participant VS as INJI Verify Service
     participant W as Carteira Digital (Celular)
 
-    U->>SDK: Clica "Verificar Idade"
+    U->>SDK: Clica "Gerar QR Code"
     SDK->>VS: POST /v1/verify/vp-request
-    VS-->>SDK: requestId + authorizationUrl
+    VS-->>SDK: transactionId + requestId + authorizationDetails
     SDK->>U: Renderiza QR Code
     U->>W: Escaneia QR Code
     W->>VS: POST /v1/verify/vp-submission (credencial)
     VS->>VS: Valida credencial
-    Note over SDK,VS: Long-polling /vp-request/{id}/status
+    Note over SDK,VS: Long-polling até receber resultado
     VS-->>SDK: Resultado
     SDK->>U: Callback executado
 ```
@@ -34,92 +34,67 @@ O usuário está no **desktop**. O site exibe um QR Code. O usuário abre a Cart
 ## Passo 1 — Instalar o SDK
 
 ```bash
-npm install @mosip/react-inji-verify-sdk
+npm install @injistack/react-inji-verify-sdk@0.17.0
 ```
+
+::: {.callout-important}
+É necessário utilizar a versão `0.17.0` do SDK.
+:::
+
+
 
 ## Passo 2 — Componente de verificação
 
 ```tsx
 // src/components/VerificaIdade.tsx
 import { useState } from 'react';
-import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+import { OpenID4VPVerification } from '@injistack/react-inji-verify-sdk';
 
-// Substitua pelo valor do seu ambiente
-const VERIFY_SERVICE_URL = '<VERIFY_BASE_URL>/v1/verify';
-const CLIENT_ID_DID = 'did:web:<SEU_DOMINIO>:v1:verify';
+const VERIFY_SERVICE_URL = '/v1/verify';
+const CLIENT_ID_DID = 'did:web:localhost:v1:verify';
 
-// Substitua pela Presentation Definition do seu credenciamento
 const presentationDefinition = {
-  id: 'age-verification-18-plus',
+  id: 'eca-age-verification',
+  purpose: 'Verificação de idade conforme o Estatuto da Criança e do Adolescente',
+  format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
   input_descriptors: [
     {
-      id: 'age_credential',
-      format: {
-        'vc+sd-jwt': {
-          'sd-jwt_alg_values': ['ES256']
-        }
-      },
+      id: 'eca credential',
+      format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
       constraints: {
         fields: [
           {
-            path: ['$.ageOver18'],
-            filter: {
-              type: 'boolean',
-              const: true
-            }
-          }
-        ]
-      }
-    }
-  ]
+            path: ['$.type'],
+            filter: { type: 'object', pattern: 'ECACredential' },
+          },
+        ],
+      },
+    },
+  ],
 };
 
-type VerificaIdadeProps = {
-  onVerificado: () => void;
-  onFalhou: () => void;
-};
-
-export function VerificaIdade({ onVerificado, onFalhou }: VerificaIdadeProps) {
-  const [estado, setEstado] = useState<'idle' | 'verificado' | 'falhou'>('idle');
+export function VerificaIdade() {
+  const [iniciado, setIniciado] = useState(false);
 
   return (
     <div>
-      {estado === 'idle' && (
+      <h2>Verificação de Idade</h2>
+      {!iniciado ? (
+        <button onClick={() => setIniciado(true)}>Gerar QR Code</button>
+      ) : (
         <OpenID4VPVerification
           verifyServiceUrl={VERIFY_SERVICE_URL}
           clientId={CLIENT_ID_DID}
           protocol="openid4vp://"
+          isSameDeviceFlowEnabled={false}
           presentationDefinition={presentationDefinition}
-          onVpProcessed={(results) => {
-            const ok = results.some(r => r.vcStatus === 'SUCCESS');
-            if (ok) {
-              setEstado('verificado');
-              onVerificado();
-            } else {
-              setEstado('falhou');
-              onFalhou();
-            }
+          onVPProcessed={(results) => {
+            const ok = results.some((r: { vcStatus: string }) => r.vcStatus === 'SUCCESS');
+            console.log('Verificado:', ok);
           }}
-          onError={(error) => {
-            console.error('Erro na verificação:', error);
-            setEstado('falhou');
-            onFalhou();
-          }}
-          onQrCodeExpired={() => {
-            console.log('QR Code expirou');
-          }}
+          onError={(error) => console.error('Erro na verificação:', error)}
+          onQrCodeExpired={() => setIniciado(false)}
         />
-      )}
-
-      {estado === 'verificado' && (
-        <p>Idade verificada com sucesso.</p>
-      )}
-
-      {estado === 'falhou' && (
-        <div>
-          <p>Verificação falhou.</p>
-          <button onClick={() => setEstado('idle')}>Tentar novamente</button>
-        </div>
       )}
     </div>
   );
@@ -135,44 +110,32 @@ import { VerificaIdade } from '../components/VerificaIdade';
 export function Checkout() {
   return (
     <div>
-      <h1>Verificação de Idade</h1>
-      <VerificaIdade
-        onVerificado={() => console.log('Acesso liberado')}
-        onFalhou={() => console.log('Acesso negado')}
-      />
+      <h1>Verificação de Credencial</h1>
+      <VerificaIdade />
     </div>
   );
 }
 ```
 
-## Versão para produção (com `onVpReceived`)
+## Versão para produção (com validação no backend)
 
-Em produção, use `onVpReceived` para buscar o resultado no backend:
+Para maior segurança, capture o `transactionId` e valide no backend:
 
 ```tsx
-// src/components/VerificaIdadeProd.tsx
-import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+import { OpenID4VPVerification } from '@injistack/react-inji-verify-sdk';
 
 export function VerificaIdadeProd() {
-  const handleVpReceived = async (txnId: string) => {
-    // Buscar resultado no seu backend
-    const res = await fetch(`/api/verificacao/resultado/${txnId}`);
-    const data = await res.json();
-
-    if (data.verified) {
-      // Liberar acesso
-    } else {
-      // Negar acesso
-    }
-  };
-
   return (
     <OpenID4VPVerification
       verifyServiceUrl="<VERIFY_BASE_URL>/v1/verify"
       clientId="did:web:<SEU_DOMINIO>:v1:verify"
       protocol="openid4vp://"
+      isSameDeviceFlowEnabled={false}
       presentationDefinition={presentationDefinition}
-      onVpReceived={handleVpReceived}
+      onVPProcessed={async (results) => {
+        const ok = results.some((r: { vcStatus: string }) => r.vcStatus === 'SUCCESS');
+        if (ok) { /* liberar acesso */ }
+      }}
       onError={(error) => console.error(error)}
       onQrCodeExpired={() => console.log('QR expirou')}
     />
@@ -181,7 +144,7 @@ export function VerificaIdadeProd() {
 ```
 
 ::: {.callout-important}
-Nessa abordagem, seu backend busca o resultado em `GET <VERIFY_BASE_URL>/v1/verify/vp-result/{txnId}` e decide se libera o acesso. Isso evita que o frontend seja adulterado.
+Para maior segurança, seu backend pode buscar o resultado diretamente em `GET <VERIFY_BASE_URL>/v1/verify/vp-result/{transactionId}` e decidir se libera o acesso, evitando que o frontend seja adulterado.
 :::
 
 ## Customização do QR Code
@@ -205,18 +168,15 @@ Nessa abordagem, seu backend busca o resultado em `GET <VERIFY_BASE_URL>/v1/veri
 | `verifyServiceUrl` | `string` | Sim | URL do INJI Verify Service |
 | `clientId` | `string` | Sim | DID do verificador |
 | `protocol` | `string` | Sim | Protocolo (`"openid4vp://"`) |
+| `isSameDeviceFlowEnabled` | `boolean` | Não | Habilita fluxo no mesmo dispositivo. Padrão: `true` — defina `false` para fluxo cross-device sem web wallet |
 | `presentationDefinition` | `object` | Sim* | Presentation Definition inline |
 | `presentationDefinitionId` | `string` | Sim* | ID de definição pré-cadastrada |
-| `onVpReceived` | `(txnId) => void` | Sim** | Callback com transaction ID |
-| `onVpProcessed` | `(results) => void` | Sim** | Callback com resultado completo |
+| `onVPProcessed` | `(results) => void` | Sim | Callback com resultado completo |
 | `onError` | `(error) => void` | Sim | Callback de erro |
 | `onQrCodeExpired` | `() => void` | Sim | Callback de QR expirado |
-| `triggerElement` | `ReactNode` | Não | Elemento que inicia a verificação |
 | `qrCodeStyles` | `object` | Não | Estilos do QR Code |
 
 \* Use `presentationDefinition` **ou** `presentationDefinitionId`, não ambos.
-
-\** Use `onVpReceived` **ou** `onVpProcessed`, não ambos.
 
 ## Próximo passo
 

@@ -14,7 +14,7 @@ Preparar a VM do verificador com Docker e Docker Compose para rodar o INJI Verif
 | RAM | 4 GB | 8 GB |
 | Disco | 20 GB | 40 GB |
 | SO | Ubuntu 22.04 LTS | Ubuntu 22.04 LTS |
-| Rede | Portas 80, 443, 8080 | Portas 80, 443, 8080 |
+| Rede | Portas 80, 443 | Portas 80, 443 |
 
 ## Passo 1 — Atualizar o sistema
 
@@ -68,14 +68,9 @@ docker run --rm hello-world
 ```bash
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
-sudo ufw allow 8080/tcp
 sudo ufw enable
 sudo ufw status
 ```
-
-::: {.callout-important}
-A porta 8080 é usada pelo INJI Verify Service. A Carteira Digital do cidadão precisa acessá-la. Em produção, coloque um reverse proxy (Nginx) com HTTPS na frente.
-:::
 
 ## Próximo passo
 

@@ -25,29 +25,51 @@ Preparar o ambiente para deploy em produção com segurança e monitoramento.
 version: '3.8'
 
 services:
-  verify-service:
-    container_name: verify-service
-    image: injistackdev/inji-verify-service:develop
+  postgres:
+    image: postgres:15-alpine
+    container_name: inji-verify-db
+    restart: always
+    environment:
+      POSTGRES_DB: inji_verify
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "127.0.0.1:5432:5432"  # Apenas localhost
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d inji_verify"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  inji-verify-service:
+    image: injistack/inji-verify-service:0.17.0
+    container_name: inji-verify-service
     restart: always
     ports:
       - "127.0.0.1:8080:8080"  # Apenas localhost — Nginx faz o proxy
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
-      - active_profile_env=default
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_NAME=inji_verify
-      - DATABASE_SCHEMA=verify
-      - DATABASE_USERNAME=${DB_USER}
-      - DATABASE_PASSWORD=${DB_PASSWORD}
-      - INJI_VP_SUBMISSION_BASE_URL=https://verify.seu-dominio.com.br/v1/verify
-      - INJI_DID_VERIFY_URI=did:web:verify.seu-dominio.com.br:v1:verify
-      - INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:verify.seu-dominio.com.br:v1:verify#key-0
-      - INJI_KEYSTORE_FILE_PASS=${KEYSTORE_PASS}
-      - INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=55000
-      - INJI_VERIFY_REDIRECT_URI=https://verify.seu-dominio.com.br
-      - INJI_VERIFY_RESPONSE_CODE_EXPIRY_TIME_IN_MINS=5
-      - INJI_VERIFY_INCLUDE_RESPONSE_CODE_SECURITY_CHECKS=true
-      - INJI_VERIFY_CLAIMS_WITH_META_DATA=_sd,_sd_alg,iss,cnf,sub,aud,exp,nbf,iat,cti
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: inji_verify
+      DATABASE_SCHEMA: public
+      DATABASE_USERNAME: ${DB_USER}
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      INJI_VP_SUBMISSION_BASE_URL: https://verify.seu-dominio.com.br/v1/verify
+      INJI_DID_VERIFY_URI: did:web:verify.seu-dominio.com.br:v1:verify
+      INJI_DID_VERIFY_PUBLIC_KEY_URI: did:web:verify.seu-dominio.com.br:v1:verify#key-0
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
+      MANAGEMENT_ENDPOINT_MAPPINGS_ENABLED: "true"
     logging:
       driver: json-file
       options:
@@ -58,27 +80,6 @@ services:
         limits:
           memory: 2G
           cpus: '2'
-    depends_on:
-      - postgres
-
-  postgres:
-    image: postgres:13
-    container_name: postgres-db
-    restart: always
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: inji_verify
-    ports:
-      - "127.0.0.1:5432:5432"  # Apenas localhost
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./db-init:/docker-entrypoint-initdb.d
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
 
 volumes:
   pgdata:
@@ -137,7 +138,7 @@ sudo certbot --nginx -d verify.seu-dominio.com.br
 ### Health Check
 
 ```bash
-curl -s https://verify.seu-dominio.com.br/v1/verify/health
+curl -s https://verify.seu-dominio.com.br/v1/verify/actuator/health
 ```
 
 ### Script de monitoramento
@@ -145,7 +146,7 @@ curl -s https://verify.seu-dominio.com.br/v1/verify/health
 ```bash
 #!/bin/bash
 # monitor.sh — executar via cron a cada minuto
-HEALTH=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/v1/verify/health)
+HEALTH=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/v1/verify/actuator/health)
 
 if [ "$HEALTH" != "200" ]; then
   echo "$(date) ALERTA: INJI Verify Service indisponível (HTTP $HEALTH)" \
@@ -166,7 +167,7 @@ crontab -e
 # backup-db.sh
 BACKUP_DIR=/home/ubuntu/backups
 mkdir -p $BACKUP_DIR
-docker exec postgres-db pg_dump -U ${DB_USER} inji_verify \
+docker exec inji-verify-db pg_dump -U ${DB_USER} inji_verify \
   | gzip > $BACKUP_DIR/inji_verify_$(date +%Y%m%d_%H%M%S).sql.gz
 
 # Manter apenas últimos 7 dias
@@ -179,7 +180,7 @@ find $BACKUP_DIR -name "*.sql.gz" -mtime +7 -delete
 cd ~/verificaidade
 docker compose -f docker-compose.prod.yml pull
 docker compose -f docker-compose.prod.yml up -d
-curl -s http://localhost:8080/v1/verify/health
+curl -s http://localhost:8080/v1/verify/actuator/health
 ```
 
 ::: {.callout-warning}

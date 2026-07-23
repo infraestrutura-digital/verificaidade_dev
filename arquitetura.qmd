@@ -46,8 +46,8 @@ flowchart LR
 | Componente | Responsável | Tecnologia | Descrição |
 |-----------|-------------|------------|-----------|
 | **Carteira Digital** | Cidadão | INJI Wallet (app mobile) | Armazena a credencial de idade emitida pelo governo |
-| **App React + SDK** | Verificador (você) | React 18 + `@mosip/react-inji-verify-sdk` | Componentes React que gerenciam o fluxo de verificação |
-| **INJI Verify Service** | Verificador (você) | Java 21, Spring Boot 3.2, PostgreSQL 13 | Backend que valida criptograficamente a credencial via OpenID4VP |
+| **App React + SDK** | Verificador (você) | React 18 + `@injistack/react-inji-verify-sdk@0.17.0` | Componentes React que gerenciam o fluxo de verificação |
+| **INJI Verify Service** | Verificador (você) | Java 21, Spring Boot 3.2, PostgreSQL 15 | Backend que valida criptograficamente a credencial via OpenID4VP |
 | **Emissor** | Governo | — | Emitiu a credencial. Não participa do fluxo em tempo real |
 
 ## Como os componentes se comunicam
@@ -56,7 +56,7 @@ flowchart LR
 2. O SDK exibe um **QR Code** (desktop) ou abre um **Deep Link** (mobile) contendo a URL de autorização
 3. O cidadão abre a **Carteira Digital**, que se comunica diretamente com o **INJI Verify Service** para apresentar a credencial
 4. O SDK faz **long-polling** no Service até receber o resultado
-5. O resultado chega ao SDK via callback (`onVpReceived` ou `onVpProcessed`)
+5. O resultado chega ao SDK via callback (`onVPProcessed`)
 
 ## Regras Fundamentais
 

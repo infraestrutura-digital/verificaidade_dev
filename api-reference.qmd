@@ -7,7 +7,7 @@ title: "API Reference"
 Referência dos endpoints REST do INJI Verify Service. O context path é `/v1/verify`.
 
 ::: {.callout-note}
-Em uso normal, o **SDK gerencia todas as chamadas** a esses endpoints automaticamente. Esta referência é útil para debugging, integração com apps nativos, ou uso de `onVpReceived` com backend.
+Em uso normal, o **SDK gerencia todas as chamadas** a esses endpoints automaticamente. Esta referência é útil para debugging ou integração com apps nativos.
 :::
 
 ## Endpoints do INJI Verify Service
@@ -24,23 +24,22 @@ POST <VERIFY_BASE_URL>/v1/verify/vp-request
 
 ```json
 {
+  "clientId": "https://<VERIFY_BASE_URL>",
   "presentationDefinition": {
-    "id": "age-verification-18-plus",
+    "id": "eca-age-check",
     "input_descriptors": [
       {
-        "id": "age_credential",
-        "format": {
-          "vc+sd-jwt": {
-            "sd-jwt_alg_values": ["ES256"]
-          }
-        },
+        "id": "ECACredential",
+        "name": "Comprovante de Maioridade",
+        "purpose": "Verificar que o usuário é maior de 18 anos",
+        "format": { "ldp_vc": { "proof_type": ["Ed25519Signature2020"] } },
         "constraints": {
           "fields": [
             {
-              "path": ["$.ageOver18"],
+              "path": ["$.type"],
               "filter": {
-                "type": "boolean",
-                "const": true
+                "type": "string",
+                "pattern": "ECACredential"
               }
             }
           ]
@@ -55,8 +54,17 @@ POST <VERIFY_BASE_URL>/v1/verify/vp-request
 
 ```json
 {
-  "requestId": "abc-123-def-456",
-  "authorizationUrl": "openid4vp://authorize?request_uri=https://..."
+  "transactionId": "txn_49dfba0a-d573-43ca-aa9d-71d1fbf03db0",
+  "requestId": "req_46555655-a746-4d87-8cca-1d85a2f3252e",
+  "authorizationDetails": {
+    "clientId": "https://<VERIFY_BASE_URL>",
+    "nonce": "cecd183d447e3d07d7786fbb373f01fc",
+    "responseUri": "https://<VERIFY_BASE_URL>/v1/verify/vp-submission/direct-post",
+    "responseType": "vp_token",
+    "responseMode": "direct_post",
+    "issuedAt": 1784817812646
+  },
+  "expiresAt": 1784818112645
 }
 ```
 
@@ -70,25 +78,21 @@ Aguarda até que a Carteira Digital envie a credencial ou o timeout seja atingid
 GET <VERIFY_BASE_URL>/v1/verify/vp-request/{requestId}/status
 ```
 
-O timeout padrão do long-polling é **55 segundos** (configurável via `INJI_VP_REQUEST_LONG_POLLING_TIMEOUT`).
-
-**Response — 200 OK (credencial recebida):**
+**Response — 200 OK:**
 
 ```json
 {
-  "status": "COMPLETED",
-  "requestId": "abc-123-def-456"
+  "status": "ACTIVE"
 }
 ```
 
-**Response — 200 OK (aguardando):**
+**Valores possíveis de `status`:**
 
-```json
-{
-  "status": "PENDING",
-  "requestId": "abc-123-def-456"
-}
-```
+| Valor | Significado |
+|---|---|
+| `ACTIVE` | Aguardando submissão da carteira |
+| `VP_SUBMITTED` | Carteira submeteu a credencial — buscar resultado |
+| `EXPIRED` | Sessão expirada |
 
 ---
 
@@ -97,20 +101,25 @@ O timeout padrão do long-polling é **55 segundos** (configurável via `INJI_VP
 Busca o resultado completo após a Wallet ter submetido a credencial.
 
 ```
-GET <VERIFY_BASE_URL>/v1/verify/vp-result/{requestId}
+GET <VERIFY_BASE_URL>/v1/verify/vp-result/{transactionId}
 ```
 
 **Response — 200 OK:**
 
 ```json
-[
-  {
-    "vc": {
-      "ageOver18": true
-    },
-    "vcStatus": "SUCCESS"
-  }
-]
+{
+  "vpResultStatus": "SUCCESS",
+  "vcResults": [
+    {
+      "vc": {
+        "credentialSubject": {
+          "isOver18": true
+        }
+      },
+      "vcStatus": "SUCCESS"
+    }
+  ]
+}
 ```
 
 **Valores possíveis de `vcStatus`:**
@@ -133,20 +142,10 @@ POST <VERIFY_BASE_URL>/v1/verify/vp-submission
 
 ---
 
-### VC Verification (QR Code Scan/Upload)
-
-Para o fluxo de QR Code scan/upload (não OpenID4VP), o SDK usa:
-
-```
-POST <VERIFY_BASE_URL>/v1/verify/vc-verification
-```
-
----
-
 ### Health Check
 
 ```
-GET <VERIFY_BASE_URL>/v1/verify/health
+GET <VERIFY_BASE_URL>/v1/verify/actuator/health
 ```
 
 **Response — 200 OK:**
@@ -155,33 +154,6 @@ GET <VERIFY_BASE_URL>/v1/verify/health
 {
   "status": "UP"
 }
-```
-
----
-
-## Uso com `onVpReceived` (Backend)
-
-Quando você usa `onVpReceived`, o SDK retorna apenas o `txnId`. Para buscar o resultado no backend:
-
-```javascript
-// Backend Node/Express (exemplo)
-const express = require('express');
-const app = express();
-
-// Substitua pelo valor do seu ambiente
-const VERIFY_BASE_URL = '<VERIFY_BASE_URL>';
-
-app.get('/api/verificacao/:txnId', async (req, res) => {
-  const { txnId } = req.params;
-
-  const response = await fetch(
-    `${VERIFY_BASE_URL}/v1/verify/vp-result/${txnId}`
-  );
-  const results = await response.json();
-
-  const verified = results.some(r => r.vcStatus === 'SUCCESS');
-  res.json({ verified, results });
-});
 ```
 
 ## Resumo de Placeholders

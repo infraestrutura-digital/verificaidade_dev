@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Integre em 1 Hora – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -67,15 +70,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-723188f279a8567b49f9b5349c77c7ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-55a229089d14938623797807ac366610.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -295,7 +297,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#etapa-4-instalar-o-sdk-no-projeto-react" id="toc-etapa-4-instalar-o-sdk-no-projeto-react" class="nav-link" data-scroll-target="#etapa-4-instalar-o-sdk-no-projeto-react">Etapa 4 — Instalar o SDK no projeto React</a></li>
   <li><a href="#etapa-5-adicionar-componente-de-verificação" id="toc-etapa-5-adicionar-componente-de-verificação" class="nav-link" data-scroll-target="#etapa-5-adicionar-componente-de-verificação">Etapa 5 — Adicionar componente de verificação</a></li>
   <li><a href="#etapa-6-testar-ponta-a-ponta" id="toc-etapa-6-testar-ponta-a-ponta" class="nav-link" data-scroll-target="#etapa-6-testar-ponta-a-ponta">Etapa 6 — Testar ponta a ponta</a></li>
-  <li><a href="#alternativa-receber-resultado-completo-no-frontend" id="toc-alternativa-receber-resultado-completo-no-frontend" class="nav-link" data-scroll-target="#alternativa-receber-resultado-completo-no-frontend">Alternativa: Receber resultado completo no frontend</a></li>
   <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
   </ul>
 </nav>
@@ -366,7 +367,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>4</td>
 <td>Instalar o SDK no projeto React</td>
 <td>5 min</td>
-<td><code>@mosip/react-inji-verify-sdk</code> instalado</td>
+<td><code>@injistack/react-inji-verify-sdk</code> instalado</td>
 </tr>
 <tr class="odd">
 <td>5</td>
@@ -396,18 +397,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Veja a configuração completa em <a href="./inji-verify.html">Subindo o INJI Verify Service</a>.</p>
 <p><strong>Resultado:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://localhost:8080/v1/verify/health</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># { "status": "UP" }</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://localhost:8080/v1/verify/actuator/health</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># {"status":"UP"}</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="etapa-3-expor-o-service-publicamente" class="level2">
 <h2 class="anchored" data-anchor-id="etapa-3-expor-o-service-publicamente">Etapa 3 — Expor o Service publicamente</h2>
-<p>A Carteira Digital (no celular do cidadão) precisa acessar o INJI Verify Service. Em desenvolvimento, use ngrok:</p>
+<p>A Carteira Digital (no celular do cidadão) precisa acessar o INJI Verify Service. Use ngrok para obter uma URL pública:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ngrok</span> http 8080</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Anote a URL pública (ex: <code>https://abc123.ngrok-free.app</code>). Atualize as variáveis de ambiente do Service:</p>
 <ul>
-<li><code>INJI_VP_SUBMISSION_BASE_URL=https://abc123.ngrok-free.app/v1/verify</code></li>
-<li><code>INJI_DID_VERIFY_URI=did:web:abc123.ngrok-free.app:v1:verify</code></li>
-<li><code>INJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:abc123.ngrok-free.app:v1:verify#key-0</code></li>
+<li><code>INJI_VP_SUBMISSION_BASE_URL</code>: <code>https://abc123.ngrok-free.app/v1/verify</code></li>
+<li><code>INJI_DID_VERIFY_URI</code>: <code>did:web:abc123.ngrok-free.app:v1:verify</code></li>
+<li><code>INJI_DID_VERIFY_PUBLIC_KEY_URI</code>: <code>did:web:abc123.ngrok-free.app:v1:verify#key-0</code></li>
 </ul>
 <p>Reinicie o Service:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down <span class="kw">&amp;&amp;</span> <span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
@@ -424,11 +425,12 @@ Aviso
 <p>Em produção, use um domínio real com HTTPS. Veja <a href="./producao.html">Produção e Operação</a>.</p>
 </div>
 </div>
-<p><strong>Resultado:</strong> URL pública acessível pelo celular.</p>
+<p><strong>Resultado:</strong> Carteira Digital alcança o Service.</p>
 </section>
 <section id="etapa-4-instalar-o-sdk-no-projeto-react" class="level2">
 <h2 class="anchored" data-anchor-id="etapa-4-instalar-o-sdk-no-projeto-react">Etapa 4 — Instalar o SDK no projeto React</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install @mosip/react-inji-verify-sdk</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Instale o SDK na versão 0.17.0:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install @injistack/react-inji-verify-sdk@0.17.0</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -447,72 +449,59 @@ Nota
 <section id="etapa-5-adicionar-componente-de-verificação" class="level2">
 <h2 class="anchored" data-anchor-id="etapa-5-adicionar-componente-de-verificação">Etapa 5 — Adicionar componente de verificação</h2>
 <pre class="tsx"><code>// src/components/VerificaIdade.tsx
-import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+import { useState } from 'react';
+import { OpenID4VPVerification } from '@injistack/react-inji-verify-sdk';
 
-// Substitua pela URL do seu INJI Verify Service
-const VERIFY_SERVICE_URL = 'https://abc123.ngrok-free.app/v1/verify';
+const VERIFY_SERVICE_URL = 'https://seu-tunel.ngrok-free.app/v1/verify';
+const CLIENT_ID_DID = 'did:web:seu-tunel.ngrok-free.app:v1:verify';
 
-// Substitua pelo DID do seu verificador
-const CLIENT_ID_DID = 'did:web:abc123.ngrok-free.app:v1:verify';
-
-// Presentation Definition para verificação de idade 18+
-// Substitua pela definição fornecida no seu credenciamento
 const presentationDefinition = {
-  id: 'age-verification-18-plus',
+  id: 'eca-age-verification',
+  purpose: 'Verificação de idade conforme o Estatuto da Criança e do Adolescente',
+  format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
   input_descriptors: [
     {
-      id: 'age_credential',
-      format: {
-        'vc+sd-jwt': {
-          'sd-jwt_alg_values': ['ES256']
-        }
-      },
+      id: 'eca credential',
+      format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
       constraints: {
         fields: [
           {
-            path: ['$.ageOver18'],
-            filter: {
-              type: 'boolean',
-              const: true
-            }
-          }
-        ]
-      }
-    }
-  ]
+            path: ['$.type'],
+            filter: { type: 'object', pattern: 'ECACredential' },
+          },
+        ],
+      },
+    },
+  ],
 };
 
 export function VerificaIdade() {
-  const handleVerificado = (txnId: string) =&gt; {
-    console.log('Verificação concluída. Transaction ID:', txnId);
-    // Busque o resultado no seu backend se necessário
-    // ou use onVpProcessed para receber o resultado direto
-  };
-
-  const handleErro = (error: unknown) =&gt; {
-    console.error('Erro na verificação:', error);
-  };
-
-  const handleQrExpirado = () =&gt; {
-    console.log('QR Code expirou');
-  };
+  const [iniciado, setIniciado] = useState(false);
 
   return (
     &lt;div&gt;
       &lt;h2&gt;Verificação de Idade&lt;/h2&gt;
-      &lt;OpenID4VPVerification
-        verifyServiceUrl={VERIFY_SERVICE_URL}
-        clientId={CLIENT_ID_DID}
-        protocol="openid4vp://"
-        presentationDefinition={presentationDefinition}
-        onVpReceived={handleVerificado}
-        onError={handleErro}
-        onQrCodeExpired={handleQrExpirado}
-      /&gt;
+      {!iniciado ? (
+        &lt;button onClick={() =&gt; setIniciado(true)}&gt;Gerar QR Code&lt;/button&gt;
+      ) : (
+        &lt;OpenID4VPVerification
+          verifyServiceUrl={VERIFY_SERVICE_URL}
+          clientId={CLIENT_ID_DID}
+          protocol="openid4vp://"
+          isSameDeviceFlowEnabled={true}
+          presentationDefinition={presentationDefinition}
+          onVPProcessed={(results) =&gt; {
+            const ok = results.some((r: { vcStatus: string }) =&gt; r.vcStatus === 'SUCCESS');
+            console.log('Verificado:', ok);
+          }}
+          onError={(error) =&gt; console.error('Erro na verificação:', error)}
+          onQrCodeExpired={() =&gt; setIniciado(false)}
+        /&gt;
+      )}
     &lt;/div&gt;
   );
 }</code></pre>
-<p><strong>Resultado:</strong> Componente renderiza QR Code na tela.</p>
+<p><strong>Resultado:</strong> Componente renderiza QR Code na tela ao clicar no botão.</p>
 </section>
 <section id="etapa-6-testar-ponta-a-ponta" class="level2">
 <h2 class="anchored" data-anchor-id="etapa-6-testar-ponta-a-ponta">Etapa 6 — Testar ponta a ponta</h2>
@@ -525,37 +514,7 @@ export function VerificaIdade() {
 <li>O SDK recebe o resultado via callback</li>
 </ol>
 <p><strong>Resultado esperado (no console):</strong></p>
-<pre><code>Verificação concluída. Transaction ID: abc-123-def-456</code></pre>
-</section>
-<section id="alternativa-receber-resultado-completo-no-frontend" class="level2">
-<h2 class="anchored" data-anchor-id="alternativa-receber-resultado-completo-no-frontend">Alternativa: Receber resultado completo no frontend</h2>
-<p>Se preferir receber o resultado diretamente (sem buscar no backend), use <code>onVpProcessed</code> em vez de <code>onVpReceived</code>:</p>
-<pre class="tsx"><code>&lt;OpenID4VPVerification
-  verifyServiceUrl={VERIFY_SERVICE_URL}
-  clientId={CLIENT_ID_DID}
-  protocol="openid4vp://"
-  presentationDefinition={presentationDefinition}
-  onVpProcessed={(results) =&gt; {
-    // results: Array&lt;{ vc: unknown, vcStatus: "SUCCESS" | "INVALID" | "EXPIRED" }&gt;
-    const verificado = results.some(r =&gt; r.vcStatus === 'SUCCESS');
-    console.log('Idade verificada:', verificado);
-  }}
-  onError={(error) =&gt; console.error(error)}
-  onQrCodeExpired={() =&gt; console.log('QR expirou')}
-/&gt;</code></pre>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Aviso
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>A documentação do INJI recomenda usar <code>onVpReceived</code> em produção e buscar o resultado pelo <code>txnId</code> no backend para maior segurança. O <code>onVpProcessed</code> é adequado para desenvolvimento e testes.</p>
-</div>
-</div>
+<pre><code>Verificado: true</code></pre>
 </section>
 <section id="próximo-passo" class="level2">
 <h2 class="anchored" data-anchor-id="próximo-passo">Próximo passo</h2>

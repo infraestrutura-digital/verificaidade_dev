@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Troubleshooting – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -67,15 +70,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-723188f279a8567b49f9b5349c77c7ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-55a229089d14938623797807ac366610.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -375,13 +377,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="diagnóstico" class="level3">
 <h3 class="anchored" data-anchor-id="diagnóstico">Diagnóstico</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> logs verify-service <span class="at">--tail</span> 100</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> logs inji-verify-service <span class="at">--tail</span> 100</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-a</span> <span class="kw">|</span> <span class="fu">grep</span> verify</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> stats <span class="at">--no-stream</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="soluções" class="level3">
 <h3 class="anchored" data-anchor-id="soluções">Soluções</h3>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Causa</th>
@@ -395,13 +401,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td>PostgreSQL não iniciou</td>
-<td>Verificar logs: <code>docker logs postgres-db</code></td>
+<td>Verificar logs: <code>docker logs inji-verify-db</code></td>
 </tr>
 <tr class="odd">
-<td>Scripts de banco faltando</td>
-<td>Copiar scripts SQL para <code>db-init/</code></td>
-</tr>
-<tr class="even">
 <td>Memória insuficiente</td>
 <td>Mínimo 4 GB RAM na VM</td>
 </tr>
@@ -414,12 +416,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="health-check-falha">Health check falha</h2>
 <section id="sintoma-1" class="level3">
 <h3 class="anchored" data-anchor-id="sintoma-1">Sintoma</h3>
-<p><code>curl http://localhost:8080/v1/verify/health</code> retorna erro ou timeout.</p>
+<p><code>curl http://localhost:8080/v1/verify/actuator/health</code> retorna erro ou timeout.</p>
 </section>
 <section id="diagnóstico-1" class="level3">
 <h3 class="anchored" data-anchor-id="diagnóstico-1">Diagnóstico</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="kw">|</span> <span class="fu">grep</span> verify-service</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> logs verify-service <span class="at">--tail</span> 20</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="kw">|</span> <span class="fu">grep</span> inji-verify-service</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> logs inji-verify-service <span class="at">--tail</span> 20</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="soluções-1" class="level3">
 <h3 class="anchored" data-anchor-id="soluções-1">Soluções</h3>
@@ -435,17 +437,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="schema-do-banco-não-existe">Schema do banco não existe</h2>
 <section id="sintoma-2" class="level3">
 <h3 class="anchored" data-anchor-id="sintoma-2">Sintoma</h3>
-<p>Logs do verify-service mostram erros de “relation does not exist”.</p>
+<p>Logs do inji-verify-service mostram erros de “relation does not exist”.</p>
 </section>
 <section id="causa" class="level3">
 <h3 class="anchored" data-anchor-id="causa">Causa</h3>
-<p><code>spring.jpa.hibernate.ddl-auto=none</code> — o schema não é criado automaticamente.</p>
+<p>O volume do PostgreSQL pode estar corrompido ou em estado inconsistente.</p>
 </section>
 <section id="solução" class="level3">
 <h3 class="anchored" data-anchor-id="solução">Solução</h3>
-<p>Copie os scripts de inicialização do repositório oficial do INJI Verify para <code>db-init/</code> e recrie o container do PostgreSQL:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> volume rm verificaidade_pgdata  <span class="co"># Remove dados antigos</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> volume rm verificaidade_pgdata</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 <hr>
 </section>
@@ -470,6 +471,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td>Versão do SDK incompatível</td>
+<td>Use <strong>exatamente</strong> versão <code>0.17.0</code>: <code>npm install @injistack/react-inji-verify-sdk@0.17.0</code></td>
+</tr>
+<tr class="even">
+<td>Versão do backend incompatível</td>
+<td>Use <strong>exatamente</strong> versão <code>0.17.0</code> do INJI Verify Service</td>
+</tr>
 <tr class="odd">
 <td>Carteira Digital não instalada</td>
 <td>Orientar o usuário a instalar a INJI Wallet</td>
@@ -502,7 +511,7 @@ Importante
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A causa mais comum é <code>INJI_VP_SUBMISSION_BASE_URL</code> apontando para <code>localhost</code>. A Carteira Digital no celular não consegue acessar <code>localhost</code> do seu computador.</p>
+<p>A causa mais comum é <code>INJI_VP_SUBMISSION_BASE_URL</code> apontando para <code>localhost</code>. A Carteira Digital no celular não consegue acessar <code>localhost</code> do seu computador. Certifique-se de usar <strong>exatamente</strong> a versão <code>0.17.0</code> do backend e SDK.</p>
 </div>
 </div>
 <hr>
@@ -534,7 +543,7 @@ Importante
 <h3 class="anchored" data-anchor-id="causas-comuns">Causas comuns</h3>
 <pre><code>Error: Cannot provide both presentationDefinition and presentationDefinitionId</code></pre>
 <p>→ Use <strong>uma ou outra</strong>, não ambas.</p>
-<pre><code>Error: Cannot provide both onVpReceived and onVpProcessed</code></pre>
+<pre><code>Error: Cannot provide both onVPReceived and onVPProcessed</code></pre>
 <p>→ Use <strong>um ou outro</strong>, não ambos.</p>
 <pre><code>Error: verifyServiceUrl is required</code></pre>
 <p>→ Passe a URL do INJI Verify Service.</p>
@@ -559,7 +568,7 @@ Importante
 <h3 class="anchored" data-anchor-id="solução-1">Solução</h3>
 <ul>
 <li>Aumente o timeout se necessário: <code>INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=120000</code> (120s)</li>
-<li>Verifique os logs: <code>docker logs verify-service -f</code></li>
+<li>Verifique os logs: <code>docker logs inji-verify-service -f</code></li>
 <li>O SDK refaz o long-polling automaticamente; o QR Code expira após o timeout configurado</li>
 </ul>
 <hr>
@@ -597,11 +606,11 @@ Importante
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">df</span> <span class="at">-h</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Limpar dados antigos (se aplicável)</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec postgres-db psql <span class="at">-U</span> postgres <span class="at">-d</span> inji_verify <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec inji-verify-db psql <span class="at">-U</span> inji <span class="at">-d</span> inji_verify <span class="dt">\</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-c</span> <span class="st">"DELETE FROM vp_requests WHERE created_at &lt; NOW() - INTERVAL '30 days';"</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Vacuum</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec postgres-db psql <span class="at">-U</span> postgres <span class="at">-d</span> inji_verify <span class="at">-c</span> <span class="st">"VACUUM FULL;"</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec inji-verify-db psql <span class="at">-U</span> inji <span class="at">-d</span> inji_verify <span class="at">-c</span> <span class="st">"VACUUM FULL;"</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>

@@ -16,7 +16,7 @@ Resolver problemas comuns durante a integração e operação.
 ### Diagnóstico
 
 ```bash
-docker logs verify-service --tail 100
+docker logs inji-verify-service --tail 100
 docker ps -a | grep verify
 docker stats --no-stream
 ```
@@ -26,8 +26,7 @@ docker stats --no-stream
 | Causa | Solução |
 |-------|---------|
 | Porta 8080 em uso | `sudo lsof -i :8080` e encerrar o processo |
-| PostgreSQL não iniciou | Verificar logs: `docker logs postgres-db` |
-| Scripts de banco faltando | Copiar scripts SQL para `db-init/` |
+| PostgreSQL não iniciou | Verificar logs: `docker logs inji-verify-db` |
 | Memória insuficiente | Mínimo 4 GB RAM na VM |
 
 ---
@@ -35,13 +34,13 @@ docker stats --no-stream
 ## Health check falha
 
 ### Sintoma
-`curl http://localhost:8080/v1/verify/health` retorna erro ou timeout.
+`curl http://localhost:8080/v1/verify/actuator/health` retorna erro ou timeout.
 
 ### Diagnóstico
 
 ```bash
-docker ps | grep verify-service
-docker logs verify-service --tail 20
+docker ps | grep inji-verify-service
+docker logs inji-verify-service --tail 20
 ```
 
 ### Soluções
@@ -55,17 +54,16 @@ docker logs verify-service --tail 20
 ## Schema do banco não existe
 
 ### Sintoma
-Logs do verify-service mostram erros de "relation does not exist".
+Logs do inji-verify-service mostram erros de "relation does not exist".
 
 ### Causa
-`spring.jpa.hibernate.ddl-auto=none` — o schema não é criado automaticamente.
+O volume do PostgreSQL pode estar corrompido ou em estado inconsistente.
 
 ### Solução
-Copie os scripts de inicialização do repositório oficial do INJI Verify para `db-init/` e recrie o container do PostgreSQL:
 
 ```bash
 docker compose down
-docker volume rm verificaidade_pgdata  # Remove dados antigos
+docker volume rm verificaidade_pgdata
 docker compose up -d
 ```
 
@@ -80,6 +78,8 @@ Usuário escaneia o QR Code mas a Carteira Digital não responde.
 
 | Causa | Solução |
 |-------|---------|
+| Versão do SDK incompatível | Use **exatamente** versão `0.17.0`: `npm install @injistack/react-inji-verify-sdk@0.17.0` |
+| Versão do backend incompatível | Use **exatamente** versão `0.17.0` do INJI Verify Service |
 | Carteira Digital não instalada | Orientar o usuário a instalar a INJI Wallet |
 | INJI Verify Service inacessível pelo celular | Verificar que `INJI_VP_SUBMISSION_BASE_URL` é um domínio público |
 | DID não resolve | Verificar `INJI_DID_VERIFY_URI` corresponde ao domínio público |
@@ -87,7 +87,7 @@ Usuário escaneia o QR Code mas a Carteira Digital não responde.
 | Usando `localhost` | Em desenvolvimento, use ngrok ou túnel equivalente |
 
 ::: {.callout-important}
-A causa mais comum é `INJI_VP_SUBMISSION_BASE_URL` apontando para `localhost`. A Carteira Digital no celular não consegue acessar `localhost` do seu computador.
+A causa mais comum é `INJI_VP_SUBMISSION_BASE_URL` apontando para `localhost`. A Carteira Digital no celular não consegue acessar `localhost` do seu computador. Certifique-se de usar **exatamente** a versão `0.17.0` do backend e SDK.
 :::
 
 ---
@@ -118,7 +118,7 @@ Error: Cannot provide both presentationDefinition and presentationDefinitionId
 → Use **uma ou outra**, não ambas.
 
 ```
-Error: Cannot provide both onVpReceived and onVpProcessed
+Error: Cannot provide both onVPReceived and onVPProcessed
 ```
 → Use **um ou outro**, não ambos.
 
@@ -143,7 +143,7 @@ O SDK fica aguardando e depois de ~55 segundos não recebe resultado.
 ### Solução
 
 - Aumente o timeout se necessário: `INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=120000` (120s)
-- Verifique os logs: `docker logs verify-service -f`
+- Verifique os logs: `docker logs inji-verify-service -f`
 - O SDK refaz o long-polling automaticamente; o QR Code expira após o timeout configurado
 
 ---
@@ -183,9 +183,9 @@ Erros de escrita no banco de dados.
 df -h
 
 # Limpar dados antigos (se aplicável)
-docker exec postgres-db psql -U postgres -d inji_verify \
+docker exec inji-verify-db psql -U inji -d inji_verify \
   -c "DELETE FROM vp_requests WHERE created_at < NOW() - INTERVAL '30 days';"
 
 # Vacuum
-docker exec postgres-db psql -U postgres -d inji_verify -c "VACUUM FULL;"
+docker exec inji-verify-db psql -U inji -d inji_verify -c "VACUUM FULL;"
 ```

@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Integração Web (QR Code) – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -67,15 +70,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-723188f279a8567b49f9b5349c77c7ea.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-55a229089d14938623797807ac366610.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -296,7 +298,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#passo-1-instalar-o-sdk" id="toc-passo-1-instalar-o-sdk" class="nav-link" data-scroll-target="#passo-1-instalar-o-sdk">Passo 1 — Instalar o SDK</a></li>
   <li><a href="#passo-2-componente-de-verificação" id="toc-passo-2-componente-de-verificação" class="nav-link" data-scroll-target="#passo-2-componente-de-verificação">Passo 2 — Componente de verificação</a></li>
   <li><a href="#passo-3-usar-o-componente" id="toc-passo-3-usar-o-componente" class="nav-link" data-scroll-target="#passo-3-usar-o-componente">Passo 3 — Usar o componente</a></li>
-  <li><a href="#versão-para-produção-com-onvpreceived" id="toc-versão-para-produção-com-onvpreceived" class="nav-link" data-scroll-target="#versão-para-produção-com-onvpreceived">Versão para produção (com <code>onVpReceived</code>)</a></li>
+  <li><a href="#versão-para-produção-com-validação-no-backend" id="toc-versão-para-produção-com-validação-no-backend" class="nav-link" data-scroll-target="#versão-para-produção-com-validação-no-backend">Versão para produção (com validação no backend)</a></li>
   <li><a href="#customização-do-qr-code" id="toc-customização-do-qr-code" class="nav-link" data-scroll-target="#customização-do-qr-code">Customização do QR Code</a></li>
   <li><a href="#props-do-openid4vpverification" id="toc-props-do-openid4vpverification" class="nav-link" data-scroll-target="#props-do-openid4vpverification">Props do <code>OpenID4VPVerification</code></a></li>
   <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
@@ -327,7 +329,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Implementar verificação de idade em uma aplicação Web React usando QR Code (fluxo cross-device).</p>
+<p>Implementar verificação de credencial em uma aplicação Web React usando QR Code (fluxo cross-device).</p>
 </section>
 <section id="fluxo-web" class="level2">
 <h2 class="anchored" data-anchor-id="fluxo-web">Fluxo Web</h2>
@@ -342,14 +344,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     participant VS as INJI Verify Service
     participant W as Carteira Digital (Celular)
 
-    U-&gt;&gt;SDK: Clica "Verificar Idade"
+    U-&gt;&gt;SDK: Clica "Gerar QR Code"
     SDK-&gt;&gt;VS: POST /v1/verify/vp-request
-    VS--&gt;&gt;SDK: requestId + authorizationUrl
+    VS--&gt;&gt;SDK: transactionId + requestId + authorizationDetails
     SDK-&gt;&gt;U: Renderiza QR Code
     U-&gt;&gt;W: Escaneia QR Code
     W-&gt;&gt;VS: POST /v1/verify/vp-submission (credencial)
     VS-&gt;&gt;VS: Valida credencial
-    Note over SDK,VS: Long-polling /vp-request/{id}/status
+    Note over SDK,VS: Long-polling até receber resultado
     VS--&gt;&gt;SDK: Resultado
     SDK-&gt;&gt;U: Callback executado
 </pre>
@@ -365,90 +367,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="passo-1-instalar-o-sdk" class="level2">
 <h2 class="anchored" data-anchor-id="passo-1-instalar-o-sdk">Passo 1 — Instalar o SDK</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install @mosip/react-inji-verify-sdk</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install @injistack/react-inji-verify-sdk@0.17.0</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>É necessário utilizar a versão <code>0.17.0</code> do SDK.</p>
+</div>
+</div>
 </section>
 <section id="passo-2-componente-de-verificação" class="level2">
 <h2 class="anchored" data-anchor-id="passo-2-componente-de-verificação">Passo 2 — Componente de verificação</h2>
 <pre class="tsx"><code>// src/components/VerificaIdade.tsx
 import { useState } from 'react';
-import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+import { OpenID4VPVerification } from '@injistack/react-inji-verify-sdk';
 
-// Substitua pelo valor do seu ambiente
-const VERIFY_SERVICE_URL = '&lt;VERIFY_BASE_URL&gt;/v1/verify';
-const CLIENT_ID_DID = 'did:web:&lt;SEU_DOMINIO&gt;:v1:verify';
+const VERIFY_SERVICE_URL = '/v1/verify';
+const CLIENT_ID_DID = 'did:web:localhost:v1:verify';
 
-// Substitua pela Presentation Definition do seu credenciamento
 const presentationDefinition = {
-  id: 'age-verification-18-plus',
+  id: 'eca-age-verification',
+  purpose: 'Verificação de idade conforme o Estatuto da Criança e do Adolescente',
+  format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
   input_descriptors: [
     {
-      id: 'age_credential',
-      format: {
-        'vc+sd-jwt': {
-          'sd-jwt_alg_values': ['ES256']
-        }
-      },
+      id: 'eca credential',
+      format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
       constraints: {
         fields: [
           {
-            path: ['$.ageOver18'],
-            filter: {
-              type: 'boolean',
-              const: true
-            }
-          }
-        ]
-      }
-    }
-  ]
+            path: ['$.type'],
+            filter: { type: 'object', pattern: 'ECACredential' },
+          },
+        ],
+      },
+    },
+  ],
 };
 
-type VerificaIdadeProps = {
-  onVerificado: () =&gt; void;
-  onFalhou: () =&gt; void;
-};
-
-export function VerificaIdade({ onVerificado, onFalhou }: VerificaIdadeProps) {
-  const [estado, setEstado] = useState&lt;'idle' | 'verificado' | 'falhou'&gt;('idle');
+export function VerificaIdade() {
+  const [iniciado, setIniciado] = useState(false);
 
   return (
     &lt;div&gt;
-      {estado === 'idle' &amp;&amp; (
+      &lt;h2&gt;Verificação de Idade&lt;/h2&gt;
+      {!iniciado ? (
+        &lt;button onClick={() =&gt; setIniciado(true)}&gt;Gerar QR Code&lt;/button&gt;
+      ) : (
         &lt;OpenID4VPVerification
           verifyServiceUrl={VERIFY_SERVICE_URL}
           clientId={CLIENT_ID_DID}
           protocol="openid4vp://"
+          isSameDeviceFlowEnabled={false}
           presentationDefinition={presentationDefinition}
-          onVpProcessed={(results) =&gt; {
-            const ok = results.some(r =&gt; r.vcStatus === 'SUCCESS');
-            if (ok) {
-              setEstado('verificado');
-              onVerificado();
-            } else {
-              setEstado('falhou');
-              onFalhou();
-            }
+          onVPProcessed={(results) =&gt; {
+            const ok = results.some((r: { vcStatus: string }) =&gt; r.vcStatus === 'SUCCESS');
+            console.log('Verificado:', ok);
           }}
-          onError={(error) =&gt; {
-            console.error('Erro na verificação:', error);
-            setEstado('falhou');
-            onFalhou();
-          }}
-          onQrCodeExpired={() =&gt; {
-            console.log('QR Code expirou');
-          }}
+          onError={(error) =&gt; console.error('Erro na verificação:', error)}
+          onQrCodeExpired={() =&gt; setIniciado(false)}
         /&gt;
-      )}
-
-      {estado === 'verificado' &amp;&amp; (
-        &lt;p&gt;Idade verificada com sucesso.&lt;/p&gt;
-      )}
-
-      {estado === 'falhou' &amp;&amp; (
-        &lt;div&gt;
-          &lt;p&gt;Verificação falhou.&lt;/p&gt;
-          &lt;button onClick={() =&gt; setEstado('idle')}&gt;Tentar novamente&lt;/button&gt;
-        &lt;/div&gt;
       )}
     &lt;/div&gt;
   );
@@ -462,41 +446,29 @@ import { VerificaIdade } from '../components/VerificaIdade';
 export function Checkout() {
   return (
     &lt;div&gt;
-      &lt;h1&gt;Verificação de Idade&lt;/h1&gt;
-      &lt;VerificaIdade
-        onVerificado={() =&gt; console.log('Acesso liberado')}
-        onFalhou={() =&gt; console.log('Acesso negado')}
-      /&gt;
+      &lt;h1&gt;Verificação de Credencial&lt;/h1&gt;
+      &lt;VerificaIdade /&gt;
     &lt;/div&gt;
   );
 }</code></pre>
 </section>
-<section id="versão-para-produção-com-onvpreceived" class="level2">
-<h2 class="anchored" data-anchor-id="versão-para-produção-com-onvpreceived">Versão para produção (com <code>onVpReceived</code>)</h2>
-<p>Em produção, use <code>onVpReceived</code> para buscar o resultado no backend:</p>
-<pre class="tsx"><code>// src/components/VerificaIdadeProd.tsx
-import { OpenID4VPVerification } from '@mosip/react-inji-verify-sdk';
+<section id="versão-para-produção-com-validação-no-backend" class="level2">
+<h2 class="anchored" data-anchor-id="versão-para-produção-com-validação-no-backend">Versão para produção (com validação no backend)</h2>
+<p>Para maior segurança, capture o <code>transactionId</code> e valide no backend:</p>
+<pre class="tsx"><code>import { OpenID4VPVerification } from '@injistack/react-inji-verify-sdk';
 
 export function VerificaIdadeProd() {
-  const handleVpReceived = async (txnId: string) =&gt; {
-    // Buscar resultado no seu backend
-    const res = await fetch(`/api/verificacao/resultado/${txnId}`);
-    const data = await res.json();
-
-    if (data.verified) {
-      // Liberar acesso
-    } else {
-      // Negar acesso
-    }
-  };
-
   return (
     &lt;OpenID4VPVerification
       verifyServiceUrl="&lt;VERIFY_BASE_URL&gt;/v1/verify"
       clientId="did:web:&lt;SEU_DOMINIO&gt;:v1:verify"
       protocol="openid4vp://"
+      isSameDeviceFlowEnabled={false}
       presentationDefinition={presentationDefinition}
-      onVpReceived={handleVpReceived}
+      onVPProcessed={async (results) =&gt; {
+        const ok = results.some((r: { vcStatus: string }) =&gt; r.vcStatus === 'SUCCESS');
+        if (ok) { /* liberar acesso */ }
+      }}
       onError={(error) =&gt; console.error(error)}
       onQrCodeExpired={() =&gt; console.log('QR expirou')}
     /&gt;
@@ -512,7 +484,7 @@ Importante
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Nessa abordagem, seu backend busca o resultado em <code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{txnId}</code> e decide se libera o acesso. Isso evita que o frontend seja adulterado.</p>
+<p>Para maior segurança, seu backend pode buscar o resultado diretamente em <code>GET &lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/{transactionId}</code> e decidir se libera o acesso, evitando que o frontend seja adulterado.</p>
 </div>
 </div>
 </section>
@@ -565,27 +537,27 @@ Importante
 <td>Protocolo (<code>"openid4vp://"</code>)</td>
 </tr>
 <tr class="even">
+<td><code>isSameDeviceFlowEnabled</code></td>
+<td><code>boolean</code></td>
+<td style="text-align: center;">Não</td>
+<td>Habilita fluxo no mesmo dispositivo. Padrão: <code>true</code> — defina <code>false</code> para fluxo cross-device sem web wallet</td>
+</tr>
+<tr class="odd">
 <td><code>presentationDefinition</code></td>
 <td><code>object</code></td>
 <td style="text-align: center;">Sim*</td>
 <td>Presentation Definition inline</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>presentationDefinitionId</code></td>
 <td><code>string</code></td>
 <td style="text-align: center;">Sim*</td>
 <td>ID de definição pré-cadastrada</td>
 </tr>
-<tr class="even">
-<td><code>onVpReceived</code></td>
-<td><code>(txnId) =&gt; void</code></td>
-<td style="text-align: center;">Sim**</td>
-<td>Callback com transaction ID</td>
-</tr>
 <tr class="odd">
-<td><code>onVpProcessed</code></td>
+<td><code>onVPProcessed</code></td>
 <td><code>(results) =&gt; void</code></td>
-<td style="text-align: center;">Sim**</td>
+<td style="text-align: center;">Sim</td>
 <td>Callback com resultado completo</td>
 </tr>
 <tr class="even">
@@ -601,12 +573,6 @@ Importante
 <td>Callback de QR expirado</td>
 </tr>
 <tr class="even">
-<td><code>triggerElement</code></td>
-<td><code>ReactNode</code></td>
-<td style="text-align: center;">Não</td>
-<td>Elemento que inicia a verificação</td>
-</tr>
-<tr class="odd">
 <td><code>qrCodeStyles</code></td>
 <td><code>object</code></td>
 <td style="text-align: center;">Não</td>
@@ -615,7 +581,6 @@ Importante
 </tbody>
 </table>
 <p>* Use <code>presentationDefinition</code> <strong>ou</strong> <code>presentationDefinitionId</code>, não ambos.</p>
-<p>** Use <code>onVpReceived</code> <strong>ou</strong> <code>onVpProcessed</code>, não ambos.</p>
 </section>
 <section id="próximo-passo" class="level2">
 <h2 class="anchored" data-anchor-id="próximo-passo">Próximo passo</h2>
