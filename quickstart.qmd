@@ -13,9 +13,8 @@ Sair do zero até uma verificação de idade funcionando em ambiente de desenvol
 | 1 | Preparar VM com Docker | 10 min | `docker compose version` funciona |
 | 2 | Subir INJI Verify Service | 10 min | Health check retorna `UP` |
 | 3 | Expor o Service publicamente | 5 min | Carteira Digital alcança o Service |
-| 4 | Instalar o SDK no projeto React | 5 min | `@injistack/react-inji-verify-sdk` instalado |
-| 5 | Adicionar componente de verificação | 15 min | QR Code exibido na tela |
-| 6 | Testar ponta a ponta | 15 min | Credencial verificada com sucesso |
+| 4 | Adicionar serviço, hook e componente | 15 min | QR Code exibido na tela |
+| 5 | Testar ponta a ponta | 15 min | Credencial verificada com sucesso |
 
 ## Etapa 1 — Preparar VM com Docker
 
@@ -71,95 +70,60 @@ Em produção, use um domínio real com HTTPS. Veja [Produção e Operação](pr
 
 **Resultado:** Carteira Digital alcança o Service.
 
-## Etapa 4 — Instalar o SDK no projeto React
+## Etapa 4 — Adicionar serviço, hook e componente
 
-Instale o SDK na versão 0.17.0:
+Crie os três arquivos abaixo. Para o código completo e detalhado, veja [Integração Web (QR Code)](integra-web.qmd).
 
-```bash
-npm install @injistack/react-inji-verify-sdk@0.17.0
+**`src/services/verifyService.ts`** — chamadas REST ao backend:
+
+```ts
+const BASE_URL = '/v1/verify';
+const CLIENT_ID = 'did:web:localhost:v1:verify';
+
+export async function createVPRequest() { /* ... */ }
+export async function pollVPStatus(requestId: string) { /* ... */ }
+export async function getVPResult(transactionId: string) { /* ... */ }
+export async function pollAndFetchResult(requestId: string, transactionId: string) { /* ... */ }
 ```
 
-::: {.callout-note}
-O SDK requer **React 18.2.0+** e **TypeScript 4.9.5+** como peer dependencies.
-:::
+**`src/hooks/useAgeVerification.ts`** — gerencia estado e orquestra o fluxo:
 
-**Resultado:** Pacote instalado sem erros.
+```ts
+export function useAgeVerification() {
+  const { verify, waiting, deepLinkUrl } = /* ... */;
+  return { verify, waiting, deepLinkUrl };
+}
+```
 
-## Etapa 5 — Adicionar componente de verificação
+**`src/components/VerificaIdade.tsx`** — exibe QR Code e resultado:
 
 ```tsx
-// src/components/VerificaIdade.tsx
-import { useState } from 'react';
-import { OpenID4VPVerification } from '@injistack/react-inji-verify-sdk';
-
-const VERIFY_SERVICE_URL = 'https://seu-tunel.ngrok-free.app/v1/verify';
-const CLIENT_ID_DID = 'did:web:seu-tunel.ngrok-free.app:v1:verify';
-
-const presentationDefinition = {
-  id: 'eca-age-verification',
-  purpose: 'Verificação de idade conforme o Estatuto da Criança e do Adolescente',
-  format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
-  input_descriptors: [
-    {
-      id: 'eca credential',
-      format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
-      constraints: {
-        fields: [
-          {
-            path: ['$.type'],
-            filter: { type: 'object', pattern: 'ECACredential' },
-          },
-        ],
-      },
-    },
-  ],
-};
+import QRCode from 'qrcode.react';
+import { useAgeVerification } from '../hooks/useAgeVerification';
 
 export function VerificaIdade() {
-  const [iniciado, setIniciado] = useState(false);
-
+  const { verify, waiting, deepLinkUrl } = useAgeVerification();
+  // ...
   return (
     <div>
-      <h2>Verificação de Idade</h2>
-      {!iniciado ? (
-        <button onClick={() => setIniciado(true)}>Gerar QR Code</button>
-      ) : (
-        <OpenID4VPVerification
-          verifyServiceUrl={VERIFY_SERVICE_URL}
-          clientId={CLIENT_ID_DID}
-          protocol="openid4vp://"
-          isSameDeviceFlowEnabled={true}
-          presentationDefinition={presentationDefinition}
-          onVPProcessed={(results) => {
-            const ok = results.some((r: { vcStatus: string }) => r.vcStatus === 'SUCCESS');
-            console.log('Verificado:', ok);
-          }}
-          onError={(error) => console.error('Erro na verificação:', error)}
-          onQrCodeExpired={() => setIniciado(false)}
-        />
-      )}
+      <button onClick={verify}>Gerar QR Code</button>
+      {waiting && deepLinkUrl && <QRCode value={deepLinkUrl} size={256} />}
     </div>
   );
 }
 ```
 
-
 **Resultado:** Componente renderiza QR Code na tela ao clicar no botão.
 
-## Etapa 6 — Testar ponta a ponta
+## Etapa 5 — Testar ponta a ponta
 
 1. Acesse sua aplicação React no navegador
-2. O QR Code aparece na tela
+2. Clique em **Gerar QR Code** — o QR Code aparece na tela
 3. Abra a **INJI Wallet** no celular
 4. Escaneie o QR Code
 5. Autorize o compartilhamento da credencial na Wallet
-6. O SDK recebe o resultado via callback
+6. O componente exibe o resultado automaticamente
 
-**Resultado esperado (no console):**
-
-```
-Verificado: true
-```
 
 ## Próximo passo
 

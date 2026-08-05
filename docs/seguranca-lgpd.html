@@ -297,7 +297,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#aplicação-react" id="toc-aplicação-react" class="nav-link" data-scroll-target="#aplicação-react">Aplicação React</a></li>
   <li><a href="#infraestrutura" id="toc-infraestrutura" class="nav-link" data-scroll-target="#infraestrutura">Infraestrutura</a></li>
   </ul></li>
-  <li><a href="#onvpprocessed-segurança" id="toc-onvpprocessed-segurança" class="nav-link" data-scroll-target="#onvpprocessed-segurança"><code>onVPProcessed</code> — Segurança</a></li>
+  <li><a href="#leitura-do-resultado-segurança" id="toc-leitura-do-resultado-segurança" class="nav-link" data-scroll-target="#leitura-do-resultado-segurança">Leitura do resultado — Segurança</a></li>
   <li><a href="#did-e-keystore" id="toc-did-e-keystore" class="nav-link" data-scroll-target="#did-e-keystore">DID e Keystore</a></li>
   <li><a href="#consentimento-do-usuário" id="toc-consentimento-do-usuário" class="nav-link" data-scroll-target="#consentimento-do-usuário">Consentimento do Usuário</a></li>
   <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
@@ -392,24 +392,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 </section>
-<section id="onvpprocessed-segurança" class="level2">
-<h2 class="anchored" data-anchor-id="onvpprocessed-segurança"><code>onVPProcessed</code> — Segurança</h2>
-<p>O callback <code>onVPProcessed</code> entrega o resultado diretamente no frontend:</p>
-<pre class="tsx"><code>// Frontend
-onVPProcessed={(results) =&gt; {
-  const ok = results.some((r) =&gt; r.vcStatus === 'SUCCESS');
-  if (ok) { /* liberar acesso */ }
-}}</code></pre>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Backend (Node/Express)</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>app<span class="op">.</span><span class="fu">get</span>(<span class="st">'/api/verificacao/:transactionId'</span><span class="op">,</span> <span class="kw">async</span> (req<span class="op">,</span> res) <span class="kw">=&gt;</span> {</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { transactionId } <span class="op">=</span> req<span class="op">.</span><span class="at">params</span><span class="op">;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> result <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="vs">`&lt;VERIFY_BASE_URL&gt;/v1/verify/vp-result/</span><span class="sc">${</span>transactionId<span class="sc">}</span><span class="vs">`</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> data <span class="op">=</span> <span class="cf">await</span> result<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> verified <span class="op">=</span> data<span class="op">.</span><span class="at">vcResults</span><span class="op">?.</span><span class="fu">some</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">vcStatus</span> <span class="op">===</span> <span class="st">'SUCCESS'</span>) <span class="op">??</span> <span class="kw">false</span><span class="op">;</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  res<span class="op">.</span><span class="fu">json</span>({ verified })<span class="op">;</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="leitura-do-resultado-segurança" class="level2">
+<h2 class="anchored" data-anchor-id="leitura-do-resultado-segurança">Leitura do resultado — Segurança</h2>
+<p>Após o wallet submeter a VP, o resultado é lido diretamente via <code>GET /v1/verify/vp-result/{transactionId}</code>. O campo relevante para a decisão de acesso é <code>vcResults[0].vc.credentialSubject.isOver18</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode ts code-with-copy"><code class="sourceCode typescript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// verifyService.ts</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> data <span class="op">=</span> <span class="cf">await</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (data<span class="op">.</span><span class="at">vpResultStatus</span> <span class="op">!==</span> <span class="st">'SUCCESS'</span> <span class="op">||</span> <span class="op">!</span>data<span class="op">.</span><span class="at">vcResults</span><span class="op">?.</span><span class="at">length</span>) {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="st">'VP result unavailable'</span>)<span class="op">;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> vc <span class="op">=</span> data<span class="op">.</span><span class="at">vcResults</span>[<span class="dv">0</span>]<span class="op">.</span><span class="at">vc</span><span class="op">;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> isOver18 <span class="op">=</span> vc<span class="op">?.</span><span class="at">credentialSubject</span><span class="op">?.</span><span class="at">isOver18</span> <span class="op">===</span> <span class="kw">true</span><span class="op">;</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="did-e-keystore" class="level2">
 <h2 class="anchored" data-anchor-id="did-e-keystore">DID e Keystore</h2>

@@ -17,7 +17,7 @@ sequenceDiagram
 
     U->>App: Toca "Verificar Idade"
     App->>VS: POST /v1/verify/vp-request
-    VS-->>App: transactionId + requestId + authorizationDetails
+    VS-->>App: transactionId + requestId + requestUri
     App->>W: Linking.openURL("openid4vp://authorize?...")
     Note over W: Usuário autoriza credencial
     W->>VS: POST /v1/verify/vp-submission
@@ -71,17 +71,18 @@ const CLIENT_ID = "https://<VERIFY_BASE_URL>";
 const ORIGIN = "<seu-app>://";
 
 const PRESENTATION_DEFINITION = {
-  id: "eca-age-check",
+  id: 'eca-age-check',
   input_descriptors: [
     {
-      id: "ECACredential",
-      name: "Comprovante de Maioridade",
-      purpose: "Verificar que o usuário é maior de 18 anos",
+      id: 'ECACredential',
+      name: 'Comprovante de Maioridade',
+      purpose: 'Verificar que o usuário é maior de 18 anos',
+      format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
       constraints: {
         fields: [
           {
-            path: ["$.type"],
-            filter: { type: "string", pattern: "ECACredential" },
+            path: ['$.type'],
+            filter: { type: 'string', pattern: 'ECACredential' },
           },
         ],
       },
@@ -92,42 +93,9 @@ const PRESENTATION_DEFINITION = {
 type VPRequestResponse = {
   transactionId: string;
   requestId: string;
-  requestUri?: string;  // opcional — alguns ambientes retornam este campo
-  authorizationDetails?: {
-    responseType: string;
-    responseMode: string;
-    nonce: string;
-    responseUri: string;
-    presentationDefinition?: object;
-  };
+  requestUri: string;
   expiresAt?: number;
 };
-
-function buildDeepLinkUrl(data: VPRequestResponse): string {
-  const params = new URLSearchParams();
-  params.set("client_id", CLIENT_ID);
-
-  if (data.requestUri) {
-    // Modo request_uri (preferencial)
-    params.set("request_uri", data.requestUri);
-  } else if (data.authorizationDetails) {
-    const auth = data.authorizationDetails;
-    params.set("redirect_uri", auth.responseUri);
-    params.set("response_type", auth.responseType);
-    params.set("response_mode", auth.responseMode);
-    params.set("nonce", auth.nonce);
-    params.set("state", data.requestId);
-    params.set(
-      "presentation_definition",
-      JSON.stringify(auth.presentationDefinition ?? PRESENTATION_DEFINITION)
-    );
-  } else {
-    throw new Error("Resposta inválida: sem requestUri nem authorizationDetails");
-  }
-
-  params.set("origin", ORIGIN);
-  return `openid4vp://authorize?${params.toString()}`;
-}
 
 export async function openWalletForVerification(): Promise<{
   transactionId: string;
@@ -145,7 +113,12 @@ export async function openWalletForVerification(): Promise<{
   if (!response.ok) throw new Error("Falha ao criar VP request");
 
   const data: VPRequestResponse = await response.json();
-  const deepLinkUrl = buildDeepLinkUrl(data);
+
+  const params = new URLSearchParams();
+  params.set("client_id", CLIENT_ID);
+  params.set("request_uri", data.requestUri);
+  params.set("origin", ORIGIN);
+  const deepLinkUrl = `openid4vp://authorize?${params.toString()}`;
 
   try {
     await Linking.openURL(deepLinkUrl);

@@ -22,6 +22,11 @@ No caso do VerificaIdade, a PD solicita uma credencial do tipo `ECACredential`.
       "id": "ECACredential",
       "name": "Comprovante de Maioridade",
       "purpose": "Verificar que o usuário é maior de 18 anos",
+      "format": {
+        "ldp_vc": {
+          "proof_type": ["Ed25519Signature2020"]
+        }
+      },
       "constraints": {
         "fields": [
           {
@@ -37,10 +42,6 @@ No caso do VerificaIdade, a PD solicita uma credencial do tipo `ECACredential`.
   ]
 }
 ```
-
-::: {.callout-important}
-Esta é uma Presentation Definition **ilustrativa**. A definição exata depende do tipo de credencial emitida pelo governo e do formato suportado. Consulte a documentação do emissor para os campos corretos.
-:::
 
 ## Como usar
 
@@ -59,32 +60,24 @@ await fetch(`${BASE_URL}/v1/verify/vp-request`, {
 });
 ```
 
-### Web (SDK React)
+### Web (chamadas REST diretas)
 
-Instale o SDK:
+Defina a `PRESENTATION_DEFINITION` em `verifyService.ts` e passe-a no corpo do `POST /v1/verify/vp-request`:
 
-```bash
-npm install @injistack/react-inji-verify-sdk
-```
-
-Passe a Presentation Definition diretamente na prop `presentationDefinition`:
-
-```tsx
-import { OpenID4VPVerification } from '@injistack/react-inji-verify-sdk';
-
-const presentationDefinition = {
-  id: 'eca-age-verification',
-  purpose: 'Verificação de idade conforme o Estatuto da Criança e do Adolescente',
-  format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
+```ts
+const PRESENTATION_DEFINITION = {
+  id: 'eca-age-check',
   input_descriptors: [
     {
-      id: 'eca credential',
+      id: 'ECACredential',
+      name: 'Comprovante de Maioridade',
+      purpose: 'Verificar que o usuário é maior de 18 anos',
       format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
       constraints: {
         fields: [
           {
             path: ['$.type'],
-            filter: { type: 'object', pattern: 'ECACredential' },
+            filter: { type: 'string', pattern: 'ECACredential' },
           },
         ],
       },
@@ -92,24 +85,16 @@ const presentationDefinition = {
   ],
 };
 
-<OpenID4VPVerification
-  verifyServiceUrl="<VERIFY_BASE_URL>/v1/verify"
-  clientId="did:web:<SEU_DOMINIO>:v1:verify"
-  protocol="openid4vp://"
-  isSameDeviceFlowEnabled={true}
-  presentationDefinition={presentationDefinition}
-  onVPProcessed={(results) => {
-    const ok = results.some((r) => r.vcStatus === 'SUCCESS');
-    console.log('Verificado:', ok);
-  }}
-  onError={(error) => console.error(error)}
-  onQrCodeExpired={() => console.log('Expirou')}
-/>
+await fetch(`${BASE_URL}/vp-request`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    clientId: CLIENT_ID,
+    presentationDefinition: PRESENTATION_DEFINITION,
+  }),
+});
 ```
 
-::: {.callout-note}
-No contexto web, o SDK detecta automaticamente se o dispositivo é mobile e escolhe entre Deep Link (`isSameDeviceFlowEnabled={true}`) ou QR Code.
-:::
 
 ## O que você recebe
 

@@ -78,8 +78,6 @@ Usuário escaneia o QR Code mas a Carteira Digital não responde.
 
 | Causa | Solução |
 |-------|---------|
-| Versão do SDK incompatível | Use **exatamente** versão `0.17.0`: `npm install @injistack/react-inji-verify-sdk@0.17.0` |
-| Versão do backend incompatível | Use **exatamente** versão `0.17.0` do INJI Verify Service |
 | Carteira Digital não instalada | Orientar o usuário a instalar a INJI Wallet |
 | INJI Verify Service inacessível pelo celular | Verificar que `INJI_VP_SUBMISSION_BASE_URL` é um domínio público |
 | DID não resolve | Verificar `INJI_DID_VERIFY_URI` corresponde ao domínio público |
@@ -87,7 +85,7 @@ Usuário escaneia o QR Code mas a Carteira Digital não responde.
 | Usando `localhost` | Em desenvolvimento, use ngrok ou túnel equivalente |
 
 ::: {.callout-important}
-A causa mais comum é `INJI_VP_SUBMISSION_BASE_URL` apontando para `localhost`. A Carteira Digital no celular não consegue acessar `localhost` do seu computador. Certifique-se de usar **exatamente** a versão `0.17.0` do backend e SDK.
+A causa mais comum é `INJI_VP_SUBMISSION_BASE_URL` apontando para `localhost`. A Carteira Digital no celular não consegue acessar `localhost` do seu computador.
 :::
 
 ---
@@ -102,30 +100,6 @@ No celular, o link `openid4vp://...` não abre nada.
 - INJI Wallet não instalada → instalar a Carteira Digital
 - Navegador bloqueia o scheme → testar em Chrome/Safari
 - App não registrou o scheme → verificar se a versão da Wallet suporta `openid4vp://`
-
----
-
-## SDK mostra erro de props
-
-### Sintoma
-Console mostra erro de validação do SDK.
-
-### Causas comuns
-
-```
-Error: Cannot provide both presentationDefinition and presentationDefinitionId
-```
-→ Use **uma ou outra**, não ambas.
-
-```
-Error: Cannot provide both onVPReceived and onVPProcessed
-```
-→ Use **um ou outro**, não ambos.
-
-```
-Error: verifyServiceUrl is required
-```
-→ Passe a URL do INJI Verify Service.
 
 ---
 
@@ -144,7 +118,7 @@ O SDK fica aguardando e depois de ~55 segundos não recebe resultado.
 
 - Aumente o timeout se necessário: `INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=120000` (120s)
 - Verifique os logs: `docker logs inji-verify-service -f`
-- O SDK refaz o long-polling automaticamente; o QR Code expira após o timeout configurado
+- O polling para automaticamente ao atingir o número máximo de tentativas; reinicie o fluxo exibindo o botão novamente
 
 ---
 

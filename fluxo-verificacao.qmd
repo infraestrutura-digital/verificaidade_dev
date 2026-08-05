@@ -15,20 +15,22 @@ Entender o ciclo completo de uma verificação de idade, do início ao resultado
 ```{mermaid}
 sequenceDiagram
     participant U as Usuário (Desktop)
-    participant SDK as App React + SDK
+    participant A as App React
     participant VS as INJI Verify Service
     participant W as Carteira Digital (Celular)
 
-    U->>SDK: Clica "Verificar Idade"
-    SDK->>VS: POST /v1/verify/vp-request
-    VS-->>SDK: transactionId + requestId + authorizationDetails
-    SDK->>U: Exibe QR Code (authorizationDetails)
+    U->>A: Clica "Verificar Idade"
+    A->>VS: POST /v1/verify/vp-request
+    VS-->>A: transactionId + requestId + requestUri
+    A->>U: Exibe QR Code (openid4vp://authorize?client_id=...&request_uri=...)
     U->>W: Escaneia QR Code com a Carteira
     W->>VS: Apresenta credencial (VP submission)
     VS->>VS: Valida credencial + policy 18+
-    Note over SDK,VS: SDK faz long-polling em /vp-request/{id}/status
-    VS-->>SDK: Resultado da verificação
-    SDK->>U: "Idade verificada!" (callback)
+    Note over A,VS: App faz long-polling em /vp-request/{id}/status
+    VS-->>A: status VP_SUBMITTED
+    A->>VS: GET /v1/verify/vp-result/{transactionId}
+    VS-->>A: vpResultStatus + vcResults
+    A->>U: "Idade verificada!"
 ```
 
 ## Fluxo Same-Device (Deep Link — Mobile)
@@ -36,32 +38,30 @@ sequenceDiagram
 ```{mermaid}
 sequenceDiagram
     participant U as Usuário (Celular)
-    participant SDK as App React + SDK
+    participant A as App React Native
     participant VS as INJI Verify Service
     participant W as Carteira Digital
 
-    U->>SDK: Toca "Verificar Idade"
-    SDK->>VS: POST /v1/verify/vp-request
-    VS-->>SDK: transactionId + requestId + authorizationDetails
-    SDK->>W: Abre Deep Link (openid4vp://...)
+    U->>A: Toca "Verificar Idade"
+    A->>VS: POST /v1/verify/vp-request
+    VS-->>A: transactionId + requestId + requestUri
+    A->>W: Abre Deep Link (openid4vp://authorize?client_id=...&request_uri=...)
     W->>VS: Apresenta credencial (VP submission)
     Note over W: Usuário volta ao app
-    SDK->>VS: Long-polling /vp-request/{id}/status
-    VS-->>SDK: Resultado da verificação
-    SDK->>U: "Idade verificada!" (callback)
+    A->>VS: Long-polling /vp-request/{id}/status
+    VS-->>A: status VP_SUBMITTED
+    A->>VS: GET /v1/verify/vp-result/{transactionId}
+    VS-->>A: vpResultStatus + vcResults
+    A->>U: "Idade verificada!"
 ```
 
-## O que o SDK faz internamente
+## O que a aplicação faz internamente
 
-O INJI Verify SDK gerencia todo o ciclo:
-
-1. **Cria a VP Request** — chama `POST /v1/verify/vp-request` com a Presentation Definition
-2. **Detecta o dispositivo** — se mobile (com `isSameDeviceFlowEnabled: true`), usa Deep Link; se desktop, renderiza QR Code
-3. **Long-polling** — consulta `GET /v1/verify/vp-request/{id}/status` repetidamente até receber o resultado ou expirar (timeout padrão: 55s)
-4. **Busca resultado** — quando a Wallet envia a credencial, obtém o resultado via `GET /v1/verify/vp-result/{id}`
-5. **Dispara callback** — chama `onVPProcessed(results)` ou `onError()` em caso de falha
-
-Você **não precisa implementar** nenhuma dessas etapas manualmente.
+1. **Cria a VP Request** — `POST /v1/verify/vp-request` com a `presentationDefinition`
+2. **Monta o Deep Link** — `openid4vp://authorize?client_id=...&request_uri=...` usando o `requestUri` retornado
+3. **Exibe QR Code** — renderiza o deep link com `qrcode.react` para fluxo cross-device
+4. **Long-polling** — consulta `GET /v1/verify/vp-request/{requestId}/status` até receber `VP_SUBMITTED` ou `EXPIRED`
+5. **Busca resultado** — `GET /v1/verify/vp-result/{transactionId}`, lê `vcResults[0].vc.credentialSubject.isOver18`
 
 ## Estados da Verificação
 
@@ -73,67 +73,14 @@ Você **não precisa implementar** nenhuma dessas etapas manualmente.
 | `INVALID` | Credencial inválida (assinatura, emissor, formato) |
 | `EXPIRED` | Credencial ou sessão expirada |
 
-## Callbacks do SDK
+## Funções principais do `verifyService.ts`
 
-O SDK oferece **quatro callbacks** para gerenciar o fluxo:
-
-### `onVPProcessed(results)`
-
-Retorna o resultado completo diretamente no frontend.
-
-```tsx
-<OpenID4VPVerification
-  // ...
-  onVPProcessed={(results) => {
-    const ok = results.some(r => r.vcStatus === 'SUCCESS');
-    console.log('Verificado:', ok);
-  }}
-/>
-```
-
-### `onError(error)` — Tratamento de erros
-
-Chamado quando ocorre um erro na verificação.
-
-```tsx
-<OpenID4VPVerification
-  // ...
-  onError={(error) => {
-    console.error('Erro na verificação:', error);
-  }}
-/>
-```
-
-### `onQrCodeExpired()` — QR Code expirado
-
-Chamado quando o QR Code expira (apenas em fluxo cross-device).
-
-```tsx
-<OpenID4VPVerification
-  // ...
-  onQrCodeExpired={() => {
-    console.log('QR Code expirou');
-    // Resetar UI ou permitir nova tentativa
-  }}
-/>
-```
-
-::: {.callout-warning}
-`onVPProcessed` expõe o resultado diretamente no frontend. Para maior segurança em produção, valide o resultado no backend usando o `transactionId`.
-:::
-
-## Propriedades principais do componente
-
-| Propriedade | Tipo | Descrição |
-|-------------|------|----------|
-| `verifyServiceUrl` | string | URL base do INJI Verify Service |
-| `clientId` | string | DID do cliente (ex: `did:web:localhost:v1:verify`) |
-| `protocol` | string | Protocolo OpenID4VP (ex: `openid4vp://`) |
-| `isSameDeviceFlowEnabled` | boolean | Se `true`, usa Deep Link; se `false`, renderiza QR Code |
-| `presentationDefinition` | object | Define quais credenciais são aceitas |
-| `onVPProcessed` | function | Callback com resultado completo |
-| `onError` | function | Callback para erros |
-| `onQrCodeExpired` | function | Callback quando QR Code expira |
+| Função | Descrição |
+|--------|-----------|
+| `createVPRequest()` | `POST /vp-request` — retorna `transactionId`, `requestId`, `deepLinkUrl` |
+| `pollVPStatus(requestId)` | `GET /vp-request/{id}/status` — retorna `ACTIVE`, `VP_SUBMITTED` ou `EXPIRED` |
+| `getVPResult(transactionId)` | `GET /vp-result/{id}` — retorna `{ verified, underage }` |
+| `pollAndFetchResult(requestId, transactionId)` | Combina polling + busca de resultado, retorna `{ isOver18 }` ou `null` se expirar |
 
 ## Próximo passo
 

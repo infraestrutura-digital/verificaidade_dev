@@ -37,29 +37,21 @@ Garantir que a integração siga boas práticas de segurança e esteja em confor
 - [ ] Docker com usuário não-root (quando possível)
 - [ ] Certificado SSL/TLS válido
 
-## `onVPProcessed` — Segurança
+## Leitura do resultado — Segurança
 
-O callback `onVPProcessed` entrega o resultado diretamente no frontend:
+Após o wallet submeter a VP, o resultado é lido diretamente via `GET /v1/verify/vp-result/{transactionId}`.
+O campo relevante para a decisão de acesso é `vcResults[0].vc.credentialSubject.isOver18`:
 
-```tsx
-// Frontend
-onVPProcessed={(results) => {
-  const ok = results.some((r) => r.vcStatus === 'SUCCESS');
-  if (ok) { /* liberar acesso */ }
-}}
-```
+```ts
+// verifyService.ts
+const data = await response.json();
 
-```javascript
-// Backend (Node/Express)
-app.get('/api/verificacao/:transactionId', async (req, res) => {
-  const { transactionId } = req.params;
-  const result = await fetch(
-    `<VERIFY_BASE_URL>/v1/verify/vp-result/${transactionId}`
-  );
-  const data = await result.json();
-  const verified = data.vcResults?.some(r => r.vcStatus === 'SUCCESS') ?? false;
-  res.json({ verified });
-});
+if (data.vpResultStatus !== 'SUCCESS' || !data.vcResults?.length) {
+  throw new Error('VP result unavailable');
+}
+
+const vc = data.vcResults[0].vc;
+const isOver18 = vc?.credentialSubject?.isOver18 === true;
 ```
 
 ## DID e Keystore

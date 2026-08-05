@@ -7,7 +7,7 @@ title: "API Reference"
 Referência dos endpoints REST do INJI Verify Service. O context path é `/v1/verify`.
 
 ::: {.callout-note}
-Em uso normal, o **SDK gerencia todas as chamadas** a esses endpoints automaticamente. Esta referência é útil para debugging ou integração com apps nativos.
+Estes endpoints são chamados diretamente pelo seu frontend. Não há SDK intermediário — a integração é feita via chamadas REST puras.
 :::
 
 ## Endpoints do INJI Verify Service

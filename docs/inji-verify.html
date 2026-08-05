@@ -348,7 +348,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td><code>inji-verify-service</code></td>
-<td><code>injistack/inji-verify-service:0.17.0</code></td>
+<td><code>injistack/inji-verify-service:0.18.1</code></td>
 <td>8080</td>
 <td>Backend Spring Boot — validação de credenciais</td>
 </tr>
@@ -372,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">services</span><span class="kw">:</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">inji-verify-service</span><span class="kw">:</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">container_name</span><span class="kw">:</span><span class="at"> inji-verify-service</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> injistack/inji-verify-service:0.17.0</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> injistack/inji-verify-service:0.18.1</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ports</span><span class="kw">:</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">"8080:8080"</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">environment</span><span class="kw">:</span></span>
@@ -515,7 +515,7 @@ Importante
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Use <strong>exatamente</strong> a versão <code>0.17.0</code> do INJI Verify Service. Versões anteriores (0.16.x) e posteriores (0.18.x+) podem ter incompatibilidades com o SDK React. <code>INJI_VP_SUBMISSION_BASE_URL</code> e os DIDs <strong>devem usar seu domínio público real</strong>. A Carteira Digital do cidadão precisa resolver esses endereços pela internet.</p>
+<p>Use <strong>exatamente</strong> a versão <code>0.18.1</code> do INJI Verify Service. <code>INJI_VP_SUBMISSION_BASE_URL</code> e os DIDs <strong>devem usar seu domínio público real</strong>. A Carteira Digital do cidadão precisa resolver esses endereços pela internet.</p>
 </div>
 </div>
 </section>

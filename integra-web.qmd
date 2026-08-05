@@ -11,61 +11,50 @@ Implementar verificação de credencial em uma aplicação Web React usando QR C
 ```{mermaid}
 sequenceDiagram
     participant U as Usuário (Desktop)
-    participant SDK as App React + SDK
+    participant App as App React
     participant VS as INJI Verify Service
     participant W as Carteira Digital (Celular)
 
-    U->>SDK: Clica "Gerar QR Code"
-    SDK->>VS: POST /v1/verify/vp-request
-    VS-->>SDK: transactionId + requestId + authorizationDetails
-    SDK->>U: Renderiza QR Code
+    U->>App: Clica "Gerar QR Code"
+    App->>VS: POST /v1/verify/vp-request
+    VS-->>App: transactionId + requestId + requestUri
+    App->>U: Renderiza QR Code (openid4vp://authorize?...)
     U->>W: Escaneia QR Code
     W->>VS: POST /v1/verify/vp-submission (credencial)
     VS->>VS: Valida credencial
-    Note over SDK,VS: Long-polling até receber resultado
-    VS-->>SDK: Resultado
-    SDK->>U: Callback executado
+    Note over App,VS: Polling até receber resultado
+    App->>VS: GET /v1/verify/vp-request/{requestId}/status
+    VS-->>App: { status: "VP_SUBMITTED" }
+    App->>VS: GET /v1/verify/vp-result/{transactionId}
+    VS-->>App: { vpResultStatus: "SUCCESS", vcResults: [...] }
+    App->>U: Exibe resultado
 ```
 
 ## Cenário
 
 O usuário está no **desktop**. O site exibe um QR Code. O usuário abre a Carteira Digital no **celular**, escaneia o QR Code e autoriza o compartilhamento da credencial.
 
-## Passo 1 — Instalar o SDK
 
-```bash
-npm install @injistack/react-inji-verify-sdk@0.17.0
-```
+## Passo 1 — Criar o serviço de verificação
 
-::: {.callout-important}
-É necessário utilizar a versão `0.17.0` do SDK.
-:::
-
-
-
-## Passo 2 — Componente de verificação
-
-```tsx
-// src/components/VerificaIdade.tsx
-import { useState } from 'react';
-import { OpenID4VPVerification } from '@injistack/react-inji-verify-sdk';
-
-const VERIFY_SERVICE_URL = '/v1/verify';
-const CLIENT_ID_DID = 'did:web:localhost:v1:verify';
+```ts
+// src/services/verifyService.ts
+const BASE_URL = '/v1/verify';
+const CLIENT_ID = 'did:web:localhost:v1:verify';
 
 const presentationDefinition = {
-  id: 'eca-age-verification',
-  purpose: 'Verificação de idade conforme o Estatuto da Criança e do Adolescente',
-  format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
+  id: 'eca-age-check',
   input_descriptors: [
     {
-      id: 'eca credential',
+      id: 'ECACredential',
+      name: 'Comprovante de Maioridade',
+      purpose: 'Verificar que o usuário é maior de 18 anos',
       format: { ldp_vc: { proof_type: ['Ed25519Signature2020'] } },
       constraints: {
         fields: [
           {
             path: ['$.type'],
-            filter: { type: 'object', pattern: 'ECACredential' },
+            filter: { type: 'string', pattern: 'ECACredential' },
           },
         ],
       },
@@ -73,35 +62,160 @@ const presentationDefinition = {
   ],
 };
 
+export async function createVPRequest() {
+  const response = await fetch(`${BASE_URL}/vp-request`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ clientId: CLIENT_ID, presentationDefinition }),
+  });
+
+  if (!response.ok) throw new Error(`Failed to create VP request: ${response.status}`);
+
+  const data = await response.json();
+  const params = new URLSearchParams();
+  params.set('client_id', CLIENT_ID);
+  params.set('request_uri', data.requestUri);
+
+  return {
+    transactionId: data.transactionId,
+    requestId: data.requestId,
+    deepLinkUrl: `openid4vp://authorize?${params.toString()}`,
+  };
+}
+
+export async function pollVPStatus(requestId: string): Promise<'ACTIVE' | 'VP_SUBMITTED' | 'EXPIRED'> {
+  const response = await fetch(`${BASE_URL}/vp-request/${requestId}/status`);
+  if (!response.ok) throw new Error(`Failed to fetch VP status: ${response.status}`);
+  const data = await response.json();
+  return data.status;
+}
+
+export async function getVPResult(transactionId: string) {
+  const response = await fetch(`${BASE_URL}/vp-result/${transactionId}`);
+  if (!response.ok) throw new Error(`Failed to get VP result: ${response.status}`);
+
+  const data = await response.json();
+  if (data.vpResultStatus !== 'SUCCESS' || !data.vcResults?.length) {
+    throw new Error(`VP result unavailable: status=${data.vpResultStatus}`);
+  }
+
+  const vcRaw = data.vcResults[0].vc;
+  const vc = typeof vcRaw === 'string' ? JSON.parse(vcRaw) : vcRaw;
+  const subject = vc?.credential?.credentialSubject ?? vc?.credentialSubject ?? vc;
+
+  return { isOver18: subject?.isOver18 === true };
+}
+
+export async function pollAndFetchResult(
+  requestId: string,
+  transactionId: string,
+  maxAttempts = 150,
+  intervalMs = 2000
+): Promise<{ isOver18: boolean } | null> {
+  for (let i = 0; i < maxAttempts; i++) {
+    const status = await pollVPStatus(requestId);
+
+    if (status === 'VP_SUBMITTED') return getVPResult(transactionId);
+    if (status === 'EXPIRED') return null;
+
+    await new Promise((resolve) => setTimeout(resolve, intervalMs));
+  }
+  return null;
+}
+```
+
+## Passo 2 — Criar o hook de verificação
+
+```ts
+// src/hooks/useAgeVerification.ts
+import { useState, useCallback } from 'react';
+import { createVPRequest, pollAndFetchResult } from '../services/verifyService';
+
+export function useAgeVerification() {
+  const [waiting, setWaiting] = useState(false);
+  const [deepLinkUrl, setDeepLinkUrl] = useState<string | null>(null);
+
+  const verify = useCallback(async () => {
+    setWaiting(true);
+    setDeepLinkUrl(null);
+    try {
+      const { requestId, transactionId, deepLinkUrl } = await createVPRequest();
+      setDeepLinkUrl(deepLinkUrl);
+
+      const result = await pollAndFetchResult(requestId, transactionId);
+      setWaiting(false);
+      return result;
+    } catch (error) {
+      setWaiting(false);
+      throw error;
+    }
+  }, []);
+
+  return { verify, waiting, deepLinkUrl };
+}
+```
+
+## Passo 3 — Componente de verificação
+
+```tsx
+// src/components/VerificaIdade.tsx
+import { useState } from 'react';
+import QRCode from 'qrcode.react';
+import { useAgeVerification } from '../hooks/useAgeVerification';
+
 export function VerificaIdade() {
-  const [iniciado, setIniciado] = useState(false);
+  const { verify, waiting, deepLinkUrl } = useAgeVerification();
+  const [resultado, setResultado] = useState<{ sucesso: boolean; mensagem: string } | null>(null);
+
+  const handleVerify = async () => {
+    setResultado(null);
+    try {
+      const result = await verify();
+      if (!result) {
+        setResultado({ sucesso: false, mensagem: 'Verificação expirada. Tente novamente.' });
+        return;
+      }
+      setResultado(
+        result.isOver18
+          ? { sucesso: true, mensagem: 'Maior de 18 anos confirmado.' }
+          : { sucesso: false, mensagem: 'Usuário menor de 18 anos.' }
+      );
+    } catch (error) {
+      setResultado({
+        sucesso: false,
+        mensagem: error instanceof Error ? error.message : 'Erro ao verificar idade',
+      });
+    }
+  };
 
   return (
     <div>
       <h2>Verificação de Idade</h2>
-      {!iniciado ? (
-        <button onClick={() => setIniciado(true)}>Gerar QR Code</button>
-      ) : (
-        <OpenID4VPVerification
-          verifyServiceUrl={VERIFY_SERVICE_URL}
-          clientId={CLIENT_ID_DID}
-          protocol="openid4vp://"
-          isSameDeviceFlowEnabled={false}
-          presentationDefinition={presentationDefinition}
-          onVPProcessed={(results) => {
-            const ok = results.some((r: { vcStatus: string }) => r.vcStatus === 'SUCCESS');
-            console.log('Verificado:', ok);
-          }}
-          onError={(error) => console.error('Erro na verificação:', error)}
-          onQrCodeExpired={() => setIniciado(false)}
-        />
+
+      {!waiting && !resultado && (
+        <button onClick={handleVerify}>Gerar QR Code</button>
+      )}
+
+      {waiting && deepLinkUrl && (
+        <div>
+          <QRCode value={deepLinkUrl} size={256} />
+          <p>Escaneie com sua carteira digital (INJI Wallet)</p>
+          <p>Aguardando resposta...</p>
+        </div>
+      )}
+
+      {resultado && (
+        <div>
+          <p>{resultado.mensagem}</p>
+          <button onClick={() => setResultado(null)}>Voltar</button>
+        </div>
       )}
     </div>
   );
 }
 ```
 
-## Passo 3 — Usar o componente
+## Passo 4 — Usar o componente
 
 ```tsx
 // src/pages/Checkout.tsx
@@ -117,66 +231,22 @@ export function Checkout() {
 }
 ```
 
-## Versão para produção (com validação no backend)
+## Passo 5 — Testar ponta a ponta
 
-Para maior segurança, capture o `transactionId` e valide no backend:
+1. Acesse sua aplicação React no navegador
+2. Clique em **Gerar QR Code** — o QR Code aparece na tela
+3. Abra a **INJI Wallet** no celular
+4. Escaneie o QR Code
+5. Autorize o compartilhamento da credencial na Wallet
+6. O componente exibe o resultado automaticamente
 
-```tsx
-import { OpenID4VPVerification } from '@injistack/react-inji-verify-sdk';
+## Variáveis de ambiente
 
-export function VerificaIdadeProd() {
-  return (
-    <OpenID4VPVerification
-      verifyServiceUrl="<VERIFY_BASE_URL>/v1/verify"
-      clientId="did:web:<SEU_DOMINIO>:v1:verify"
-      protocol="openid4vp://"
-      isSameDeviceFlowEnabled={false}
-      presentationDefinition={presentationDefinition}
-      onVPProcessed={async (results) => {
-        const ok = results.some((r: { vcStatus: string }) => r.vcStatus === 'SUCCESS');
-        if (ok) { /* liberar acesso */ }
-      }}
-      onError={(error) => console.error(error)}
-      onQrCodeExpired={() => console.log('QR expirou')}
-    />
-  );
-}
+```bash
+# .env
+VITE_VERIFY_SERVICE_URL=/v1/verify
+VITE_CLIENT_ID_DID=did:web:SEU_DOMINIO_PUBLICO:v1:verify
 ```
-
-::: {.callout-important}
-Para maior segurança, seu backend pode buscar o resultado diretamente em `GET <VERIFY_BASE_URL>/v1/verify/vp-result/{transactionId}` e decidir se libera o acesso, evitando que o frontend seja adulterado.
-:::
-
-## Customização do QR Code
-
-```tsx
-<OpenID4VPVerification
-  // ...
-  qrCodeStyles={{
-    size: 300,
-    bgColor: '#ffffff',
-    fgColor: '#000000',
-  }}
-  triggerElement={<button className="btn-verificar">Verificar Idade</button>}
-/>
-```
-
-## Props do `OpenID4VPVerification`
-
-| Prop | Tipo | Obrigatório | Descrição |
-|------|------|:-----------:|-----------|
-| `verifyServiceUrl` | `string` | Sim | URL do INJI Verify Service |
-| `clientId` | `string` | Sim | DID do verificador |
-| `protocol` | `string` | Sim | Protocolo (`"openid4vp://"`) |
-| `isSameDeviceFlowEnabled` | `boolean` | Não | Habilita fluxo no mesmo dispositivo. Padrão: `true` — defina `false` para fluxo cross-device sem web wallet |
-| `presentationDefinition` | `object` | Sim* | Presentation Definition inline |
-| `presentationDefinitionId` | `string` | Sim* | ID de definição pré-cadastrada |
-| `onVPProcessed` | `(results) => void` | Sim | Callback com resultado completo |
-| `onError` | `(error) => void` | Sim | Callback de erro |
-| `onQrCodeExpired` | `() => void` | Sim | Callback de QR expirado |
-| `qrCodeStyles` | `object` | Não | Estilos do QR Code |
-
-\* Use `presentationDefinition` **ou** `presentationDefinitionId`, não ambos.
 
 ## Próximo passo
 

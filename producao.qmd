@@ -49,7 +49,7 @@ services:
         max-file: "3"
 
   inji-verify-service:
-    image: injistack/inji-verify-service:0.17.0
+    image: injistack/inji-verify-service:0.18.1
     container_name: inji-verify-service
     restart: always
     ports:

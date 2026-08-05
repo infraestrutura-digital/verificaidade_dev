@@ -12,7 +12,7 @@ O INJI Verify Service é composto por 2 containers:
 
 | Container | Imagem | Porta | Função |
 |-----------|--------|-------|--------|
-| `inji-verify-service` | `injistack/inji-verify-service:0.17.0` | 8080 | Backend Spring Boot — validação de credenciais |
+| `inji-verify-service` | `injistack/inji-verify-service:0.18.1` | 8080 | Backend Spring Boot — validação de credenciais |
 | `inji-verify-db` | `postgres:15-alpine` | 5432 | Banco de dados |
 
 ## Passo 1 — Criar estrutura de diretórios
@@ -30,7 +30,7 @@ Substitua `SEU_DOMINIO_PUBLICO` pelo domínio público da sua VM (ou URL do ngro
 services:
   inji-verify-service:
     container_name: inji-verify-service
-    image: injistack/inji-verify-service:0.17.0
+    image: injistack/inji-verify-service:0.18.1
     ports:
       - "8080:8080"
     environment:
@@ -116,7 +116,7 @@ curl -s http://localhost:8080/v1/verify/actuator/health
 | `INJI_VERIFY_RESPONSE_CODE_EXPIRY_TIME_IN_MINS` | `5` | TTL do response code (min) |
 
 ::: {.callout-important}
-Use **exatamente** a versão `0.17.0` do INJI Verify Service. Versões anteriores (0.16.x) e posteriores (0.18.x+) podem ter incompatibilidades com o SDK React. `INJI_VP_SUBMISSION_BASE_URL` e os DIDs **devem usar seu domínio público real**. A Carteira Digital do cidadão precisa resolver esses endereços pela internet.
+Use **exatamente** a versão `0.18.1` do INJI Verify Service. `INJI_VP_SUBMISSION_BASE_URL` e os DIDs **devem usar seu domínio público real**. A Carteira Digital do cidadão precisa resolver esses endereços pela internet.
 :::
 
 ## Comandos úteis

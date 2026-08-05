@@ -261,15 +261,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#fluxo-same-device-via-deep-link" id="toc-fluxo-same-device-via-deep-link" class="nav-link" data-scroll-target="#fluxo-same-device-via-deep-link">Fluxo Same-Device via Deep Link</a></li>
   <li><a href="#fluxo-ponta-a-ponta-cross-device-qr-code" id="toc-fluxo-ponta-a-ponta-cross-device-qr-code" class="nav-link" data-scroll-target="#fluxo-ponta-a-ponta-cross-device-qr-code">Fluxo Ponta a Ponta (Cross-Device — QR Code)</a></li>
   <li><a href="#fluxo-same-device-deep-link-mobile" id="toc-fluxo-same-device-deep-link-mobile" class="nav-link" data-scroll-target="#fluxo-same-device-deep-link-mobile">Fluxo Same-Device (Deep Link — Mobile)</a></li>
-  <li><a href="#o-que-o-sdk-faz-internamente" id="toc-o-que-o-sdk-faz-internamente" class="nav-link" data-scroll-target="#o-que-o-sdk-faz-internamente">O que o SDK faz internamente</a></li>
+  <li><a href="#o-que-a-aplicação-faz-internamente" id="toc-o-que-a-aplicação-faz-internamente" class="nav-link" data-scroll-target="#o-que-a-aplicação-faz-internamente">O que a aplicação faz internamente</a></li>
   <li><a href="#estados-da-verificação" id="toc-estados-da-verificação" class="nav-link" data-scroll-target="#estados-da-verificação">Estados da Verificação</a></li>
-  <li><a href="#callbacks-do-sdk" id="toc-callbacks-do-sdk" class="nav-link" data-scroll-target="#callbacks-do-sdk">Callbacks do SDK</a>
-  <ul class="collapse">
-  <li><a href="#onvpprocessedresults" id="toc-onvpprocessedresults" class="nav-link" data-scroll-target="#onvpprocessedresults"><code>onVPProcessed(results)</code></a></li>
-  <li><a href="#onerrorerror-tratamento-de-erros" id="toc-onerrorerror-tratamento-de-erros" class="nav-link" data-scroll-target="#onerrorerror-tratamento-de-erros"><code>onError(error)</code> — Tratamento de erros</a></li>
-  <li><a href="#onqrcodeexpired-qr-code-expirado" id="toc-onqrcodeexpired-qr-code-expirado" class="nav-link" data-scroll-target="#onqrcodeexpired-qr-code-expirado"><code>onQrCodeExpired()</code> — QR Code expirado</a></li>
-  </ul></li>
-  <li><a href="#propriedades-principais-do-componente" id="toc-propriedades-principais-do-componente" class="nav-link" data-scroll-target="#propriedades-principais-do-componente">Propriedades principais do componente</a></li>
+  <li><a href="#funções-principais-do-verifyservice.ts" id="toc-funções-principais-do-verifyservice.ts" class="nav-link" data-scroll-target="#funções-principais-do-verifyservice.ts">Funções principais do <code>verifyService.ts</code></a></li>
   <li><a href="#próximo-passo" id="toc-próximo-passo" class="nav-link" data-scroll-target="#próximo-passo">Próximo passo</a></li>
   </ul>
 </nav>
@@ -318,20 +312,22 @@ ul.task-list li input[type="checkbox"] {
 <div>
 <pre class="mermaid mermaid-js">sequenceDiagram
     participant U as Usuário (Desktop)
-    participant SDK as App React + SDK
+    participant A as App React
     participant VS as INJI Verify Service
     participant W as Carteira Digital (Celular)
 
-    U-&gt;&gt;SDK: Clica "Verificar Idade"
-    SDK-&gt;&gt;VS: POST /v1/verify/vp-request
-    VS--&gt;&gt;SDK: transactionId + requestId + authorizationDetails
-    SDK-&gt;&gt;U: Exibe QR Code (authorizationDetails)
+    U-&gt;&gt;A: Clica "Verificar Idade"
+    A-&gt;&gt;VS: POST /v1/verify/vp-request
+    VS--&gt;&gt;A: transactionId + requestId + requestUri
+    A-&gt;&gt;U: Exibe QR Code (openid4vp://authorize?client_id=...&amp;request_uri=...)
     U-&gt;&gt;W: Escaneia QR Code com a Carteira
     W-&gt;&gt;VS: Apresenta credencial (VP submission)
     VS-&gt;&gt;VS: Valida credencial + policy 18+
-    Note over SDK,VS: SDK faz long-polling em /vp-request/{id}/status
-    VS--&gt;&gt;SDK: Resultado da verificação
-    SDK-&gt;&gt;U: "Idade verificada!" (callback)
+    Note over A,VS: App faz long-polling em /vp-request/{id}/status
+    VS--&gt;&gt;A: status VP_SUBMITTED
+    A-&gt;&gt;VS: GET /v1/verify/vp-result/{transactionId}
+    VS--&gt;&gt;A: vpResultStatus + vcResults
+    A-&gt;&gt;U: "Idade verificada!"
 </pre>
 </div>
 <p></p></figure><p></p>
@@ -348,19 +344,21 @@ ul.task-list li input[type="checkbox"] {
 <div>
 <pre class="mermaid mermaid-js">sequenceDiagram
     participant U as Usuário (Celular)
-    participant SDK as App React + SDK
+    participant A as App React Native
     participant VS as INJI Verify Service
     participant W as Carteira Digital
 
-    U-&gt;&gt;SDK: Toca "Verificar Idade"
-    SDK-&gt;&gt;VS: POST /v1/verify/vp-request
-    VS--&gt;&gt;SDK: transactionId + requestId + authorizationDetails
-    SDK-&gt;&gt;W: Abre Deep Link (openid4vp://...)
+    U-&gt;&gt;A: Toca "Verificar Idade"
+    A-&gt;&gt;VS: POST /v1/verify/vp-request
+    VS--&gt;&gt;A: transactionId + requestId + requestUri
+    A-&gt;&gt;W: Abre Deep Link (openid4vp://authorize?client_id=...&amp;request_uri=...)
     W-&gt;&gt;VS: Apresenta credencial (VP submission)
     Note over W: Usuário volta ao app
-    SDK-&gt;&gt;VS: Long-polling /vp-request/{id}/status
-    VS--&gt;&gt;SDK: Resultado da verificação
-    SDK-&gt;&gt;U: "Idade verificada!" (callback)
+    A-&gt;&gt;VS: Long-polling /vp-request/{id}/status
+    VS--&gt;&gt;A: status VP_SUBMITTED
+    A-&gt;&gt;VS: GET /v1/verify/vp-result/{transactionId}
+    VS--&gt;&gt;A: vpResultStatus + vcResults
+    A-&gt;&gt;U: "Idade verificada!"
 </pre>
 </div>
 <p></p></figure><p></p>
@@ -368,17 +366,15 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
-<section id="o-que-o-sdk-faz-internamente" class="level2">
-<h2 class="anchored" data-anchor-id="o-que-o-sdk-faz-internamente">O que o SDK faz internamente</h2>
-<p>O INJI Verify SDK gerencia todo o ciclo:</p>
+<section id="o-que-a-aplicação-faz-internamente" class="level2">
+<h2 class="anchored" data-anchor-id="o-que-a-aplicação-faz-internamente">O que a aplicação faz internamente</h2>
 <ol type="1">
-<li><strong>Cria a VP Request</strong> — chama <code>POST /v1/verify/vp-request</code> com a Presentation Definition</li>
-<li><strong>Detecta o dispositivo</strong> — se mobile (com <code>isSameDeviceFlowEnabled: true</code>), usa Deep Link; se desktop, renderiza QR Code</li>
-<li><strong>Long-polling</strong> — consulta <code>GET /v1/verify/vp-request/{id}/status</code> repetidamente até receber o resultado ou expirar (timeout padrão: 55s)</li>
-<li><strong>Busca resultado</strong> — quando a Wallet envia a credencial, obtém o resultado via <code>GET /v1/verify/vp-result/{id}</code></li>
-<li><strong>Dispara callback</strong> — chama <code>onVPProcessed(results)</code> ou <code>onError()</code> em caso de falha</li>
+<li><strong>Cria a VP Request</strong> — <code>POST /v1/verify/vp-request</code> com a <code>presentationDefinition</code></li>
+<li><strong>Monta o Deep Link</strong> — <code>openid4vp://authorize?client_id=...&amp;request_uri=...</code> usando o <code>requestUri</code> retornado</li>
+<li><strong>Exibe QR Code</strong> — renderiza o deep link com <code>qrcode.react</code> para fluxo cross-device</li>
+<li><strong>Long-polling</strong> — consulta <code>GET /v1/verify/vp-request/{requestId}/status</code> até receber <code>VP_SUBMITTED</code> ou <code>EXPIRED</code></li>
+<li><strong>Busca resultado</strong> — <code>GET /v1/verify/vp-result/{transactionId}</code>, lê <code>vcResults[0].vc.credentialSubject.isOver18</code></li>
 </ol>
-<p>Você <strong>não precisa implementar</strong> nenhuma dessas etapas manualmente.</p>
 </section>
 <section id="estados-da-verificação" class="level2">
 <h2 class="anchored" data-anchor-id="estados-da-verificação">Estados da Verificação</h2>
@@ -413,110 +409,35 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="callbacks-do-sdk" class="level2">
-<h2 class="anchored" data-anchor-id="callbacks-do-sdk">Callbacks do SDK</h2>
-<p>O SDK oferece <strong>quatro callbacks</strong> para gerenciar o fluxo:</p>
-<section id="onvpprocessedresults" class="level3">
-<h3 class="anchored" data-anchor-id="onvpprocessedresults"><code>onVPProcessed(results)</code></h3>
-<p>Retorna o resultado completo diretamente no frontend.</p>
-<pre class="tsx"><code>&lt;OpenID4VPVerification
-  // ...
-  onVPProcessed={(results) =&gt; {
-    const ok = results.some(r =&gt; r.vcStatus === 'SUCCESS');
-    console.log('Verificado:', ok);
-  }}
-/&gt;</code></pre>
-</section>
-<section id="onerrorerror-tratamento-de-erros" class="level3">
-<h3 class="anchored" data-anchor-id="onerrorerror-tratamento-de-erros"><code>onError(error)</code> — Tratamento de erros</h3>
-<p>Chamado quando ocorre um erro na verificação.</p>
-<pre class="tsx"><code>&lt;OpenID4VPVerification
-  // ...
-  onError={(error) =&gt; {
-    console.error('Erro na verificação:', error);
-  }}
-/&gt;</code></pre>
-</section>
-<section id="onqrcodeexpired-qr-code-expirado" class="level3">
-<h3 class="anchored" data-anchor-id="onqrcodeexpired-qr-code-expirado"><code>onQrCodeExpired()</code> — QR Code expirado</h3>
-<p>Chamado quando o QR Code expira (apenas em fluxo cross-device).</p>
-<pre class="tsx"><code>&lt;OpenID4VPVerification
-  // ...
-  onQrCodeExpired={() =&gt; {
-    console.log('QR Code expirou');
-    // Resetar UI ou permitir nova tentativa
-  }}
-/&gt;</code></pre>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Aviso
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><code>onVPProcessed</code> expõe o resultado diretamente no frontend. Para maior segurança em produção, valide o resultado no backend usando o <code>transactionId</code>.</p>
-</div>
-</div>
-</section>
-</section>
-<section id="propriedades-principais-do-componente" class="level2">
-<h2 class="anchored" data-anchor-id="propriedades-principais-do-componente">Propriedades principais do componente</h2>
+<section id="funções-principais-do-verifyservice.ts" class="level2">
+<h2 class="anchored" data-anchor-id="funções-principais-do-verifyservice.ts">Funções principais do <code>verifyService.ts</code></h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 44%">
-<col style="width: 20%">
-<col style="width: 34%">
+<col style="width: 42%">
+<col style="width: 57%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Propriedade</th>
-<th>Tipo</th>
+<th>Função</th>
 <th>Descrição</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>verifyServiceUrl</code></td>
-<td>string</td>
-<td>URL base do INJI Verify Service</td>
+<td><code>createVPRequest()</code></td>
+<td><code>POST /vp-request</code> — retorna <code>transactionId</code>, <code>requestId</code>, <code>deepLinkUrl</code></td>
 </tr>
 <tr class="even">
-<td><code>clientId</code></td>
-<td>string</td>
-<td>DID do cliente (ex: <code>did:web:localhost:v1:verify</code>)</td>
+<td><code>pollVPStatus(requestId)</code></td>
+<td><code>GET /vp-request/{id}/status</code> — retorna <code>ACTIVE</code>, <code>VP_SUBMITTED</code> ou <code>EXPIRED</code></td>
 </tr>
 <tr class="odd">
-<td><code>protocol</code></td>
-<td>string</td>
-<td>Protocolo OpenID4VP (ex: <code>openid4vp://</code>)</td>
+<td><code>getVPResult(transactionId)</code></td>
+<td><code>GET /vp-result/{id}</code> — retorna <code>{ verified, underage }</code></td>
 </tr>
 <tr class="even">
-<td><code>isSameDeviceFlowEnabled</code></td>
-<td>boolean</td>
-<td>Se <code>true</code>, usa Deep Link; se <code>false</code>, renderiza QR Code</td>
-</tr>
-<tr class="odd">
-<td><code>presentationDefinition</code></td>
-<td>object</td>
-<td>Define quais credenciais são aceitas</td>
-</tr>
-<tr class="even">
-<td><code>onVPProcessed</code></td>
-<td>function</td>
-<td>Callback com resultado completo</td>
-</tr>
-<tr class="odd">
-<td><code>onError</code></td>
-<td>function</td>
-<td>Callback para erros</td>
-</tr>
-<tr class="even">
-<td><code>onQrCodeExpired</code></td>
-<td>function</td>
-<td>Callback quando QR Code expira</td>
+<td><code>pollAndFetchResult(requestId, transactionId)</code></td>
+<td>Combina polling + busca de resultado, retorna <code>{ isOver18 }</code> ou <code>null</code> se expirar</td>
 </tr>
 </tbody>
 </table>

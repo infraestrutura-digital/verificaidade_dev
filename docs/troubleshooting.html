@@ -318,25 +318,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#sintoma-4" id="toc-sintoma-4" class="nav-link" data-scroll-target="#sintoma-4">Sintoma</a></li>
   <li><a href="#soluções-2" id="toc-soluções-2" class="nav-link" data-scroll-target="#soluções-2">Soluções</a></li>
   </ul></li>
-  <li><a href="#sdk-mostra-erro-de-props" id="toc-sdk-mostra-erro-de-props" class="nav-link" data-scroll-target="#sdk-mostra-erro-de-props">SDK mostra erro de props</a>
-  <ul class="collapse">
-  <li><a href="#sintoma-5" id="toc-sintoma-5" class="nav-link" data-scroll-target="#sintoma-5">Sintoma</a></li>
-  <li><a href="#causas-comuns" id="toc-causas-comuns" class="nav-link" data-scroll-target="#causas-comuns">Causas comuns</a></li>
-  </ul></li>
   <li><a href="#long-polling-retorna-timeout" id="toc-long-polling-retorna-timeout" class="nav-link" data-scroll-target="#long-polling-retorna-timeout">Long-polling retorna timeout</a>
   <ul class="collapse">
-  <li><a href="#sintoma-6" id="toc-sintoma-6" class="nav-link" data-scroll-target="#sintoma-6">Sintoma</a></li>
+  <li><a href="#sintoma-5" id="toc-sintoma-5" class="nav-link" data-scroll-target="#sintoma-5">Sintoma</a></li>
   <li><a href="#causas" id="toc-causas" class="nav-link" data-scroll-target="#causas">Causas</a></li>
   <li><a href="#solução-1" id="toc-solução-1" class="nav-link" data-scroll-target="#solução-1">Solução</a></li>
   </ul></li>
   <li><a href="#erro-cors-no-navegador" id="toc-erro-cors-no-navegador" class="nav-link" data-scroll-target="#erro-cors-no-navegador">Erro CORS no navegador</a>
   <ul class="collapse">
-  <li><a href="#sintoma-7" id="toc-sintoma-7" class="nav-link" data-scroll-target="#sintoma-7">Sintoma</a></li>
+  <li><a href="#sintoma-6" id="toc-sintoma-6" class="nav-link" data-scroll-target="#sintoma-6">Sintoma</a></li>
   <li><a href="#solução-2" id="toc-solução-2" class="nav-link" data-scroll-target="#solução-2">Solução</a></li>
   </ul></li>
   <li><a href="#postgresql-sem-espaço-em-disco" id="toc-postgresql-sem-espaço-em-disco" class="nav-link" data-scroll-target="#postgresql-sem-espaço-em-disco">PostgreSQL sem espaço em disco</a>
   <ul class="collapse">
-  <li><a href="#sintoma-8" id="toc-sintoma-8" class="nav-link" data-scroll-target="#sintoma-8">Sintoma</a></li>
+  <li><a href="#sintoma-7" id="toc-sintoma-7" class="nav-link" data-scroll-target="#sintoma-7">Sintoma</a></li>
   <li><a href="#solução-3" id="toc-solução-3" class="nav-link" data-scroll-target="#solução-3">Solução</a></li>
   </ul></li>
   </ul>
@@ -472,14 +467,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td>Versão do SDK incompatível</td>
-<td>Use <strong>exatamente</strong> versão <code>0.17.0</code>: <code>npm install @injistack/react-inji-verify-sdk@0.17.0</code></td>
-</tr>
-<tr class="even">
-<td>Versão do backend incompatível</td>
-<td>Use <strong>exatamente</strong> versão <code>0.17.0</code> do INJI Verify Service</td>
-</tr>
-<tr class="odd">
 <td>Carteira Digital não instalada</td>
 <td>Orientar o usuário a instalar a INJI Wallet</td>
 </tr>
@@ -511,7 +498,7 @@ Importante
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>A causa mais comum é <code>INJI_VP_SUBMISSION_BASE_URL</code> apontando para <code>localhost</code>. A Carteira Digital no celular não consegue acessar <code>localhost</code> do seu computador. Certifique-se de usar <strong>exatamente</strong> a versão <code>0.17.0</code> do backend e SDK.</p>
+<p>A causa mais comum é <code>INJI_VP_SUBMISSION_BASE_URL</code> apontando para <code>localhost</code>. A Carteira Digital no celular não consegue acessar <code>localhost</code> do seu computador.</p>
 </div>
 </div>
 <hr>
@@ -533,27 +520,10 @@ Importante
 <hr>
 </section>
 </section>
-<section id="sdk-mostra-erro-de-props" class="level2">
-<h2 class="anchored" data-anchor-id="sdk-mostra-erro-de-props">SDK mostra erro de props</h2>
-<section id="sintoma-5" class="level3">
-<h3 class="anchored" data-anchor-id="sintoma-5">Sintoma</h3>
-<p>Console mostra erro de validação do SDK.</p>
-</section>
-<section id="causas-comuns" class="level3">
-<h3 class="anchored" data-anchor-id="causas-comuns">Causas comuns</h3>
-<pre><code>Error: Cannot provide both presentationDefinition and presentationDefinitionId</code></pre>
-<p>→ Use <strong>uma ou outra</strong>, não ambas.</p>
-<pre><code>Error: Cannot provide both onVPReceived and onVPProcessed</code></pre>
-<p>→ Use <strong>um ou outro</strong>, não ambos.</p>
-<pre><code>Error: verifyServiceUrl is required</code></pre>
-<p>→ Passe a URL do INJI Verify Service.</p>
-<hr>
-</section>
-</section>
 <section id="long-polling-retorna-timeout" class="level2">
 <h2 class="anchored" data-anchor-id="long-polling-retorna-timeout">Long-polling retorna timeout</h2>
-<section id="sintoma-6" class="level3">
-<h3 class="anchored" data-anchor-id="sintoma-6">Sintoma</h3>
+<section id="sintoma-5" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-5">Sintoma</h3>
 <p>O SDK fica aguardando e depois de ~55 segundos não recebe resultado.</p>
 </section>
 <section id="causas" class="level3">
@@ -569,15 +539,15 @@ Importante
 <ul>
 <li>Aumente o timeout se necessário: <code>INJI_VP_REQUEST_LONG_POLLING_TIMEOUT=120000</code> (120s)</li>
 <li>Verifique os logs: <code>docker logs inji-verify-service -f</code></li>
-<li>O SDK refaz o long-polling automaticamente; o QR Code expira após o timeout configurado</li>
+<li>O polling para automaticamente ao atingir o número máximo de tentativas; reinicie o fluxo exibindo o botão novamente</li>
 </ul>
 <hr>
 </section>
 </section>
 <section id="erro-cors-no-navegador" class="level2">
 <h2 class="anchored" data-anchor-id="erro-cors-no-navegador">Erro CORS no navegador</h2>
-<section id="sintoma-7" class="level3">
-<h3 class="anchored" data-anchor-id="sintoma-7">Sintoma</h3>
+<section id="sintoma-6" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-6">Sintoma</h3>
 <p>Console mostra <code>Access-Control-Allow-Origin</code> bloqueado.</p>
 </section>
 <section id="solução-2" class="level3">
@@ -596,21 +566,21 @@ Importante
 </section>
 <section id="postgresql-sem-espaço-em-disco" class="level2">
 <h2 class="anchored" data-anchor-id="postgresql-sem-espaço-em-disco">PostgreSQL sem espaço em disco</h2>
-<section id="sintoma-8" class="level3">
-<h3 class="anchored" data-anchor-id="sintoma-8">Sintoma</h3>
+<section id="sintoma-7" class="level3">
+<h3 class="anchored" data-anchor-id="sintoma-7">Sintoma</h3>
 <p>Erros de escrita no banco de dados.</p>
 </section>
 <section id="solução-3" class="level3">
 <h3 class="anchored" data-anchor-id="solução-3">Solução</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar espaço</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">df</span> <span class="at">-h</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Limpar dados antigos (se aplicável)</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec inji-verify-db psql <span class="at">-U</span> inji <span class="at">-d</span> inji_verify <span class="dt">\</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-c</span> <span class="st">"DELETE FROM vp_requests WHERE created_at &lt; NOW() - INTERVAL '30 days';"</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Vacuum</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec inji-verify-db psql <span class="at">-U</span> inji <span class="at">-d</span> inji_verify <span class="at">-c</span> <span class="st">"VACUUM FULL;"</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar espaço</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">df</span> <span class="at">-h</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Limpar dados antigos (se aplicável)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec inji-verify-db psql <span class="at">-U</span> inji <span class="at">-d</span> inji_verify <span class="dt">\</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-c</span> <span class="st">"DELETE FROM vp_requests WHERE created_at &lt; NOW() - INTERVAL '30 days';"</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Vacuum</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec inji-verify-db psql <span class="at">-U</span> inji <span class="at">-d</span> inji_verify <span class="at">-c</span> <span class="st">"VACUUM FULL;"</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
