@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Onboarding (Conceito e Uso com WSO2) – VerificaIdade — Portal do Desenvolvedor</title>
+<title>Onboarding (Conceito e Uso) – VerificaIdade — Portal do Desenvolvedor</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -122,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./onboarding.html">Onboarding (Conceito e Uso com WSO2)</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./onboarding.html">Onboarding (Conceito e Uso)</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
@@ -271,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./onboarding.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Onboarding (Conceito e Uso com WSO2)</span></a>
+ <span class="menu-text">Onboarding (Conceito e Uso)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -295,16 +295,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#objetivo" id="toc-objetivo" class="nav-link active" data-scroll-target="#objetivo">Objetivo</a></li>
   <li><a href="#o-que-é-o-onboarding" id="toc-o-que-é-o-onboarding" class="nav-link" data-scroll-target="#o-que-é-o-onboarding">O que é o Onboarding?</a></li>
   <li><a href="#fluxo-de-onboarding" id="toc-fluxo-de-onboarding" class="nav-link" data-scroll-target="#fluxo-de-onboarding">Fluxo de Onboarding</a></li>
-  <li><a href="#o-papel-do-gateway-wso2" id="toc-o-papel-do-gateway-wso2" class="nav-link" data-scroll-target="#o-papel-do-gateway-wso2">O papel do Gateway (WSO2)</a></li>
   <li><a href="#o-que-você-configura" id="toc-o-que-você-configura" class="nav-link" data-scroll-target="#o-que-você-configura">O que você configura</a></li>
   <li><a href="#ambientes" id="toc-ambientes" class="nav-link" data-scroll-target="#ambientes">Ambientes</a></li>
   <li><a href="#passos-do-credenciamento" id="toc-passos-do-credenciamento" class="nav-link" data-scroll-target="#passos-do-credenciamento">Passos do credenciamento</a>
   <ul class="collapse">
   <li><a href="#passo-1-solicitar-acesso" id="toc-passo-1-solicitar-acesso" class="nav-link" data-scroll-target="#passo-1-solicitar-acesso">Passo 1 — Solicitar acesso</a></li>
-  <li><a href="#passo-2-receber-acesso-ao-portal" id="toc-passo-2-receber-acesso-ao-portal" class="nav-link" data-scroll-target="#passo-2-receber-acesso-ao-portal">Passo 2 — Receber acesso ao portal</a></li>
-  <li><a href="#passo-3-configurar-identidade" id="toc-passo-3-configurar-identidade" class="nav-link" data-scroll-target="#passo-3-configurar-identidade">Passo 3 — Configurar identidade</a></li>
-  <li><a href="#passo-4-configurar-inji-verify-service" id="toc-passo-4-configurar-inji-verify-service" class="nav-link" data-scroll-target="#passo-4-configurar-inji-verify-service">Passo 4 — Configurar INJI Verify Service</a></li>
-  <li><a href="#passo-5-testar-em-homologação" id="toc-passo-5-testar-em-homologação" class="nav-link" data-scroll-target="#passo-5-testar-em-homologação">Passo 5 — Testar em homologação</a></li>
+  <li><a href="#passo-2-configurar-identidade" id="toc-passo-2-configurar-identidade" class="nav-link" data-scroll-target="#passo-2-configurar-identidade">Passo 2 — Configurar identidade</a></li>
+  <li><a href="#passo-3-configurar-inji-verify-service" id="toc-passo-3-configurar-inji-verify-service" class="nav-link" data-scroll-target="#passo-3-configurar-inji-verify-service">Passo 3 — Configurar INJI Verify Service</a></li>
+  <li><a href="#passo-4-testar-em-homologação" id="toc-passo-4-testar-em-homologação" class="nav-link" data-scroll-target="#passo-4-testar-em-homologação">Passo 4 — Testar em homologação</a></li>
   </ul></li>
   <li><a href="#dúvidas-sobre-onboarding" id="toc-dúvidas-sobre-onboarding" class="nav-link" data-scroll-target="#dúvidas-sobre-onboarding">Dúvidas sobre Onboarding</a></li>
   </ul>
@@ -313,9 +311,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./onboarding.html">Onboarding (Conceito e Uso com WSO2)</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy18.html">Referência</a></li><li class="breadcrumb-item"><a href="./onboarding.html">Onboarding (Conceito e Uso)</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Onboarding (Conceito e Uso com WSO2)</h1>
+<h1 class="title">Onboarding (Conceito e Uso)</h1>
 </div>
 
 
@@ -353,8 +351,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart TD
-    A[Solicitar credenciamento] --&gt; B[Aprovação pelo órgão responsável]
-    B --&gt; C[Receber acesso ao gateway WSO2]
+    A[Solicitar credenciamento] --&gt; C[Aprovação pelo órgão responsável]
     C --&gt; D[Configurar DID e keystore]
     D --&gt; E[Configurar INJI Verify Service]
     E --&gt; F[Testar em ambiente de homologação]
@@ -363,49 +360,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p></p></figure><p></p>
 </div>
-</div>
-</div>
-</section>
-<section id="o-papel-do-gateway-wso2" class="level2">
-<h2 class="anchored" data-anchor-id="o-papel-do-gateway-wso2">O papel do Gateway (WSO2)</h2>
-<p>O gateway <strong>WSO2 API Manager</strong> é a camada de gerenciamento do ecossistema:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Função</th>
-<th>Descrição</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Registro</strong></td>
-<td>Registra verificadores e suas credenciais de acesso</td>
-</tr>
-<tr class="even">
-<td><strong>Rate Limiting</strong></td>
-<td>Controla quantidade de verificações por período</td>
-</tr>
-<tr class="odd">
-<td><strong>Monitoramento</strong></td>
-<td>Registra uso do serviço</td>
-</tr>
-<tr class="even">
-<td><strong>Políticas</strong></td>
-<td>Define quais Presentation Definitions são permitidas</td>
-</tr>
-</tbody>
-</table>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Nota
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Você <strong>não precisa instalar o WSO2</strong>. Ele é gerenciado pelo provedor do ecossistema. Sua responsabilidade é configurar o INJI Verify Service na sua infraestrutura.</p>
 </div>
 </div>
 </section>
@@ -493,27 +447,20 @@ Aviso
 <h3 class="anchored" data-anchor-id="passo-1-solicitar-acesso">Passo 1 — Solicitar acesso</h3>
 <p>Entre em contato com o órgão responsável pelo VerificaIdade.</p>
 </section>
-<section id="passo-2-receber-acesso-ao-portal" class="level3">
-<h3 class="anchored" data-anchor-id="passo-2-receber-acesso-ao-portal">Passo 2 — Receber acesso ao portal</h3>
-<p>Após aprovação, você receberá acesso ao portal do gateway WSO2.</p>
+<section id="passo-2-configurar-identidade" class="level3">
+<h3 class="anchored" data-anchor-id="passo-2-configurar-identidade">Passo 2 — Configurar identidade</h3>
+<p>Após aprovação: - Gere ou receba o DID Web do seu verificador - Gere ou receba o keystore PKCS12</p>
 </section>
-<section id="passo-3-configurar-identidade" class="level3">
-<h3 class="anchored" data-anchor-id="passo-3-configurar-identidade">Passo 3 — Configurar identidade</h3>
-<ul>
-<li>Gere ou receba o DID Web do seu verificador</li>
-<li>Gere ou receba o keystore PKCS12</li>
-</ul>
-</section>
-<section id="passo-4-configurar-inji-verify-service" class="level3">
-<h3 class="anchored" data-anchor-id="passo-4-configurar-inji-verify-service">Passo 4 — Configurar INJI Verify Service</h3>
+<section id="passo-3-configurar-inji-verify-service" class="level3">
+<h3 class="anchored" data-anchor-id="passo-3-configurar-inji-verify-service">Passo 3 — Configurar INJI Verify Service</h3>
 <p>Use os valores recebidos nas variáveis de ambiente do <a href="./inji-verify.html">INJI Verify Service</a>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">INJI_DID_VERIFY_URI</span><span class="op">=</span>did:web:verify.seu-dominio.com.br:v1:verify</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">INJI_DID_VERIFY_PUBLIC_KEY_URI</span><span class="op">=</span>did:web:verify.seu-dominio.com.br:v1:verify#key-0</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">INJI_KEYSTORE_FILE_PASS</span><span class="op">=</span>sua-senha-do-keystore</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">INJI_VP_SUBMISSION_BASE_URL</span><span class="op">=</span>https://verify.seu-dominio.com.br/v1/verify</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="passo-5-testar-em-homologação" class="level3">
-<h3 class="anchored" data-anchor-id="passo-5-testar-em-homologação">Passo 5 — Testar em homologação</h3>
+<section id="passo-4-testar-em-homologação" class="level3">
+<h3 class="anchored" data-anchor-id="passo-4-testar-em-homologação">Passo 4 — Testar em homologação</h3>
 <p>Use credenciais de teste para validar o fluxo completo antes de ir para produção.</p>
 </section>
 </section>

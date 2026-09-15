@@ -1008,100 +1008,89 @@
   {
     "objectID": "onboarding.html",
     "href": "onboarding.html",
-    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "title": "Onboarding (Conceito e Uso)",
     "section": "",
     "text": "Entender o processo de credenciamento (onboarding) para operar como verificador.",
     "crumbs": [
       "Referência",
-      "Onboarding (Conceito e Uso com WSO2)"
+      "Onboarding (Conceito e Uso)"
     ]
   },
   {
     "objectID": "onboarding.html#objetivo",
     "href": "onboarding.html#objetivo",
-    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "title": "Onboarding (Conceito e Uso)",
     "section": "",
     "text": "Entender o processo de credenciamento (onboarding) para operar como verificador.",
     "crumbs": [
       "Referência",
-      "Onboarding (Conceito e Uso com WSO2)"
+      "Onboarding (Conceito e Uso)"
     ]
   },
   {
     "objectID": "onboarding.html#o-que-é-o-onboarding",
     "href": "onboarding.html#o-que-é-o-onboarding",
-    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "title": "Onboarding (Conceito e Uso)",
     "section": "O que é o Onboarding?",
     "text": "O que é o Onboarding?\nAntes de verificar credenciais em produção, sua organização precisa ser credenciada como verificador autorizado. O onboarding define:\n\nQuem você é (identidade do verificador via DID)\nQue credenciais você pode solicitar (Presentation Definitions)\nComo acessar o ecossistema",
     "crumbs": [
       "Referência",
-      "Onboarding (Conceito e Uso com WSO2)"
+      "Onboarding (Conceito e Uso)"
     ]
   },
   {
     "objectID": "onboarding.html#fluxo-de-onboarding",
     "href": "onboarding.html#fluxo-de-onboarding",
-    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "title": "Onboarding (Conceito e Uso)",
     "section": "Fluxo de Onboarding",
-    "text": "Fluxo de Onboarding\n\n\n\n\n\nflowchart TD\n    A[Solicitar credenciamento] --&gt; B[Aprovação pelo órgão responsável]\n    B --&gt; C[Receber acesso ao gateway WSO2]\n    C --&gt; D[Configurar DID e keystore]\n    D --&gt; E[Configurar INJI Verify Service]\n    E --&gt; F[Testar em ambiente de homologação]\n    F --&gt; G[Aprovação para produção]",
+    "text": "Fluxo de Onboarding\n\n\n\n\n\nflowchart TD\n    A[Solicitar credenciamento] --&gt; C[Aprovação pelo órgão responsável]\n    C --&gt; D[Configurar DID e keystore]\n    D --&gt; E[Configurar INJI Verify Service]\n    E --&gt; F[Testar em ambiente de homologação]\n    F --&gt; G[Aprovação para produção]",
     "crumbs": [
       "Referência",
-      "Onboarding (Conceito e Uso com WSO2)"
-    ]
-  },
-  {
-    "objectID": "onboarding.html#o-papel-do-gateway-wso2",
-    "href": "onboarding.html#o-papel-do-gateway-wso2",
-    "title": "Onboarding (Conceito e Uso com WSO2)",
-    "section": "O papel do Gateway (WSO2)",
-    "text": "O papel do Gateway (WSO2)\nO gateway WSO2 API Manager é a camada de gerenciamento do ecossistema:\n\n\n\nFunção\nDescrição\n\n\n\n\nRegistro\nRegistra verificadores e suas credenciais de acesso\n\n\nRate Limiting\nControla quantidade de verificações por período\n\n\nMonitoramento\nRegistra uso do serviço\n\n\nPolíticas\nDefine quais Presentation Definitions são permitidas\n\n\n\n\n\n\n\n\n\nNota\n\n\n\nVocê não precisa instalar o WSO2. Ele é gerenciado pelo provedor do ecossistema. Sua responsabilidade é configurar o INJI Verify Service na sua infraestrutura.",
-    "crumbs": [
-      "Referência",
-      "Onboarding (Conceito e Uso com WSO2)"
+      "Onboarding (Conceito e Uso)"
     ]
   },
   {
     "objectID": "onboarding.html#o-que-você-configura",
     "href": "onboarding.html#o-que-você-configura",
-    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "title": "Onboarding (Conceito e Uso)",
     "section": "O que você configura",
     "text": "O que você configura\nApós o credenciamento, você recebe informações para configurar:\n\n\n\n\n\n\n\n\nItem\nOnde usar\nDescrição\n\n\n\n\nDID do verificador\nINJI_DID_VERIFY_URI\nIdentidade digital do seu verificador\n\n\nKeystore PKCS12\nMontado no container\nChave para assinar authorization requests\n\n\nPresentation Definition\nProp presentationDefinition do SDK\nDefine quais credenciais solicitar\n\n\nDomínio público\nINJI_VP_SUBMISSION_BASE_URL\nEndereço para a Wallet enviar credenciais",
     "crumbs": [
       "Referência",
-      "Onboarding (Conceito e Uso com WSO2)"
+      "Onboarding (Conceito e Uso)"
     ]
   },
   {
     "objectID": "onboarding.html#ambientes",
     "href": "onboarding.html#ambientes",
-    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "title": "Onboarding (Conceito e Uso)",
     "section": "Ambientes",
     "text": "Ambientes\n\n\n\n\n\n\n\nAmbiente\nUso\n\n\n\n\nHomologação\nTestes com credenciais de teste. Use o keystore de teste.\n\n\nProdução\nSistema em operação real. Keystore e DID definitivos.\n\n\n\n\n\n\n\n\n\nAviso\n\n\n\nNunca use o keystore de teste (test.p12) em produção. Gere um keystore próprio.",
     "crumbs": [
       "Referência",
-      "Onboarding (Conceito e Uso com WSO2)"
+      "Onboarding (Conceito e Uso)"
     ]
   },
   {
     "objectID": "onboarding.html#passos-do-credenciamento",
     "href": "onboarding.html#passos-do-credenciamento",
-    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "title": "Onboarding (Conceito e Uso)",
     "section": "Passos do credenciamento",
-    "text": "Passos do credenciamento\n\nPasso 1 — Solicitar acesso\nEntre em contato com o órgão responsável pelo VerificaIdade.\n\n\nPasso 2 — Receber acesso ao portal\nApós aprovação, você receberá acesso ao portal do gateway WSO2.\n\n\nPasso 3 — Configurar identidade\n\nGere ou receba o DID Web do seu verificador\nGere ou receba o keystore PKCS12\n\n\n\nPasso 4 — Configurar INJI Verify Service\nUse os valores recebidos nas variáveis de ambiente do INJI Verify Service:\nINJI_DID_VERIFY_URI=did:web:verify.seu-dominio.com.br:v1:verify\nINJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:verify.seu-dominio.com.br:v1:verify#key-0\nINJI_KEYSTORE_FILE_PASS=sua-senha-do-keystore\nINJI_VP_SUBMISSION_BASE_URL=https://verify.seu-dominio.com.br/v1/verify\n\n\nPasso 5 — Testar em homologação\nUse credenciais de teste para validar o fluxo completo antes de ir para produção.",
+    "text": "Passos do credenciamento\n\nPasso 1 — Solicitar acesso\nEntre em contato com o órgão responsável pelo VerificaIdade.\n\n\nPasso 2 — Configurar identidade\nApós aprovação: - Gere ou receba o DID Web do seu verificador - Gere ou receba o keystore PKCS12\n\n\nPasso 3 — Configurar INJI Verify Service\nUse os valores recebidos nas variáveis de ambiente do INJI Verify Service:\nINJI_DID_VERIFY_URI=did:web:verify.seu-dominio.com.br:v1:verify\nINJI_DID_VERIFY_PUBLIC_KEY_URI=did:web:verify.seu-dominio.com.br:v1:verify#key-0\nINJI_KEYSTORE_FILE_PASS=sua-senha-do-keystore\nINJI_VP_SUBMISSION_BASE_URL=https://verify.seu-dominio.com.br/v1/verify\n\n\nPasso 4 — Testar em homologação\nUse credenciais de teste para validar o fluxo completo antes de ir para produção.",
     "crumbs": [
       "Referência",
-      "Onboarding (Conceito e Uso com WSO2)"
+      "Onboarding (Conceito e Uso)"
     ]
   },
   {
     "objectID": "onboarding.html#dúvidas-sobre-onboarding",
     "href": "onboarding.html#dúvidas-sobre-onboarding",
-    "title": "Onboarding (Conceito e Uso com WSO2)",
+    "title": "Onboarding (Conceito e Uso)",
     "section": "Dúvidas sobre Onboarding",
     "text": "Dúvidas sobre Onboarding\nO processo de onboarding é gerenciado pelo órgão responsável pelo VerificaIdade. Consulte a documentação fornecida no credenciamento.",
     "crumbs": [
       "Referência",
-      "Onboarding (Conceito e Uso com WSO2)"
+      "Onboarding (Conceito e Uso)"
     ]
   },
   {
